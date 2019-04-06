@@ -279,6 +279,7 @@ describe("Unit tests", () => {
       expect(wrapper.find("button").length).toBe(0);
 
       const input = wrapper.find("textarea");
+      expect(input.prop("autoFocus")).toBe(true);
 
       expect(input.length).toBe(1);
       // TODO : expect focus ?
@@ -300,11 +301,3 @@ describe("Unit tests", () => {
     });
   });
 });
-// test("componant onClick call action createCard", () => {
-//   const mockCallback = jest.fn(x => 42 + x);
-
-//   const wrapper = shallow(<CreateCard onClick=/>);
-
-//   expect(wrapper.find("button").simulate('click'));
-
-// });
