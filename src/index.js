@@ -4,12 +4,16 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
+import firebase from "firebase/app";
+import "firebase/firestore";
+import "firebase/storage";
+
 import { api } from "./API/api";
 
 import reducer from "./redux/store/index";
 import CreateCard from "./components/CreateCard";
-import { createCard } from "./redux/modules/cards";
-import CardList from "./components/Cards";
+import { createCard, cardStatus } from "./redux/modules/cards";
+import CardListByStatus from "./containers/CardsListByStatus";
 
 import "./styles.css";
 /*
@@ -23,10 +27,20 @@ function Card({ card }) {
 const cardsList = [{ title: "Creer une carte" }];
 
 */
+let config = {
+  apiKey: "AIzaSyBwM4YVUVijCR35f9D_vg1qHbF3OTotVb0",
+  authDomain: "massive-pen-231814.firebaseapp.com",
+  databaseURL: "https://massive-pen-231814.firebaseio.com",
+  projectId: "massive-pen-231814",
+  storageBucket: "massive-pen-231814.appspot.com",
+  messagingSenderId: "61056570786"
+};
+firebase.initializeApp(config);
+const db = firebase.firestore();
 
 const store = createStore(
   reducer,
-  applyMiddleware(thunk.withExtraArgument({ api }))
+  applyMiddleware(thunk.withExtraArgument({ api: api(db) }))
 );
 
 function App() {
@@ -38,7 +52,8 @@ function App() {
             store.dispatch(createCard(title));
           }}
         />
-        <CardList />
+        <CardListByStatus status={cardStatus.Todo} />
+        <CardListByStatus status={cardStatus.Inprogress} />
       </div>
     </Provider>
   );
