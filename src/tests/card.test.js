@@ -201,6 +201,13 @@ describe("API tests", () => {
   });
 
   describe("Unit tests", () => {
+    test("create a card without title", () => {
+      const wrapper = () => {
+        const store = mockStore(storeStateInitial);
+        store.dispatch(createCard());
+      };
+      expect(wrapper).toThrowError("Argument title is mandatory");
+    });
     test("create a card", async () => {
       const store = mockStore(storeStateInitial);
 
@@ -229,7 +236,14 @@ describe("API tests", () => {
         }
       });
     });
+    test("retrieve all cards without type", () => {
+      const wrapper = () => {
+        const store = mockStore(storeStateInitial);
+        store.dispatch(retrieveAllCards());
+      };
 
+      expect(wrapper).toThrowError("Argument type is mandatory");
+    });
     test("retrieve all cards of type TASK", async () => {
       const store = mockStore(storeStateInitial);
       await store.dispatch(retrieveAllCards(cardType.Task));

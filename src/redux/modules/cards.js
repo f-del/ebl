@@ -39,6 +39,8 @@ export const cardType = {
  */
 
 export const createCard = title => {
+  if (title === undefined || title.length === 0)
+    throw new Error("Argument title is mandatory");
   return (dispatch, getState, { api }) => {
     const newCard = card(title);
     return api.Cards.Post(newCard).then(res => {
@@ -48,6 +50,7 @@ export const createCard = title => {
 };
 
 export const retrieveAllCards = type => {
+  if (type === undefined) throw new Error("Argument type is mandatory");
   return (dispatch, getState, { api }) => {
     if (getAllCards(getState()).length !== 0)
       throw new Error("Could not retrieve cards in the current state");

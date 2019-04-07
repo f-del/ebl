@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
@@ -12,10 +12,11 @@ import { api } from "./API/api";
 
 import reducer from "./redux/store/index";
 import CreateCard from "./components/CreateCard";
-import { createCard, cardStatus } from "./redux/modules/cards";
+import { createCard, cardStatus, cardType } from "./redux/modules/cards";
 import CardListByStatus from "./containers/CardsListByStatus";
 
 import "./styles.css";
+import CardsListContext from "./containers/hoc/CardsListContext";
 /*
 {cardsList.map(c => (
   <Card card={c} />
@@ -38,10 +39,15 @@ let config = {
 firebase.initializeApp(config);
 const db = firebase.firestore();
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
   reducer,
-  applyMiddleware(thunk.withExtraArgument({ api: api(db) }))
+  composeEnhancers(applyMiddleware(thunk.withExtraArgument({ api: api(db) })))
 );
+
+function taskBoard({ props }) {
+  return <div>props.children</div>;
+}
 
 function App() {
   return (
@@ -52,8 +58,10 @@ function App() {
             store.dispatch(createCard(title));
           }}
         />
-        <CardListByStatus status={cardStatus.TODO} />
-        <CardListByStatus status={cardStatus.INPROGRESS} />
+        <CardsListContext type={cardType.Task}>
+          <CardListByStatus status={cardStatus.TODO} />
+          <CardListByStatus status={cardStatus.INPROGRESS} />
+        </CardsListContext>
       </div>
     </Provider>
   );
