@@ -1,5 +1,5 @@
-import Tasks from "./tasks";
+import Cards from "./cards";
 
 export const api = db => {
-  return { Tasks: Tasks(db) };
+  return { Cards: Cards(db) };
 };
