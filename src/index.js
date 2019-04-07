@@ -52,8 +52,8 @@ function App() {
             store.dispatch(createCard(title));
           }}
         />
-        <CardListByStatus status={cardStatus.Todo} />
-        <CardListByStatus status={cardStatus.Inprogress} />
+        <CardListByStatus status={cardStatus.TODO} />
+        <CardListByStatus status={cardStatus.INPROGRESS} />
       </div>
     </Provider>
   );

@@ -5,14 +5,14 @@ const START = "CARD/START";
 
 const card = title => ({
   Title: title,
-  Status: cardStatus.Todo,
+  Status: cardStatus.TODO,
   Type: cardType.Task
 });
 
-export const cardStatus = {
-  Todo: "TODO",
-  Inprogress: "INPROGRESS"
-};
+export const cardStatus = Object.freeze({
+  TODO: Symbol("TODO"),
+  INPROGRESS: Symbol("INPROGRESS")
+});
 
 export const cardType = {
   Task: "TASK"
@@ -55,7 +55,7 @@ export default function(state = initialState, action) {
       let idx = state.list.findIndex(c => c.Id === action.payload.Id);
 
       var mergeObject = {};
-      mergeObject[idx] = { $merge: { Status: cardStatus.Inprogress } };
+      mergeObject[idx] = { $merge: { Status: cardStatus.INPROGRESS } };
 
       return { ...state, list: update(state.list, mergeObject) };
 
@@ -78,8 +78,8 @@ export function getAllCardsTodo(state) {
 
 /* Functionnal helper */
 function isCardStatusInProgess(card) {
-  return card.Status === cardStatus.Inprogress;
+  return card.Status === cardStatus.INPROGRESS;
 }
 function isCardStatusToDo(card) {
-  return card.Status === cardStatus.Todo;
+  return card.Status === cardStatus.TODO;
 }

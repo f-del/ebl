@@ -8,9 +8,11 @@ import {
 import CardsList from "../components/CardsList";
 
 function helperGetCards(state, ownProps) {
-  if (ownProps.status === cardStatus.Todo) return getAllCardsTodo(state);
-  if (ownProps.status === cardStatus.Inprogress)
+  if (ownProps.status === cardStatus.TODO) return getAllCardsTodo(state);
+  if (ownProps.status === cardStatus.INPROGRESS)
     return getAllCardsInProgess(state);
+
+  throw new Error("Status not recognized, should come from cardStatus");
 }
 
 const mapStateToProps = (state, ownProps) => ({
@@ -25,7 +27,7 @@ const CardListByStatus = connect(
 )(CardsList);
 
 CardListByStatus.propTypes = {
-  status: PropTypes.string.isRequired
+  status: PropTypes.symbol.isRequired
 };
 
 export default CardListByStatus;

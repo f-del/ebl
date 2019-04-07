@@ -44,7 +44,7 @@ var api = undefined;
 /*    DATAS  */
 const entity_test = {
   Title: "test",
-  Status: cardStatus.Todo,
+  Status: cardStatus.TODO,
   Type: cardType.Task
 };
 const entity_test_created = { Id: 1, ...entity_test };
@@ -119,6 +119,37 @@ describe("Integration tests", () => {
     await store.dispatch(createCard("test"));
     expect(getAllCards(store.getState()).length).toBe(1);
   });
+
+  test("call action createcard then call action startcard & expect getAllCardsInProgess selector", async () => {
+    // call action create card
+    // on async success
+    // get updated state
+    // call start action on retrieved card id
+    // get refreshed card entity from state
+    // expect it's state === INPROGRESS
+    fnMockPostTasks.mockImplementationOnce(
+      () =>
+        new Promise((resolve, reject) => {
+          setTimeout(t => {
+            resolve({ Id: 555 });
+          }, 20);
+        })
+    );
+    const store = createStore(
+      reducer,
+      applyMiddleware(thunk.withExtraArgument({ api }))
+    );
+    await store.dispatch(createCard("test"));
+    expect(getAllCardsTodo(store.getState()).length).toBe(1);
+    expect(getAllCardsInProgess(store.getState()).length).toBe(0);
+    await store.dispatch(startCard(555));
+
+    expect(getAllCardsTodo(store.getState()).length).toBe(0);
+    expect(getAllCardsInProgess(store.getState()).length).toBe(1);
+    await store.dispatch(createCard("test 2"));
+    expect(getAllCardsTodo(store.getState()).length).toBe(1);
+    expect(getAllCardsInProgess(store.getState()).length).toBe(1);
+  });
 });
 
 describe("Unit tests", () => {
@@ -164,7 +195,7 @@ describe("Unit tests", () => {
       payload: {
         Id: 10,
         Title: "test",
-        Status: "TODO",
+        Status: cardStatus.TODO,
         Type: cardType.Task
       }
     });
@@ -214,7 +245,7 @@ describe("Unit tests", () => {
 
     test("cardreducer on start action", () => {
       expect(cardReducer(stateWith1Card, start_action)).toEqual({
-        list: [{ ...entity_test_created, Status: "INPROGRESS" }]
+        list: [{ ...entity_test_created, Status: cardStatus.INPROGRESS }]
       });
     });
   });
@@ -239,7 +270,7 @@ describe("Unit tests", () => {
     test("GetAllCards InProgress", () => {
       const cardIp = {
         Title: "test - inprogress",
-        Status: cardStatus.Inprogress,
+        Status: cardStatus.INPROGRESS,
         Type: cardType.Task
       };
 
@@ -249,7 +280,7 @@ describe("Unit tests", () => {
     test("GetAllCards Todo", () => {
       const cardIp = {
         Title: "test - inprogress",
-        Status: cardStatus.Inprogress,
+        Status: cardStatus.INPROGRESS,
         Type: cardType.Task
       };
 
