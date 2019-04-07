@@ -27,7 +27,6 @@ export const createCard = title => {
   return (dispatch, getState, { api }) => {
     const newCard = card(title);
     return api.Tasks.Post(newCard).then(res => {
-      console.log("post done,  new Id =" + res.Id);
       dispatch(createCardSuccess(res.Id, newCard));
     });
   };
@@ -48,7 +47,7 @@ const initialState = {
 };
 
 export default function(state = initialState, action) {
-  console.debug(action);
+  //console.debug(action);
   switch (action.type) {
     case CREATE:
       return { ...state, list: [...state.list, action.payload] };

@@ -117,8 +117,6 @@ describe("Integration tests", () => {
       applyMiddleware(thunk.withExtraArgument({ api }))
     );
     await store.dispatch(createCard("test"));
-    console.debug("getAllCards ");
-    console.debug(store.getState());
     expect(getAllCards(store.getState()).length).toBe(1);
   });
 });
