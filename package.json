@@ -16,23 +16,30 @@
     "redux-thunk": "2.3.0"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.11",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.11.2",
+    "mock-cloud-firestore": "^0.9.2",
     "react-scripts": "2.1.8",
-    "redux-mock-store": "1.5.3",
     "react-test-renderer": "16.8.5",
-    "typescript": "3.3.3",
-    "@types/jest": "^24.0.11"
+    "redux-mock-store": "1.5.3",
+    "typescript": "3.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "testwc": "react-scripts test --env=jsdom --coverage",
+    "testwc": "npm test -- --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "jest": {
+    "coverageReporters": [
+      "text",
+      "html"
+    ]
   },
   "browserslist": [
     ">0.2%",

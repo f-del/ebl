@@ -16,18 +16,8 @@ import { createCard, cardStatus, cardType } from "./redux/modules/cards";
 import CardListByStatus from "./containers/CardsListByStatus";
 
 import "./styles.css";
-import CardsListContext from "./containers/hoc/CardsListContext";
-/*
-{cardsList.map(c => (
-  <Card card={c} />
-))}
-function Card({ card }) {
-  return <div>{card.title}</div>;
-}
+import TaskCardsBoard from "./containers/TaskCardsBoard";
 
-const cardsList = [{ title: "Creer une carte" }];
-
-*/
 let config = {
   apiKey: "AIzaSyBwM4YVUVijCR35f9D_vg1qHbF3OTotVb0",
   authDomain: "massive-pen-231814.firebaseapp.com",
@@ -45,10 +35,6 @@ const store = createStore(
   composeEnhancers(applyMiddleware(thunk.withExtraArgument({ api: api(db) })))
 );
 
-function taskBoard({ props }) {
-  return <div>props.children</div>;
-}
-
 function App() {
   return (
     <Provider store={store}>
@@ -58,10 +44,10 @@ function App() {
             store.dispatch(createCard(title));
           }}
         />
-        <CardsListContext type={cardType.Task}>
+        <TaskCardsBoard type={cardType.Task}>
           <CardListByStatus status={cardStatus.TODO} />
           <CardListByStatus status={cardStatus.INPROGRESS} />
-        </CardsListContext>
+        </TaskCardsBoard>
       </div>
     </Provider>
   );

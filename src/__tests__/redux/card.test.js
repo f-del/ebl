@@ -1,7 +1,15 @@
+import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 
 import configureMockStore from "redux-mock-store";
-
+import {
+  entity_test,
+  entity_test_created,
+  storeStateInitial,
+  storeStateWith1Card,
+  stateWith1Card,
+  storeStateDyn
+} from "../datas";
 import {
   createCard,
   cardType,
@@ -16,26 +24,9 @@ import {
   retrieveAllCards_End,
   LOADING_STATE,
   getLoadingStatus
-} from "../redux/modules/cards";
-import reducer from "../redux/store/index";
-import cardReducer from "../redux/modules/cards";
-import { createStore, applyMiddleware } from "redux";
-
-// import { api } from "../API/api";
-// jest.mock("../API/api", () => {
-//   return {
-//     Cards: {
-//       Post: jest.fn(() => {
-//         return new Promise((resolve, reject) => {
-//           // use firestore API
-//           setTimeout(t => {
-//             resolve({ Id: 1 });
-//           }, 100);
-//         });
-//       })
-//     }
-//   };
-// });
+} from "../../redux/modules/cards";
+import reducer from "../../redux/store/index";
+import cardReducer from "../../redux/modules/cards";
 
 var middlewares = undefined;
 var store,
@@ -43,13 +34,6 @@ var store,
 var fnMockPostCards,
   fnMockGetCards = undefined;
 var api = undefined;
-/*    DATAS  */
-const entity_test = {
-  Title: "test",
-  Status: cardStatus.TODO,
-  Type: cardType.Task
-};
-const entity_test_created = { Id: 1, ...entity_test };
 
 const create_action = {
   type: "CARD/CREATE",
@@ -71,22 +55,6 @@ const retrieve_start_action = {
 const retrieve_end_action = {
   type: "CARD/RETRIEVE/END",
   payload: { cards: [entity_test_created] }
-};
-
-const stateWith1Card = {
-  list: [entity_test_created],
-  status: LOADING_STATE.NULL
-};
-const storeStateInitial = {
-  cards: { list: [], status: LOADING_STATE.NULL }
-};
-const storeStateWith1Card = {
-  cards: { list: [entity_test_created], status: LOADING_STATE.NULL }
-};
-const storeStateDyn = card => {
-  return {
-    cards: { list: [entity_test_created, card], status: LOADING_STATE.NULL }
-  };
 };
 
 describe("API tests", () => {

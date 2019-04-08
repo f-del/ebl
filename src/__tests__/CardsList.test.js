@@ -12,7 +12,7 @@ import * as cardsSelector from "../redux/modules/cards";
 configure({ adapter: new Adapter() });
 let store;
 
-describe.skip("Containers tests", () => {
+describe("Containers tests", () => {
   describe("CardsListByStatus", () => {
     beforeEach(() => {
       store = configureMockStore();
