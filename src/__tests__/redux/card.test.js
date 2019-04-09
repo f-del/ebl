@@ -5,10 +5,12 @@ import configureMockStore from "redux-mock-store";
 import {
   entity_test,
   entity_test_created,
+  entity_test_card2Criteria_false,
   storeStateInitial,
   storeStateWith1Card,
   stateWith1Card,
-  storeStateDyn
+  storeStateDyn,
+  stateWithDynCard
 } from "../datas";
 import {
   createCard,
@@ -17,13 +19,17 @@ import {
   getAllCards,
   startCard,
   createCardSuccess,
+  setCardCriteria,
   getAllCardsInProgess,
   getAllCardsTodo,
   retrieveAllCards,
   retrieveAllCards_Starting,
   retrieveAllCards_End,
   LOADING_STATE,
-  getLoadingStatus
+  getLoadingStatus,
+  toggleCardCriteria,
+  doneCard,
+  getCard
 } from "../../redux/modules/cards";
 import reducer from "../../redux/store/index";
 import cardReducer from "../../redux/modules/cards";
@@ -46,6 +52,24 @@ const start_action = {
   type: "CARD/START",
   payload: {
     Id: 1
+  }
+};
+
+const done_action = {
+  type: "CARD/DONE",
+  payload: {
+    Id: 1
+  }
+};
+
+const setCardCriteria_action = {
+  type: "CARD/CRITERIA/SET",
+  payload: {
+    Id: 1,
+    Criteria: {
+      Id: 1,
+      Value: true
+    }
   }
 };
 const retrieve_start_action = {
@@ -168,6 +192,41 @@ describe("API tests", () => {
     done();
   });
 
+  test("Toogle 1 Card Criteria to true on card with 1 criterias set to true", async () => {
+    const card = {
+      ...entity_test_created,
+      Status: cardStatus.INPROGRESS,
+      Criterias: [{ Id: 1, Value: false }, { Id: 2, Value: true }]
+    };
+    const initialStore = storeStateDyn([card]);
+
+    fnMockPostCards.mockImplementationOnce(
+      (id, criteria) =>
+        new Promise((resolve, reject) => {
+          setTimeout(t => {
+            resolve({ Update: true });
+          }, 20);
+        })
+    );
+
+    store = createStore(
+      reducer,
+      initialStore,
+      applyMiddleware(thunk.withExtraArgument({ api }))
+    );
+
+    await store.dispatch(toggleCardCriteria(1, 1, true));
+
+    expect(fnMockPostCards.mock.calls.length).toBe(1);
+    expect(fnMockPostCards.mock.calls[0][0]).toEqual(card);
+    expect(fnMockPostCards.mock.calls[0][1]).toEqual({ Id: 1, Value: true });
+    expect(getCard(store.getState(), 1)).toEqual({
+      ...entity_test_created,
+      Criterias: [{ Id: 1, Value: true }, { Id: 2, Value: true }],
+      Status: cardStatus.DONE
+    });
+  });
+
   describe("Unit tests", () => {
     test("create a card without title", () => {
       const wrapper = () => {
@@ -204,6 +263,50 @@ describe("API tests", () => {
         }
       });
     });
+
+    test("Toogle 1 Card Criteria without parameters", () => {
+      const store = mockStore(storeStateInitial);
+      let wrapper = () => {
+        store.dispatch(toggleCardCriteria());
+      };
+
+      expect(wrapper).toThrowError(
+        "Id Card, Id Criteria and Value Criteria arguments are mandatory"
+      );
+
+      wrapper = () => {
+        store.dispatch(toggleCardCriteria(1));
+      };
+
+      expect(wrapper).toThrowError(
+        "Id Card, Id Criteria and Value Criteria arguments are mandatory"
+      );
+
+      wrapper = () => {
+        store.dispatch(toggleCardCriteria(1, 3));
+      };
+
+      expect(wrapper).toThrowError(
+        "Id Card, Id Criteria and Value Criteria arguments are mandatory"
+      );
+    });
+
+    test("Toogle 1 Card Criteria to true on card with 2 criterias set to false", async () => {
+      const store = mockStore(
+        storeStateDyn([
+          {
+            ...entity_test_created,
+            ...entity_test_card2Criteria_false
+          }
+        ])
+      );
+
+      await store.dispatch(toggleCardCriteria(1, 1, true));
+      const actions = store.getActions();
+      expect(actions.length).toBe(1);
+      expect(actions[0]).toEqual(setCardCriteria_action);
+    });
+
     test("retrieve all cards without type", () => {
       const wrapper = () => {
         const store = mockStore(storeStateInitial);
@@ -266,6 +369,26 @@ describe("API tests", () => {
       expect(startCardAction).toEqual(start_action);
     });
 
+    it("Done a card without Id", () => {
+      const inner = () => {
+        doneCard();
+      };
+
+      expect(inner).toThrowError(new Error("Id arg is mandatory"));
+    });
+
+    it("Done a card with an Id", () => {
+      const doneCardAction = doneCard(1);
+
+      expect(doneCardAction).toEqual(done_action);
+    });
+
+    it("Set done criteria of a card", () => {
+      const cardCriteriaAction = setCardCriteria(1, 1, true);
+
+      expect(cardCriteriaAction).toEqual(setCardCriteria_action);
+    });
+
     it("Retrieve all cards - start", () => {
       expect(retrieveAllCards_Starting()).toEqual(retrieve_start_action);
     });
@@ -312,6 +435,53 @@ describe("API tests", () => {
         list: [{ ...entity_test_created, Status: cardStatus.INPROGRESS }],
         status: LOADING_STATE.NULL
       });
+    });
+
+    test("SET CRITERIA action", () => {
+      expect(
+        cardReducer(
+          stateWithDynCard({
+            ...entity_test_created,
+            ...entity_test_card2Criteria_false
+          }),
+          setCardCriteria_action
+        )
+      ).toEqual(
+        stateWithDynCard({
+          ...entity_test_created,
+          Criterias: [{ Id: 1, Value: true }, { Id: 2, Value: false }]
+        })
+      );
+    });
+
+    test("SET CRITERIA action 2 ", () => {
+      expect(
+        cardReducer(
+          stateWithDynCard({
+            ...entity_test_created,
+            Criterias: [{ Id: 1, Value: false }, { Id: 2, Value: true }]
+          }),
+          setCardCriteria_action
+        )
+      ).toEqual(
+        stateWithDynCard({
+          ...entity_test_created,
+          Criterias: [{ Id: 1, Value: true }, { Id: 2, Value: true }]
+        })
+      );
+    });
+
+    test("DONE action", () => {
+      expect(
+        cardReducer(
+          stateWithDynCard({
+            ...entity_test_created
+          }),
+          done_action
+        )
+      ).toEqual(
+        stateWithDynCard({ ...entity_test_created, Status: cardStatus.DONE })
+      );
     });
 
     test("RETRIEVE action start on empty state", () => {
@@ -362,7 +532,9 @@ describe("API tests", () => {
         Type: cardType.Task
       };
 
-      expect(getAllCardsInProgess(storeStateDyn(cardIp))).toEqual([cardIp]);
+      expect(
+        getAllCardsInProgess(storeStateDyn([entity_test_created, cardIp]))
+      ).toEqual([cardIp]);
     });
 
     test("GetAllCards Todo", () => {
@@ -372,13 +544,21 @@ describe("API tests", () => {
         Type: cardType.Task
       };
 
-      expect(getAllCardsTodo(storeStateDyn(cardIp))).toEqual([
-        entity_test_created
-      ]);
+      expect(
+        getAllCardsTodo(storeStateDyn([entity_test_created, cardIp]))
+      ).toEqual([entity_test_created]);
     });
 
     test("Get cards loading state", () => {
       expect(getLoadingStatus(storeStateWith1Card)).toEqual(LOADING_STATE.NULL);
+    });
+
+    test("Get card by id", () => {
+      expect(getCard(storeStateWith1Card, 1)).toEqual(entity_test_created);
+    });
+
+    test("Get card by id, not exist, expect undefined", () => {
+      expect(getCard(storeStateWith1Card, 99999)).toEqual(undefined);
     });
   });
 });

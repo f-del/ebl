@@ -1,8 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
+import CardActions from "./CardActions";
+import { cardStatus } from "../redux/modules/cards";
 
 function Card({ card }) {
-  return <div key={card.Id}>{card.Title}</div>;
+  function handleCardAction() {
+    if (card.Status === cardStatus.TODO) {
+    }
+  }
+
+  return (
+    <div>
+      {card.Title}
+      <CardActions status={card.Status} onAction={handleCardAction} />
+    </div>
+  );
 }
 
 Card.propTypes = {

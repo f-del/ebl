@@ -1,4 +1,4 @@
-import { entity_test } from "../datas";
+import { entity_test, entity_test_created } from "../datas";
 import { mapping } from "../../API/cards";
 
 import MockFirebase from "mock-cloud-firestore";
@@ -119,7 +119,7 @@ describe("POST method", () => {
     expect(result).toThrowError("Argument card is mandatory");
   });
 
-  it("Error on not asserted card literal", async () => {
+  it.skip("Error on not asserted card literal", async () => {
     expect.assertions(1);
     const firebase = new MockFirebase(fixtureData);
 
@@ -139,6 +139,20 @@ describe("POST method", () => {
     const api = apiCards(db);
 
     await expect(api.Post(entity_test)).resolves.toEqual({
+      id: expect.any(String)
+    });
+  });
+
+  it.skip("Return true on updated card", async () => {
+    expect.assertions(1);
+    const firebase = new MockFirebase(fixtureData);
+
+    const db = firebase.firestore();
+    const api = apiCards(db);
+
+    await expect(
+      api.Post(entity_test_created, { fieldToUpdate: false })
+    ).resolves.toEqual({
       id: expect.any(String)
     });
   });

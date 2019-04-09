@@ -2,6 +2,8 @@ import update from "immutability-helper";
 
 const CREATE = "CARD/CREATE";
 const START = "CARD/START";
+const DONE = "CARD/DONE";
+const SET_CRITERIA = "CARD/CRITERIA/SET";
 
 const RETRIEVE = "CARD/RETRIEVE/START";
 const RETRIEVED = "CARD/RETRIEVE/END";
@@ -21,7 +23,8 @@ export const LOADING_STATE = Object.freeze({
 
 export const cardStatus = Object.freeze({
   TODO: Symbol("TODO"),
-  INPROGRESS: Symbol("INPROGRESS")
+  INPROGRESS: Symbol("INPROGRESS"),
+  DONE: Symbol("DONE")
 });
 
 export const cardType = {
@@ -46,6 +49,28 @@ export const createCard = title => {
     return api.Cards.Post(newCard).then(res => {
       dispatch(createCardSuccess(res.Id, newCard));
     });
+  };
+};
+
+export const toggleCardCriteria = (id, idCriteria, valueCriteria) => {
+  if (
+    id === undefined ||
+    idCriteria === undefined ||
+    valueCriteria === undefined
+  )
+    throw new Error(
+      "Id Card, Id Criteria and Value Criteria arguments are mandatory"
+    );
+  return async (dispatch, getState, { api }) => {
+    const card = getCard(getState(), id);
+    await api.Cards.Post(card, { Id: idCriteria, Value: valueCriteria });
+
+    dispatch(setCardCriteria(id, idCriteria, valueCriteria));
+
+    const updatedCard = getCard(getState(), id);
+    console.debug(updatedCard);
+    if (updatedCard.Criterias.every(c => c.Value === true))
+      dispatch(doneCard(id));
   };
 };
 
@@ -80,6 +105,17 @@ export const createCardSuccess = (id, card) => ({
   payload: { Id: id, ...card }
 });
 
+export const setCardCriteria = (id, idCriteria, valueCriteria) => ({
+  type: SET_CRITERIA,
+  payload: {
+    Id: id,
+    Criteria: {
+      Id: idCriteria,
+      Value: valueCriteria
+    }
+  }
+});
+
 export const retrieveAllCards_Starting = type => {
   return {
     type: RETRIEVE,
@@ -106,6 +142,15 @@ export const startCard = id => {
   };
 };
 
+export const doneCard = id => {
+  if (id === undefined) throw new Error("Id arg is mandatory");
+  return {
+    type: DONE,
+    payload: {
+      Id: id
+    }
+  };
+};
 /***
  *    ██████╗ ███████╗██████╗ ██╗   ██╗ ██████╗███████╗██████╗ ███████╗
  *    ██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝██╔══██╗██╔════╝
@@ -137,15 +182,44 @@ export default function(state = initialState, action) {
     case CREATE:
       return { ...state, list: [...state.list, action.payload] };
     case START:
-      let idx = state.list.findIndex(c => c.Id === action.payload.Id);
+      return reducerUpdateCardStatus(state, action, cardStatus.INPROGRESS);
 
-      var mergeObject = {};
-      mergeObject[idx] = { $merge: { Status: cardStatus.INPROGRESS } };
+    case DONE:
+      return reducerUpdateCardStatus(state, action, cardStatus.DONE);
+    case SET_CRITERIA:
+      const cardIdx = state.list.findIndex(c => c.Id === action.payload.Id);
+      const criteriaIdx = state.list[cardIdx].Criterias.findIndex(
+        c => c.Id === action.payload.Criteria.Id
+      );
 
-      return { ...state, list: update(state.list, mergeObject) };
+      let mergeCriteria = {};
+      mergeCriteria[criteriaIdx] = {
+        $merge: { Value: action.payload.Criteria.Value }
+      };
 
+      let mergeCard = {};
+      mergeCard[cardIdx] = { $merge: { Criterias: cardStatus.INPROGRESS } };
+      return {
+        ...state,
+        list: update(state.list, {
+          [cardIdx]: {
+            Criterias: {
+              [criteriaIdx]: {
+                $merge: { Value: action.payload.Criteria.Value }
+              }
+            }
+          }
+        })
+      };
     default:
       return state;
+  }
+
+  function reducerUpdateCardStatus(state, action, status) {
+    const idx = state.list.findIndex(c => c.Id === action.payload.Id);
+    let mergeObject = {};
+    mergeObject[idx] = { $merge: { Status: status } };
+    return { ...state, list: update(state.list, mergeObject) };
   }
 }
 
@@ -158,7 +232,9 @@ export default function(state = initialState, action) {
  *    ╚══════╝╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
  *
  */
-
+export function getCard(state, id) {
+  return getAllCards(state).find(c => c.Id === id);
+}
 export function getAllCards(state) {
   return getCards(validateState(state)).list || [];
 }

@@ -21,13 +21,17 @@ export const mapping = card => {
 };
 
 function post(db) {
-  return card => {
+  return (card, fields) => {
     if (card === undefined) throw new Error("Argument card is mandatory");
+    const _post = db => {
+      if (card.Id === undefined) return db.add(card);
+      else return db.doc(card.Id).update(fields);
+    };
     return new Promise((resolve, reject) => {
-      if (card.Trype !== undefined)
+      if (card.Status === undefined || card.Title === undefined)
         reject("Argument card is not expected type");
-      db.collection("cards")
-        .add(card)
+
+      _post(db.collection("cards"))
         .then(ref => {
           console.log("Document successfully written!");
           resolve({ id: ref.id });
