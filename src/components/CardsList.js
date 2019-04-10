@@ -6,7 +6,11 @@ function CardsList({ list, status }) {
   return (
     <div
       style={
-        status === cardStatus.TODO ? { color: "blue" } : { color: "green" }
+        status === cardStatus.TODO
+          ? { color: "blue" }
+          : status === cardStatus.INPROGRESS
+          ? { color: "green" }
+          : { color: "gray" }
       }
     >
       {list.map((c, i) => (

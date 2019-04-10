@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import {
   cardStatus,
   getAllCardsTodo,
-  getAllCardsInProgess
+  getAllCardsInProgess,
+  getAllCardsDone
 } from "../redux/modules/cards";
 import CardsList from "../components/CardsList";
 
@@ -11,6 +12,7 @@ function helperGetCards(state, ownProps) {
   if (ownProps.status === cardStatus.TODO) return getAllCardsTodo(state);
   if (ownProps.status === cardStatus.INPROGRESS)
     return getAllCardsInProgess(state);
+  if (ownProps.status === cardStatus.DONE) return getAllCardsDone(state);
 
   throw new Error("Status not recognized, should come from cardStatus");
 }

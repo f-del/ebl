@@ -3,12 +3,11 @@ import PropTypes from "prop-types";
 
 import { cardStatus } from "../redux/modules/cards";
 
-function CardActions({ status, onAction }) {
+function CardActions({ id, status, onAction }) {
   const devDoneCriteria = [
     { Id: 1, Name: "Dev" },
     { Id: 2, Name: "Unit Test" }
   ];
-
   const displayINPROGRESS = () => (
     <div>
       Done criterias:
@@ -18,8 +17,8 @@ function CardActions({ status, onAction }) {
             <input
               id={"tdod_" + c.Id}
               type="checkbox"
-              value="c.Id"
-              onChange={handleCheckBox}
+              value={c.Id}
+              onChange={e => handleCheckBox(e, c.Id)}
             />
             <label htmlFor={"tdod_" + c.Id}>{c.Name}</label>
           </li>
@@ -30,7 +29,7 @@ function CardActions({ status, onAction }) {
 
   const displayTODO = () => (
     <div>
-      <button onClick={() => onAction()}>Start</button>
+      <button onClick={onAction}>Start</button>
     </div>
   );
 
@@ -38,8 +37,8 @@ function CardActions({ status, onAction }) {
 
   if (status === cardStatus.INPROGRESS) return displayINPROGRESS();
 
-  function handleCheckBox(e) {
-    onAction(e.target.checked);
+  function handleCheckBox(e, id) {
+    onAction({ id: "" + id, value: e.target.checked });
   }
 }
 

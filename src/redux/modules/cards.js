@@ -1,7 +1,7 @@
 import update from "immutability-helper";
 
 const CREATE = "CARD/CREATE";
-const START = "CARD/START";
+const STARTED = "CARD/STARTED";
 const DONE = "CARD/DONE";
 const SET_CRITERIA = "CARD/CRITERIA/SET";
 
@@ -24,7 +24,17 @@ export const LOADING_STATE = Object.freeze({
 export const cardStatus = Object.freeze({
   TODO: Symbol("TODO"),
   INPROGRESS: Symbol("INPROGRESS"),
-  DONE: Symbol("DONE")
+  DONE: Symbol("DONE"),
+  mapFrom: symbol => {
+    if (symbol === cardStatus.TODO) return "TODO";
+    if (symbol === cardStatus.INPROGRESS) return "INPROGRESS";
+    if (symbol === cardStatus.DONE) return "DONE";
+  },
+  mapTo: text => {
+    if (text === "TODO") return cardStatus.TODO;
+    if (text === "INPROGRESS") return cardStatus.INPROGRESS;
+    if (text === "DONE") return cardStatus.DONE;
+  }
 });
 
 export const cardType = {
@@ -44,11 +54,34 @@ export const cardType = {
 export const createCard = title => {
   if (title === undefined || title.length === 0)
     throw new Error("Argument title is mandatory");
-  return (dispatch, getState, { api }) => {
+  return async (dispatch, getState, { api }) => {
     const newCard = card(title);
-    return api.Cards.Post(newCard).then(res => {
+    await api.Cards.Post(newCard).then(res => {
       dispatch(createCardSuccess(res.Id, newCard));
     });
+  };
+};
+
+export const updateCardStateForward = id => {
+  if (id === undefined) throw new Error("Argument id is mandatory");
+
+  return async (dispatch, getState, { api }) => {
+    const card = getCard(getState(), id);
+    if (card === undefined)
+      throw new Error("Card with id " + id + " can't be found");
+    switch (card.State) {
+      case cardStatus.TODO:
+        await api.Cards.Post(card, { Status: cardStatus.INPROGRESS });
+        dispatch(startCard(id));
+        break;
+      case cardStatus.INPROGRESS:
+        await api.Cards.Post(card, { Status: cardStatus.DONE });
+        dispatch(doneCard(id));
+        break;
+
+      default:
+        throw new Error("Card has not handled state " + card.State);
+    }
   };
 };
 
@@ -135,7 +168,7 @@ export const retrieveAllCards_End = cards => {
 export const startCard = id => {
   if (id === undefined) throw new Error("Id arg is mandatory");
   return {
-    type: START,
+    type: STARTED,
     payload: {
       Id: id
     }
@@ -181,7 +214,7 @@ export default function(state = initialState, action) {
     }
     case CREATE:
       return { ...state, list: [...state.list, action.payload] };
-    case START:
+    case STARTED:
       return reducerUpdateCardStatus(state, action, cardStatus.INPROGRESS);
 
     case DONE:
@@ -247,6 +280,10 @@ export function getAllCardsTodo(state) {
   return getAllCards(state).filter(isCardStatusToDo);
 }
 
+export function getAllCardsDone(state) {
+  return getAllCards(state).filter(isCardStatusDone);
+}
+
 export function getLoadingStatus(state) {
   return getCards(validateState(state)).status;
 }
@@ -265,4 +302,7 @@ function isCardStatusInProgess(card) {
 }
 function isCardStatusToDo(card) {
   return card.Status === cardStatus.TODO;
+}
+function isCardStatusDone(card) {
+  return card.Status === cardStatus.DONE;
 }

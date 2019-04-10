@@ -26,7 +26,8 @@ let config = {
   storageBucket: "massive-pen-231814.appspot.com",
   messagingSenderId: "61056570786"
 };
-firebase.initializeApp(config);
+
+if (firebase.apps.length === 0) firebase.initializeApp(config);
 const db = firebase.firestore();
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -47,6 +48,7 @@ function App() {
         <TaskCardsBoard type={cardType.Task}>
           <CardListByStatus status={cardStatus.TODO} />
           <CardListByStatus status={cardStatus.INPROGRESS} />
+          <CardListByStatus status={cardStatus.DONE} />
         </TaskCardsBoard>
       </div>
     </Provider>

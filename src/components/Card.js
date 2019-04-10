@@ -1,18 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import CardActions from "./CardActions";
-import { cardStatus } from "../redux/modules/cards";
+import CardActionnable from "../containers/CardActionnable";
 
-function Card({ card }) {
-  function handleCardAction() {
-    if (card.Status === cardStatus.TODO) {
-    }
-  }
-
+function Card({ card }){
   return (
     <div>
       {card.Title}
-      <CardActions status={card.Status} onAction={handleCardAction} />
+      <CardActionnable id={card.Id} status={card.Status} />
     </div>
   );
 }

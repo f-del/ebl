@@ -1,17 +1,19 @@
 import { cardStatus } from "../redux/modules/cards";
 
+/**
+ * Mapping from Firestore model to JS model
+ */
 export const mapping = card => {
   if (card === undefined) throw new Error("Argument card is mandatory");
   card =
-    typeof card.data === "function" ? { Id: card.id, ...card.data() } : card;
+    typeof card.data === "function"
+      ? { Id: "" + card.id, ...card.data() }
+      : card;
 
   let status =
     card.Status !== undefined
       ? {
-          Status:
-            card.Status === "INPROGRESS"
-              ? cardStatus.INPROGRESS
-              : cardStatus.TODO
+          Status: cardStatus.mapTo(card.Status)
         }
       : {};
   return {
@@ -20,11 +22,27 @@ export const mapping = card => {
   };
 };
 
+/**
+ * Mapping from JS model to Firestore model
+ */
+export const mappingTo = card => {
+  if (card === undefined) throw new Error("Argument card is mandatory");
+  const mappedCard = {};
+  if (card.Title !== undefined) mappedCard["Title"] = card.Title;
+  if (card.Type !== undefined) mappedCard["Type"] = card.Type;
+
+  if (card.Status !== undefined)
+    mappedCard["Status"] = cardStatus.mapFrom(card.Status);
+
+  return mappedCard;
+};
+
 function post(db) {
   return (card, fields) => {
     if (card === undefined) throw new Error("Argument card is mandatory");
+    const isUpdate = card.Id !== undefined;
     const _post = db => {
-      if (card.Id === undefined) return db.add(card);
+      if (isUpdate) return db.add(mappingTo(card));
       else return db.doc(card.Id).update(fields);
     };
     return new Promise((resolve, reject) => {
@@ -34,7 +52,7 @@ function post(db) {
       _post(db.collection("cards"))
         .then(ref => {
           console.log("Document successfully written!");
-          resolve({ id: ref.id });
+          resolve(isUpdate ? { update: true } : { id: ref.id });
         })
         .catch(error => {
           console.error("Error writing document: ", error);

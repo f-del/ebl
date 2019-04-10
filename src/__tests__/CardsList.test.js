@@ -18,7 +18,7 @@ describe("Containers tests", () => {
       store = configureMockStore();
       jest.resetAllMocks();
     });
-    it("CardsListByStatus with bad symbol status parameter", () => {
+    test.skip("CardsListByStatus with bad symbol status parameter", () => {
       const falseStatus = Object.freeze({
         TODO: Symbol("FALSETODO")
       });
@@ -36,7 +36,7 @@ describe("Containers tests", () => {
       );
     });
 
-    it("CardsListByStatus with todo", () => {
+    test.skip("CardsListByStatus with todo", () => {
       cardsSelector.getAllCardsTodo = jest.fn(state => {
         return [];
       });
@@ -51,7 +51,7 @@ describe("Containers tests", () => {
       wrapper.unmount();
     });
 
-    it("CardsListByStatus with Inprogress", () => {
+    test.skip("CardsListByStatus with Inprogress", () => {
       cardsSelector.getAllCardsInProgess = jest.fn(state => {
         return [];
       });
@@ -63,6 +63,21 @@ describe("Containers tests", () => {
       );
 
       expect(cardsSelector.getAllCardsInProgess.mock.calls.length).toBe(1);
+      wrapper.unmount();
+    });
+
+    test.skip("CardsListByStatus with DONE", () => {
+      cardsSelector.getAllCardsDone = jest.fn(state => {
+        return [];
+      });
+
+      const wrapper = mount(
+        <Provider store={store({})}>
+          <CardListByStatus status={cardStatus.DONE} />
+        </Provider>
+      );
+
+      expect(cardsSelector.getAllCardsDone.mock.calls.length).toBe(1);
       wrapper.unmount();
     });
   });
