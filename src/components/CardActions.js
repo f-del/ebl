@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { cardStatus } from "../redux/modules/cards";
 
-function CardActions({ id, status, onAction }) {
+function CardActions({ status, onAction }) {
   const devDoneCriteria = [
     { Id: 1, Name: "Dev" },
     { Id: 2, Name: "Unit Test" }

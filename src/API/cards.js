@@ -42,16 +42,23 @@ function post(db) {
     if (card === undefined) throw new Error("Argument card is mandatory");
     const isUpdate = card.Id !== undefined;
     const _post = db => {
-      if (isUpdate) return db.add(mappingTo(card));
-      else return db.doc(card.Id).update(fields);
+      if (isUpdate) return db.doc(card.Id).update(fields);
+      else return db.add(mappingTo(card));
     };
     return new Promise((resolve, reject) => {
-      if (card.Status === undefined || card.Title === undefined)
+      if (
+        card.Status === undefined ||
+        card.Title === undefined ||
+        card.Status === undefined ||
+        card.Type === undefined
+      )
         reject("Argument card is not expected type");
 
       _post(db.collection("cards"))
         .then(ref => {
-          console.log("Document successfully written!");
+          console.log(
+            "Document successfully " + (isUpdate ? "updated" : "written") + "!"
+          );
           resolve(isUpdate ? { update: true } : { id: ref.id });
         })
         .catch(error => {

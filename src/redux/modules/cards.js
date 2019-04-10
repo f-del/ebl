@@ -62,14 +62,14 @@ export const createCard = title => {
   };
 };
 
-export const updateCardStateForward = id => {
+export const updateCardStatusForward = id => {
   if (id === undefined) throw new Error("Argument id is mandatory");
 
   return async (dispatch, getState, { api }) => {
     const card = getCard(getState(), id);
     if (card === undefined)
       throw new Error("Card with id " + id + " can't be found");
-    switch (card.State) {
+    switch (card.Status) {
       case cardStatus.TODO:
         await api.Cards.Post(card, { Status: cardStatus.INPROGRESS });
         dispatch(startCard(id));
@@ -80,7 +80,8 @@ export const updateCardStateForward = id => {
         break;
 
       default:
-        throw new Error("Card has not handled state " + card.State);
+        console.debug(card);
+        throw new Error("Card has not handled state " + card.Status);
     }
   };
 };

@@ -7,9 +7,9 @@ export const entity_test = {
   Status: cardStatus.TODO,
   Type: cardType.Task
 };
-export const entity_test_created = { Id: 1, ...entity_test };
+export const entity_test_created = { Id: "1", ...entity_test };
 export const entity_test_card2Criteria_false = {
-  Criterias: [{ Id: 1, Value: false }, { Id: 2, Value: false }]
+  Criterias: [{ Id: "1", Value: false }, { Id: "2", Value: false }]
 };
 export const stateWith1Card = {
   list: [entity_test_created],

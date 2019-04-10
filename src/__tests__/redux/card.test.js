@@ -31,9 +31,8 @@ import {
   doneCard,
   getCard,
   getAllCardsDone,
-  updateCardStateForward
+  updateCardStatusForward
 } from "../../redux/modules/cards";
-import * as cardsSelector from "../redux/modules/cards";
 import reducer from "../../redux/store/index";
 import cardReducer from "../../redux/modules/cards";
 
@@ -47,30 +46,30 @@ var api = undefined;
 const create_action = {
   type: "CARD/CREATE",
   payload: {
-    Id: 1,
+    Id: "1",
     ...entity_test
   }
 };
 const start_action = {
   type: "CARD/STARTED",
   payload: {
-    Id: 1
+    Id: "1"
   }
 };
 
 const done_action = {
   type: "CARD/DONE",
   payload: {
-    Id: 1
+    Id: "1"
   }
 };
 
 const setCardCriteria_action = {
   type: "CARD/CRITERIA/SET",
   payload: {
-    Id: 1,
+    Id: "1",
     Criteria: {
-      Id: 1,
+      Id: "1",
       Value: true
     }
   }
@@ -121,7 +120,7 @@ describe("API tests", () => {
       applyMiddleware(thunk.withExtraArgument({ api }))
     );
   });
-  test.skip("call action createcard & expect change in state with getAllCards selector", async () => {
+  test("call action createcard & expect change in state with getAllCards selector", async () => {
     fnMockPostCards.mockImplementationOnce(
       () =>
         new Promise((resolve, reject) => {
@@ -134,7 +133,7 @@ describe("API tests", () => {
     expect(getAllCards(store.getState()).length).toBe(1);
   });
 
-  test.skip("call action createcard then call action startcard & expect getAllCardsInProgess selector", async () => {
+  test("call action createcard then call action startcard & expect getAllCardsInProgess selector", async () => {
     fnMockPostCards.mockImplementationOnce(
       () =>
         new Promise((resolve, reject) => {
@@ -160,7 +159,7 @@ describe("API tests", () => {
     expect(inprogCards[0].Id).toBe(555);
   });
 
-  test.skip("call action getAllCards and expect to retrieve cards in state", async () => {
+  test("call action getAllCards and expect to retrieve cards in state", async () => {
     fnMockGetCards.mockImplementationOnce(
       () =>
         new Promise((resolve, reject) => {
@@ -180,7 +179,7 @@ describe("API tests", () => {
     expect(getAllCardsInProgess(store.getState()).length).toBe(1);
   });
 
-  test.skip("retrieve all cards in // calls, expect only 1 call on API Get", async done => {
+  test("retrieve all cards in // calls, expect only 1 call on API Get", async done => {
     const fn1 = async () => {
       await store.dispatch(retrieveAllCards(cardType.Task));
     };
@@ -195,11 +194,11 @@ describe("API tests", () => {
     done();
   });
 
-  test.skip("Toogle 1 Card Criteria to true on card with 1 criterias set to true", async () => {
+  test("Toogle 1 Card Criteria to true on card with 1 criterias set to true", async () => {
     const card = {
       ...entity_test_created,
       Status: cardStatus.INPROGRESS,
-      Criterias: [{ Id: 1, Value: false }, { Id: 2, Value: true }]
+      Criterias: [{ Id: "1", Value: false }, { Id: "2", Value: true }]
     };
     const initialStore = storeStateDyn([card]);
 
@@ -218,34 +217,37 @@ describe("API tests", () => {
       applyMiddleware(thunk.withExtraArgument({ api }))
     );
 
-    await store.dispatch(toggleCardCriteria(1, 1, true));
+    await store.dispatch(toggleCardCriteria("1", "1", true));
 
     expect(fnMockPostCards.mock.calls.length).toBe(1);
     expect(fnMockPostCards.mock.calls[0][0]).toEqual(card);
-    expect(fnMockPostCards.mock.calls[0][1]).toEqual({ Id: 1, Value: true });
-    expect(getCard(store.getState(), 1)).toEqual({
+    expect(fnMockPostCards.mock.calls[0][1]).toEqual({ Id: "1", Value: true });
+    expect(getCard(store.getState(), "1")).toEqual({
       ...entity_test_created,
-      Criterias: [{ Id: 1, Value: true }, { Id: 2, Value: true }],
+      Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: true }],
       Status: cardStatus.DONE
     });
   });
 
   describe("Unit tests", () => {
-    test.skip("create a card without title", () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+    test("create a card without title", () => {
       const wrapper = () => {
         const store = mockStore(storeStateInitial);
         store.dispatch(createCard());
       };
       expect(wrapper).toThrowError("Argument title is mandatory");
     });
-    test.skip("create a card", async () => {
+    test("create a card", async () => {
       const store = mockStore(storeStateInitial);
 
       fnMockPostCards.mockImplementationOnce(
         () =>
           new Promise((resolve, reject) => {
             setTimeout(t => {
-              resolve({ Id: 10 });
+              resolve({ Id: "10" });
             }, 20);
           })
       );
@@ -259,7 +261,7 @@ describe("API tests", () => {
       expect(actions[0]).toEqual({
         type: "CARD/CREATE",
         payload: {
-          Id: 10,
+          Id: "10",
           Title: "test",
           Status: cardStatus.TODO,
           Type: cardType.Task
@@ -269,28 +271,32 @@ describe("API tests", () => {
 
     test("Start a card with empty parameter", () => {
       const wrapper = () => {
-        store.dispatch(updateCardStateForward());
+        store.dispatch(updateCardStatusForward());
       };
 
       expect(wrapper).toThrowError("Argument id is mandatory");
     });
 
-    test("Start a not existing card", () => {
+    test("Start a not existing card", async () => {
       const store = mockStore(storeStateWith1Card);
 
-      cardsSelector.getCard = jest.fn(() => {
+      /*cardsSelector.getCard = jest.fn(() => {
         return [];
-      });
-      const wrapper = () => {
-        store.dispatch(updateCardStateForward(999));
-      };
+      });*/
 
-      expect(cardsSelector.mock.calls.length).toBe(1);
-      expect(wrapper).toThrowError("Card with id " + 999 + " can't be found");
+      await expect(
+        store.dispatch(updateCardStatusForward("999"))
+      ).rejects.toEqual(new Error("Card with id 999 can't be found"));
+
+      //expect(cardsSelector.getCard.mock.calls.length).toBe(1);
     });
 
     test("Start a card", async () => {
       const store = mockStore(storeStateWith1Card);
+      /*cardsSelector.getCard = jest.fn(() => {
+        return [{ ...entity_test_created }];
+      });*/
+
       fnMockPostCards.mockImplementationOnce(
         () =>
           new Promise((resolve, reject) => {
@@ -299,7 +305,7 @@ describe("API tests", () => {
             }, 20);
           })
       );
-      await store.dispatch(updateCardStateForward(1));
+      await store.dispatch(updateCardStatusForward("1"));
 
       expect(fnMockPostCards.mock.calls.length).toBe(1);
       expect(fnMockPostCards.mock.calls[0][0]).toEqual(entity_test_created);
@@ -307,7 +313,7 @@ describe("API tests", () => {
         Status: cardStatus.INPROGRESS
       });
     });
-    test.skip("Toogle 1 Card Criteria without parameters", () => {
+    test("Toogle 1 Card Criteria without parameters", () => {
       const store = mockStore(storeStateInitial);
       let wrapper = () => {
         store.dispatch(toggleCardCriteria());
@@ -318,7 +324,7 @@ describe("API tests", () => {
       );
 
       wrapper = () => {
-        store.dispatch(toggleCardCriteria(1));
+        store.dispatch(toggleCardCriteria("1"));
       };
 
       expect(wrapper).toThrowError(
@@ -326,7 +332,7 @@ describe("API tests", () => {
       );
 
       wrapper = () => {
-        store.dispatch(toggleCardCriteria(1, 3));
+        store.dispatch(toggleCardCriteria("1", "3"));
       };
 
       expect(wrapper).toThrowError(
@@ -334,7 +340,7 @@ describe("API tests", () => {
       );
     });
 
-    test.skip("Toogle 1 Card Criteria to true on card with 2 criterias set to false", async () => {
+    test("Toogle 1 Card Criteria to true on card with 2 criterias set to false", async () => {
       const store = mockStore(
         storeStateDyn([
           {
@@ -344,13 +350,13 @@ describe("API tests", () => {
         ])
       );
 
-      await store.dispatch(toggleCardCriteria(1, 1, true));
+      await store.dispatch(toggleCardCriteria("1", "1", true));
       const actions = store.getActions();
       expect(actions.length).toBe(1);
       expect(actions[0]).toEqual(setCardCriteria_action);
     });
 
-    test.skip("retrieve all cards without type", () => {
+    test("retrieve all cards without type", () => {
       const wrapper = () => {
         const store = mockStore(storeStateInitial);
         store.dispatch(retrieveAllCards());
@@ -358,7 +364,16 @@ describe("API tests", () => {
 
       expect(wrapper).toThrowError("Argument type is mandatory");
     });
-    test.skip("retrieve all cards of type TASK", async () => {
+    test("retrieve all cards of type TASK", async () => {
+      fnMockGetCards.mockImplementationOnce(
+        () =>
+          new Promise((resolve, reject) => {
+            setTimeout(t => {
+              resolve([entity_test_created]);
+            }, 20);
+          })
+      );
+
       const store = mockStore(storeStateInitial);
       await store.dispatch(retrieveAllCards(cardType.Task));
 
@@ -371,7 +386,7 @@ describe("API tests", () => {
       expect(actions[1]).toEqual(retrieve_end_action);
     });
 
-    test.skip("retrieve all cards of type TASK on existing state with cards", () => {
+    test("retrieve all cards of type TASK on existing state with cards", () => {
       const store = mockStore(storeStateWith1Card);
       const errorWrapper = () => {
         store.dispatch(retrieveAllCards(cardType.Task));
@@ -397,8 +412,8 @@ describe("API tests", () => {
     beforeEach(() => {
       jest.resetAllMocks();
     });
-    test.skip("create card success action", () => {
-      const createAction = createCardSuccess(1, entity_test);
+    test("create card success action", () => {
+      const createAction = createCardSuccess("1", entity_test);
       expect(createAction).toEqual(create_action);
     });
 
@@ -410,7 +425,7 @@ describe("API tests", () => {
       expect(inner).toThrowError(new Error("Id arg is mandatory"));
     });
     test("Start a card with an Id", () => {
-      const startCardAction = startCard(1);
+      const startCardAction = startCard("1");
 
       expect(startCardAction).toEqual(start_action);
     });
@@ -424,13 +439,13 @@ describe("API tests", () => {
     });
 
     test("Done a card with an Id", () => {
-      const doneCardAction = doneCard(1);
+      const doneCardAction = doneCard("1");
 
       expect(doneCardAction).toEqual(done_action);
     });
 
     test("Set done criteria of a card", () => {
-      const cardCriteriaAction = setCardCriteria(1, 1, true);
+      const cardCriteriaAction = setCardCriteria("1", "1", true);
 
       expect(cardCriteriaAction).toEqual(setCardCriteria_action);
     });
@@ -455,21 +470,21 @@ describe("API tests", () => {
    *
    */
   describe("reducers", () => {
-    test.skip("undefined", () => {
+    test("undefined", () => {
       expect(cardReducer(undefined, {})).toEqual({
         list: [],
         status: LOADING_STATE.NULL
       });
     });
 
-    test.skip("CREATE on empty state", () => {
+    test("CREATE on empty state", () => {
       expect(cardReducer(undefined, create_action)).toEqual({
         list: [entity_test_created],
         status: LOADING_STATE.NULL
       });
     });
 
-    test.skip("CREATE on existing state", () => {
+    test("CREATE on existing state", () => {
       expect(cardReducer(stateWith1Card, create_action)).toEqual({
         list: [entity_test_created, entity_test_created],
         status: LOADING_STATE.NULL
@@ -483,7 +498,7 @@ describe("API tests", () => {
       });
     });
 
-    test.skip("SET CRITERIA action", () => {
+    test("SET CRITERIA action", () => {
       expect(
         cardReducer(
           stateWithDynCard({
@@ -495,29 +510,29 @@ describe("API tests", () => {
       ).toEqual(
         stateWithDynCard({
           ...entity_test_created,
-          Criterias: [{ Id: 1, Value: true }, { Id: 2, Value: false }]
+          Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: false }]
         })
       );
     });
 
-    test.skip("SET CRITERIA action 2 ", () => {
+    test("SET CRITERIA action 2 ", () => {
       expect(
         cardReducer(
           stateWithDynCard({
             ...entity_test_created,
-            Criterias: [{ Id: 1, Value: false }, { Id: 2, Value: true }]
+            Criterias: [{ Id: "1", Value: false }, { Id: "2", Value: true }]
           }),
           setCardCriteria_action
         )
       ).toEqual(
         stateWithDynCard({
           ...entity_test_created,
-          Criterias: [{ Id: 1, Value: true }, { Id: 2, Value: true }]
+          Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: true }]
         })
       );
     });
 
-    test.skip("DONE action", () => {
+    test("DONE action", () => {
       expect(
         cardReducer(
           stateWithDynCard({
@@ -530,14 +545,14 @@ describe("API tests", () => {
       );
     });
 
-    test.skip("RETRIEVE action start on empty state", () => {
+    test("RETRIEVE action start on empty state", () => {
       expect(cardReducer(undefined, retrieve_start_action)).toEqual({
         list: [],
         status: LOADING_STATE.INPROGRESS
       });
     });
 
-    test.skip("RETRIEVE action end on empty state", () => {
+    test("RETRIEVE action end on empty state", () => {
       expect(cardReducer(undefined, retrieve_end_action)).toEqual({
         list: [entity_test_created],
         status: LOADING_STATE.DONE
@@ -555,7 +570,7 @@ describe("API tests", () => {
    */
 
   describe("Selectors", () => {
-    test.skip("GetAllCards no state arg", () => {
+    test("GetAllCards no state arg", () => {
       const testgetAllCards = () => {
         getAllCards();
       };
@@ -563,15 +578,15 @@ describe("API tests", () => {
       expect(testgetAllCards).toThrowError(new Error("State arg is mandatory"));
     });
 
-    test.skip("GetAllCards from default state", () => {
+    test("GetAllCards from default state", () => {
       expect(getAllCards({})).toEqual([]);
     });
 
-    test.skip("GetAllCards from state with 1 card", () => {
+    test("GetAllCards from state with 1 card", () => {
       expect(getAllCards(storeStateWith1Card)).toEqual([entity_test_created]);
     });
 
-    test.skip("GetAllCards InProgress", () => {
+    test("GetAllCards InProgress", () => {
       const cardIp = {
         Title: "test - inprogress",
         Status: cardStatus.INPROGRESS,
@@ -583,7 +598,7 @@ describe("API tests", () => {
       ).toEqual([cardIp]);
     });
 
-    test.skip("GetAllCards Todo", () => {
+    test("GetAllCards Todo", () => {
       const cardIp = {
         Title: "test - inprogress",
         Status: cardStatus.INPROGRESS,
@@ -595,7 +610,7 @@ describe("API tests", () => {
       ).toEqual([entity_test_created]);
     });
 
-    test.skip("GetAllCards DONE", () => {
+    test("GetAllCards DONE", () => {
       const cardIp = {
         Title: "test - done",
         Status: cardStatus.DONE,
@@ -613,15 +628,15 @@ describe("API tests", () => {
       ]);
     });
 
-    test.skip("Get cards loading state", () => {
+    test("Get cards loading state", () => {
       expect(getLoadingStatus(storeStateWith1Card)).toEqual(LOADING_STATE.NULL);
     });
 
-    test.skip("Get card by id", () => {
-      expect(getCard(storeStateWith1Card, 1)).toEqual(entity_test_created);
+    test("Get card by id", () => {
+      expect(getCard(storeStateWith1Card, "1")).toEqual(entity_test_created);
     });
 
-    test.skip("Get card by id, not exist, expect undefined", () => {
+    test("Get card by id, not exist, expect undefined", () => {
       expect(getCard(storeStateWith1Card, 99999)).toEqual(undefined);
     });
   });

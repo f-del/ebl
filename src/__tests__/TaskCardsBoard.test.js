@@ -16,7 +16,7 @@ beforeEach(() => {
   jest.resetAllMocks();
   store = createStore(reducer, applyMiddleware(thunk));
 });
-test.skip("CardsListByStatus with todo", () => {
+test("CardsListByStatus with todo", () => {
   cardsSelector.retrieveAllCards = jest.fn(type => {
     return dispatch => {
       return [];

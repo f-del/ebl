@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import {
   cardStatus,
   createCard,
-  toggleCardCriteria
+  toggleCardCriteria,
+  startCard
 } from "../redux/modules/cards";
 import CardActions from "../components/CardActions";
 
@@ -12,7 +13,7 @@ const mapStateToProps = (state, ownProps) => ({});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onAction: newValue => {
-    if (ownProps.status === cardStatus.TODO) dispatch(createCard(ownProps.id));
+    if (ownProps.status === cardStatus.TODO) dispatch(startCard(ownProps.id));
     else if (ownProps.status === cardStatus.INPROGRESS)
       dispatch(toggleCardCriteria(ownProps.id, newValue.id, newValue.value));
   }
