@@ -229,6 +229,36 @@ describe("API tests", () => {
     });
   });
 
+  test("Expect that toogle to false an already truthy criteria is blocked", async () => {
+    const initialStore = storeStateDyn([
+      {
+        ...entity_test_created,
+        ...entity_test_card2Criteria_false
+      }
+    ]);
+
+    store = createStore(
+      reducer,
+      initialStore,
+      applyMiddleware(thunk.withExtraArgument({ api }))
+    );
+
+    await store.dispatch(toggleCardCriteria("1", "1", true));
+    expect(getCard(store.getState(), "1")).toEqual({
+      ...entity_test_created,
+      Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: false }],
+      Status: cardStatus.TODO
+    });
+
+    await store.dispatch(toggleCardCriteria("1", "1", false));
+
+    expect(getCard(store.getState(), "1")).toEqual({
+      ...entity_test_created,
+      Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: false }],
+      Status: cardStatus.TODO
+    });
+  });
+
   describe("Unit tests", () => {
     beforeEach(() => {
       jest.resetAllMocks();
@@ -338,20 +368,31 @@ describe("API tests", () => {
       );
     });
 
+    test("Toogle 1 Card Criteria not existing", async () => {
+      const store = mockStore(storeStateInitial);
+
+      await expect(
+        store.dispatch(toggleCardCriteria("999", "1", true))
+      ).rejects.toEqual(new Error("Card with id 999 can't be found"));
+    });
     test("Toogle 1 Card Criteria to true on card with 2 criterias set to false", async () => {
-      const store = mockStore(
-        storeStateDyn([
-          {
-            ...entity_test_created,
-            ...entity_test_card2Criteria_false
-          }
-        ])
-      );
+      const card = {
+        ...entity_test_created,
+        ...entity_test_card2Criteria_false
+      };
+      const store = mockStore(storeStateDyn([card]));
 
       await store.dispatch(toggleCardCriteria("1", "1", true));
       const actions = store.getActions();
       expect(actions.length).toBe(1);
       expect(actions[0]).toEqual(setCardCriteria_action);
+
+      expect(fnMockPostCards.mock.calls.length).toBe(1);
+      expect(fnMockPostCards.mock.calls[0][0]).toEqual(card);
+      expect(fnMockPostCards.mock.calls[0][1]).toEqual({
+        Id: "1",
+        Value: true
+      });
     });
 
     test("retrieve all cards without type", () => {

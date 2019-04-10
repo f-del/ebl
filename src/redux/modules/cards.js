@@ -97,14 +97,27 @@ export const toggleCardCriteria = (id, idCriteria, valueCriteria) => {
     );
   return async (dispatch, getState, { api }) => {
     const card = getCard(getState(), id);
-    await api.Cards.Post(card, { Id: idCriteria, Value: valueCriteria });
+    if (card === undefined)
+      throw new Error("Card with id " + id + " can't be found");
 
-    dispatch(setCardCriteria(id, idCriteria, valueCriteria));
+    if (card.Criterias === undefined || card.Criterias.length === 0)
+      throw new Error("No criterias are attached to the card " + id);
+    const idxCriteria = card.Criterias.findIndex(c => c.Id === idCriteria);
 
-    const updatedCard = getCard(getState(), id);
-    console.debug(updatedCard);
-    if (updatedCard.Criterias.every(c => c.Value === true))
-      dispatch(doneCard(id));
+    if (idxCriteria === -1)
+      throw new Error(
+        "Criteria with id " + idCriteria + " can't be found in card " + id
+      );
+
+    if (card.Criterias[idxCriteria].Value === false) {
+      await api.Cards.Post(card, { Id: idCriteria, Value: valueCriteria });
+
+      dispatch(setCardCriteria(id, idCriteria, valueCriteria));
+
+      const updatedCard = getCard(getState(), id);
+      if (updatedCard.Criterias.every(c => c.Value === true))
+        dispatch(doneCard(id));
+    }
   };
 };
 
