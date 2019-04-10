@@ -10,7 +10,8 @@ import {
   storeStateWith1Card,
   stateWith1Card,
   storeStateDyn,
-  stateWithDynCard
+  stateWithDynCard,
+  entity_test_created_with_criterias
 } from "../datas";
 import {
   createCard,
@@ -230,12 +231,7 @@ describe("API tests", () => {
   });
 
   test("Expect that toogle to false an already truthy criteria is blocked", async () => {
-    const initialStore = storeStateDyn([
-      {
-        ...entity_test_created,
-        ...entity_test_card2Criteria_false
-      }
-    ]);
+    const initialStore = storeStateDyn([entity_test_created_with_criterias]);
 
     store = createStore(
       reducer,
@@ -321,8 +317,20 @@ describe("API tests", () => {
       //expect(cardsSelector.getCard.mock.calls.length).toBe(1);
     });
 
-    test("Start a card", async () => {
+    test("Start a card without criteria, expect error", async () => {
       const store = mockStore(storeStateWith1Card);
+
+      await expect(
+        store.dispatch(updateCardStatusForward("1"))
+      ).rejects.toThrowError(
+        "Can't change status of card 1 to INPROGRESS to a card without criteria"
+      );
+    });
+
+    test("Start a card with criterias, expect Status to INPROGRESS", async () => {
+      const store = mockStore(
+        storeStateDyn([entity_test_created_with_criterias])
+      );
 
       fnMockPostCards.mockImplementationOnce(
         () =>
@@ -335,11 +343,16 @@ describe("API tests", () => {
       await store.dispatch(updateCardStatusForward("1"));
 
       expect(fnMockPostCards.mock.calls.length).toBe(1);
-      expect(fnMockPostCards.mock.calls[0][0]).toEqual(entity_test_created);
+      expect(fnMockPostCards.mock.calls[0][0]).toEqual(
+        entity_test_created_with_criterias
+      );
 
       expect(fnMockPostCards.mock.calls[0][1]).toEqual({
         Status: cardStatus.INPROGRESS
       });
+      const actions = store.getActions();
+      expect(actions.length).toBe(1);
+      expect(actions[0]).toEqual(start_action);
     });
     test("Toogle 1 Card Criteria without parameters", () => {
       const store = mockStore(storeStateInitial);
@@ -376,10 +389,7 @@ describe("API tests", () => {
       ).rejects.toEqual(new Error("Card with id 999 can't be found"));
     });
     test("Toogle 1 Card Criteria to true on card with 2 criterias set to false", async () => {
-      const card = {
-        ...entity_test_created,
-        ...entity_test_card2Criteria_false
-      };
+      const card = entity_test_created_with_criterias;
       const store = mockStore(storeStateDyn([card]));
 
       await store.dispatch(toggleCardCriteria("1", "1", true));
@@ -436,253 +446,252 @@ describe("API tests", () => {
       );
     });
   });
+});
+/***
+ *     █████╗  ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
+ *    ██╔══██╗██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
+ *    ███████║██║        ██║   ██║██║   ██║██╔██╗ ██║███████╗
+ *    ██╔══██║██║        ██║   ██║██║   ██║██║╚██╗██║╚════██║
+ *    ██║  ██║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║███████║
+ *    ╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
+ *
+ */
 
-  /***
-   *     █████╗  ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
-   *    ██╔══██╗██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
-   *    ███████║██║        ██║   ██║██║   ██║██╔██╗ ██║███████╗
-   *    ██╔══██║██║        ██║   ██║██║   ██║██║╚██╗██║╚════██║
-   *    ██║  ██║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║███████║
-   *    ╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
-   *
-   */
+describe("Actions creators", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+  test("create card success action", () => {
+    const createAction = createCardSuccess("1", entity_test);
+    expect(createAction).toEqual(create_action);
+  });
 
-  describe("Actions creators", () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-    test("create card success action", () => {
-      const createAction = createCardSuccess("1", entity_test);
-      expect(createAction).toEqual(create_action);
-    });
+  test("Start a card without Id", () => {
+    const inner = () => {
+      startCard();
+    };
 
-    test("Start a card without Id", () => {
-      const inner = () => {
-        startCard();
-      };
+    expect(inner).toThrowError(new Error("Id arg is mandatory"));
+  });
+  test("Start a card with an Id", () => {
+    const startCardAction = startCard("1");
 
-      expect(inner).toThrowError(new Error("Id arg is mandatory"));
-    });
-    test("Start a card with an Id", () => {
-      const startCardAction = startCard("1");
+    expect(startCardAction).toEqual(start_action);
+  });
 
-      expect(startCardAction).toEqual(start_action);
-    });
+  test("Done a card without Id", () => {
+    const inner = () => {
+      doneCard();
+    };
 
-    test("Done a card without Id", () => {
-      const inner = () => {
-        doneCard();
-      };
+    expect(inner).toThrowError(new Error("Id arg is mandatory"));
+  });
 
-      expect(inner).toThrowError(new Error("Id arg is mandatory"));
-    });
+  test("Done a card with an Id", () => {
+    const doneCardAction = doneCard("1");
 
-    test("Done a card with an Id", () => {
-      const doneCardAction = doneCard("1");
+    expect(doneCardAction).toEqual(done_action);
+  });
 
-      expect(doneCardAction).toEqual(done_action);
-    });
+  test("Set done criteria of a card", () => {
+    const cardCriteriaAction = setCardCriteria("1", "1", true);
 
-    test("Set done criteria of a card", () => {
-      const cardCriteriaAction = setCardCriteria("1", "1", true);
+    expect(cardCriteriaAction).toEqual(setCardCriteria_action);
+  });
 
-      expect(cardCriteriaAction).toEqual(setCardCriteria_action);
-    });
+  test("Retrieve all cards - start", () => {
+    expect(retrieveAllCards_Starting()).toEqual(retrieve_start_action);
+  });
+  test("Retrieve all cards - end", () => {
+    expect(retrieveAllCards_End([entity_test_created])).toEqual(
+      retrieve_end_action
+    );
+  });
+});
 
-    test("Retrieve all cards - start", () => {
-      expect(retrieveAllCards_Starting()).toEqual(retrieve_start_action);
-    });
-    test("Retrieve all cards - end", () => {
-      expect(retrieveAllCards_End([entity_test_created])).toEqual(
-        retrieve_end_action
-      );
+/***
+ *    ██████╗ ███████╗██████╗ ██╗   ██╗ ██████╗███████╗██████╗ ███████╗
+ *    ██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝██╔══██╗██╔════╝
+ *    ██████╔╝█████╗  ██║  ██║██║   ██║██║     █████╗  ██████╔╝███████╗
+ *    ██╔══██╗██╔══╝  ██║  ██║██║   ██║██║     ██╔══╝  ██╔══██╗╚════██║
+ *    ██║  ██║███████╗██████╔╝╚██████╔╝╚██████╗███████╗██║  ██║███████║
+ *    ╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝╚══════╝╚═╝  ╚═╝╚══════╝
+ *
+ */
+describe("reducers", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+  test("undefined", () => {
+    expect(cardReducer(undefined, {})).toEqual({
+      list: [],
+      status: LOADING_STATE.NULL
     });
   });
 
-  /***
-   *    ██████╗ ███████╗██████╗ ██╗   ██╗ ██████╗███████╗██████╗ ███████╗
-   *    ██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝██╔══██╗██╔════╝
-   *    ██████╔╝█████╗  ██║  ██║██║   ██║██║     █████╗  ██████╔╝███████╗
-   *    ██╔══██╗██╔══╝  ██║  ██║██║   ██║██║     ██╔══╝  ██╔══██╗╚════██║
-   *    ██║  ██║███████╗██████╔╝╚██████╔╝╚██████╗███████╗██║  ██║███████║
-   *    ╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝╚══════╝╚═╝  ╚═╝╚══════╝
-   *
-   */
-  describe("reducers", () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-    test("undefined", () => {
-      expect(cardReducer(undefined, {})).toEqual({
-        list: [],
-        status: LOADING_STATE.NULL
-      });
-    });
-
-    test("CREATE on empty state", () => {
-      expect(cardReducer(undefined, create_action)).toEqual({
-        list: [entity_test_created],
-        status: LOADING_STATE.NULL
-      });
-    });
-
-    test("CREATE on existing state", () => {
-      expect(cardReducer(stateWith1Card, create_action)).toEqual({
-        list: [entity_test_created, entity_test_created],
-        status: LOADING_STATE.NULL
-      });
-    });
-
-    test("START action", () => {
-      expect(cardReducer(stateWith1Card, start_action)).toEqual({
-        list: [{ ...entity_test_created, Status: cardStatus.INPROGRESS }],
-        status: LOADING_STATE.NULL
-      });
-    });
-
-    test("SET CRITERIA action", () => {
-      expect(
-        cardReducer(
-          stateWithDynCard({
-            ...entity_test_created,
-            ...entity_test_card2Criteria_false
-          }),
-          setCardCriteria_action
-        )
-      ).toEqual(
-        stateWithDynCard({
-          ...entity_test_created,
-          Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: false }]
-        })
-      );
-    });
-
-    test("SET CRITERIA action 2 ", () => {
-      expect(
-        cardReducer(
-          stateWithDynCard({
-            ...entity_test_created,
-            Criterias: [{ Id: "1", Value: false }, { Id: "2", Value: true }]
-          }),
-          setCardCriteria_action
-        )
-      ).toEqual(
-        stateWithDynCard({
-          ...entity_test_created,
-          Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: true }]
-        })
-      );
-    });
-
-    test("DONE action", () => {
-      expect(
-        cardReducer(
-          stateWithDynCard({
-            ...entity_test_created
-          }),
-          done_action
-        )
-      ).toEqual(
-        stateWithDynCard({ ...entity_test_created, Status: cardStatus.DONE })
-      );
-    });
-
-    test("RETRIEVE action start on empty state", () => {
-      expect(cardReducer(undefined, retrieve_start_action)).toEqual({
-        list: [],
-        status: LOADING_STATE.INPROGRESS
-      });
-    });
-
-    test("RETRIEVE action end on empty state", () => {
-      expect(cardReducer(undefined, retrieve_end_action)).toEqual({
-        list: [entity_test_created],
-        status: LOADING_STATE.DONE
-      });
+  test("CREATE on empty state", () => {
+    expect(cardReducer(undefined, create_action)).toEqual({
+      list: [entity_test_created],
+      status: LOADING_STATE.NULL
     });
   });
-  /***
-   *    ███████╗███████╗██╗     ███████╗ ██████╗████████╗ ██████╗ ██████╗ ███████╗
-   *    ██╔════╝██╔════╝██║     ██╔════╝██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝
-   *    ███████╗█████╗  ██║     █████╗  ██║        ██║   ██║   ██║██████╔╝███████╗
-   *    ╚════██║██╔══╝  ██║     ██╔══╝  ██║        ██║   ██║   ██║██╔══██╗╚════██║
-   *    ███████║███████╗███████╗███████╗╚██████╗   ██║   ╚██████╔╝██║  ██║███████║
-   *    ╚══════╝╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
-   *
-   */
 
-  describe("Selectors", () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
+  test("CREATE on existing state", () => {
+    expect(cardReducer(stateWith1Card, create_action)).toEqual({
+      list: [entity_test_created, entity_test_created],
+      status: LOADING_STATE.NULL
     });
-    test("GetAllCards no state arg", () => {
-      const testgetAllCards = () => {
-        getAllCards();
-      };
+  });
 
-      expect(testgetAllCards).toThrowError(new Error("State arg is mandatory"));
+  test("START action", () => {
+    expect(cardReducer(stateWith1Card, start_action)).toEqual({
+      list: [{ ...entity_test_created, Status: cardStatus.INPROGRESS }],
+      status: LOADING_STATE.NULL
     });
+  });
 
-    test("GetAllCards from default state", () => {
-      expect(getAllCards({})).toEqual([]);
+  test("SET CRITERIA action", () => {
+    expect(
+      cardReducer(
+        stateWithDynCard({
+          ...entity_test_created,
+          ...entity_test_card2Criteria_false
+        }),
+        setCardCriteria_action
+      )
+    ).toEqual(
+      stateWithDynCard({
+        ...entity_test_created,
+        Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: false }]
+      })
+    );
+  });
+
+  test("SET CRITERIA action 2 ", () => {
+    expect(
+      cardReducer(
+        stateWithDynCard({
+          ...entity_test_created,
+          Criterias: [{ Id: "1", Value: false }, { Id: "2", Value: true }]
+        }),
+        setCardCriteria_action
+      )
+    ).toEqual(
+      stateWithDynCard({
+        ...entity_test_created,
+        Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: true }]
+      })
+    );
+  });
+
+  test("DONE action", () => {
+    expect(
+      cardReducer(
+        stateWithDynCard({
+          ...entity_test_created
+        }),
+        done_action
+      )
+    ).toEqual(
+      stateWithDynCard({ ...entity_test_created, Status: cardStatus.DONE })
+    );
+  });
+
+  test("RETRIEVE action start on empty state", () => {
+    expect(cardReducer(undefined, retrieve_start_action)).toEqual({
+      list: [],
+      status: LOADING_STATE.INPROGRESS
     });
+  });
 
-    test("GetAllCards from state with 1 card", () => {
-      expect(getAllCards(storeStateWith1Card)).toEqual([entity_test_created]);
+  test("RETRIEVE action end on empty state", () => {
+    expect(cardReducer(undefined, retrieve_end_action)).toEqual({
+      list: [entity_test_created],
+      status: LOADING_STATE.DONE
     });
+  });
+});
+/***
+ *    ███████╗███████╗██╗     ███████╗ ██████╗████████╗ ██████╗ ██████╗ ███████╗
+ *    ██╔════╝██╔════╝██║     ██╔════╝██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝
+ *    ███████╗█████╗  ██║     █████╗  ██║        ██║   ██║   ██║██████╔╝███████╗
+ *    ╚════██║██╔══╝  ██║     ██╔══╝  ██║        ██║   ██║   ██║██╔══██╗╚════██║
+ *    ███████║███████╗███████╗███████╗╚██████╗   ██║   ╚██████╔╝██║  ██║███████║
+ *    ╚══════╝╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
+ *
+ */
 
-    test("GetAllCards InProgress", () => {
-      const cardIp = {
-        Title: "test - inprogress",
-        Status: cardStatus.INPROGRESS,
-        Type: cardType.Task
-      };
+describe("Selectors", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+  test("GetAllCards no state arg", () => {
+    const testgetAllCards = () => {
+      getAllCards();
+    };
 
-      expect(
-        getAllCardsInProgess(storeStateDyn([entity_test_created, cardIp]))
-      ).toEqual([cardIp]);
-    });
+    expect(testgetAllCards).toThrowError(new Error("State arg is mandatory"));
+  });
 
-    test("GetAllCards Todo", () => {
-      const cardIp = {
-        Title: "test - inprogress",
-        Status: cardStatus.INPROGRESS,
-        Type: cardType.Task
-      };
+  test("GetAllCards from default state", () => {
+    expect(getAllCards({})).toEqual([]);
+  });
 
-      expect(
-        getAllCardsTodo(storeStateDyn([entity_test_created, cardIp]))
-      ).toEqual([entity_test_created]);
-    });
+  test("GetAllCards from state with 1 card", () => {
+    expect(getAllCards(storeStateWith1Card)).toEqual([entity_test_created]);
+  });
 
-    test("GetAllCards DONE", () => {
-      const cardIp = {
+  test("GetAllCards InProgress", () => {
+    const cardIp = {
+      Title: "test - inprogress",
+      Status: cardStatus.INPROGRESS,
+      Type: cardType.Task
+    };
+
+    expect(
+      getAllCardsInProgess(storeStateDyn([entity_test_created, cardIp]))
+    ).toEqual([cardIp]);
+  });
+
+  test("GetAllCards Todo", () => {
+    const cardIp = {
+      Title: "test - inprogress",
+      Status: cardStatus.INPROGRESS,
+      Type: cardType.Task
+    };
+
+    expect(
+      getAllCardsTodo(storeStateDyn([entity_test_created, cardIp]))
+    ).toEqual([entity_test_created]);
+  });
+
+  test("GetAllCards DONE", () => {
+    const cardIp = {
+      Title: "test - done",
+      Status: cardStatus.DONE,
+      Type: cardType.Task
+    };
+
+    expect(
+      getAllCardsDone(storeStateDyn([entity_test_created, cardIp]))
+    ).toEqual([
+      {
         Title: "test - done",
         Status: cardStatus.DONE,
         Type: cardType.Task
-      };
+      }
+    ]);
+  });
 
-      expect(
-        getAllCardsDone(storeStateDyn([entity_test_created, cardIp]))
-      ).toEqual([
-        {
-          Title: "test - done",
-          Status: cardStatus.DONE,
-          Type: cardType.Task
-        }
-      ]);
-    });
+  test("Get cards loading state", () => {
+    expect(getLoadingStatus(storeStateWith1Card)).toEqual(LOADING_STATE.NULL);
+  });
 
-    test("Get cards loading state", () => {
-      expect(getLoadingStatus(storeStateWith1Card)).toEqual(LOADING_STATE.NULL);
-    });
+  test("Get card by id", () => {
+    expect(getCard(storeStateWith1Card, "1")).toEqual(entity_test_created);
+  });
 
-    test("Get card by id", () => {
-      expect(getCard(storeStateWith1Card, "1")).toEqual(entity_test_created);
-    });
-
-    test("Get card by id, not exist, expect undefined", () => {
-      expect(getCard(storeStateWith1Card, 99999)).toEqual(undefined);
-    });
+  test("Get card by id, not exist, expect undefined", () => {
+    expect(getCard(storeStateWith1Card, 99999)).toEqual(undefined);
   });
 });

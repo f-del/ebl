@@ -71,6 +71,12 @@ export const updateCardStatusForward = id => {
       throw new Error("Card with id " + id + " can't be found");
     switch (card.Status) {
       case cardStatus.TODO:
+        if (card.Criterias === undefined || card.Criterias.length === 0)
+          throw new Error(
+            "Can't change status of card " +
+              id +
+              " to INPROGRESS to a card without criteria"
+          );
         await api.Cards.Post(card, { Status: cardStatus.INPROGRESS });
         dispatch(startCard(id));
         break;

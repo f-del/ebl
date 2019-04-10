@@ -90,6 +90,11 @@ function get(db) {
           });
 
           resolve(cards);
+        })
+        .catch(error => {
+          console.error("Error in getting document: ", error);
+          //dispatch(errorSave())
+          reject(error);
         });
     });
   };

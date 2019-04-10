@@ -11,6 +11,12 @@ export const entity_test_created = { Id: "1", ...entity_test };
 export const entity_test_card2Criteria_false = {
   Criterias: [{ Id: "1", Value: false }, { Id: "2", Value: false }]
 };
+
+export const entity_test_created_with_criterias = {
+  ...entity_test_created,
+  ...entity_test_card2Criteria_false
+};
+
 export const stateWith1Card = {
   list: [entity_test_created],
   status: LOADING_STATE.NULL
