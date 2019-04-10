@@ -293,9 +293,6 @@ describe("API tests", () => {
 
     test("Start a card", async () => {
       const store = mockStore(storeStateWith1Card);
-      /*cardsSelector.getCard = jest.fn(() => {
-        return [{ ...entity_test_created }];
-      });*/
 
       fnMockPostCards.mockImplementationOnce(
         () =>
@@ -309,6 +306,7 @@ describe("API tests", () => {
 
       expect(fnMockPostCards.mock.calls.length).toBe(1);
       expect(fnMockPostCards.mock.calls[0][0]).toEqual(entity_test_created);
+
       expect(fnMockPostCards.mock.calls[0][1]).toEqual({
         Status: cardStatus.INPROGRESS
       });
@@ -470,6 +468,9 @@ describe("API tests", () => {
    *
    */
   describe("reducers", () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
     test("undefined", () => {
       expect(cardReducer(undefined, {})).toEqual({
         list: [],
@@ -570,6 +571,9 @@ describe("API tests", () => {
    */
 
   describe("Selectors", () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
     test("GetAllCards no state arg", () => {
       const testgetAllCards = () => {
         getAllCards();

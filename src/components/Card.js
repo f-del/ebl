@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import CardActions from "./CardActions";
 import CardActionnable from "../containers/CardActionnable";
 
-function Card({ card }){
+function Card({ card }) {
   return (
     <div>
       {card.Title}
