@@ -3,6 +3,8 @@ import update from "immutability-helper";
 const CREATE = "CARD/CREATE";
 const STARTED = "CARD/STARTED";
 const DONE = "CARD/DONE";
+
+const ADD_CRITERIA = "CARD/CRITERIA/ADD";
 const SET_CRITERIA = "CARD/CRITERIA/SET";
 
 const RETRIEVE = "CARD/RETRIEVE/START";
@@ -60,6 +62,9 @@ export const createCard = title => {
       dispatch(createCardSuccess(res.Id, newCard));
     });
   };
+};
+export const setCriteriasTypology = type => {
+  return async (dispatch, getState, { api }) => {};
 };
 
 export const updateCardStatusForward = id => {
@@ -158,6 +163,17 @@ export const createCardSuccess = (id, card) => ({
   payload: { Id: id, ...card }
 });
 
+export const addCriteria = (id, { idCriteria, defaultValue }) => ({
+  type: ADD_CRITERIA,
+  payload: {
+    Id: id,
+    Criteria: {
+      Id: idCriteria,
+      Value: defaultValue
+    }
+  }
+});
+
 export const setCardCriteria = (id, idCriteria, valueCriteria) => ({
   type: SET_CRITERIA,
   payload: {
@@ -234,24 +250,32 @@ export default function(state = initialState, action) {
     }
     case CREATE:
       return { ...state, list: [...state.list, action.payload] };
+
     case STARTED:
       return reducerUpdateCardStatus(state, action, cardStatus.INPROGRESS);
 
     case DONE:
       return reducerUpdateCardStatus(state, action, cardStatus.DONE);
-    case SET_CRITERIA:
+
+    case ADD_CRITERIA: {
       const cardIdx = state.list.findIndex(c => c.Id === action.payload.Id);
+
+      return {
+        ...state,
+        list: update(state.list, {
+          [cardIdx]: {
+            Criterias: criterias =>
+              update(criterias || [], { $push: [action.payload.Criteria] })
+          }
+        })
+      };
+    }
+    case SET_CRITERIA: {
+      let cardIdx = state.list.findIndex(c => c.Id === action.payload.Id);
       const criteriaIdx = state.list[cardIdx].Criterias.findIndex(
         c => c.Id === action.payload.Criteria.Id
       );
 
-      let mergeCriteria = {};
-      mergeCriteria[criteriaIdx] = {
-        $merge: { Value: action.payload.Criteria.Value }
-      };
-
-      let mergeCard = {};
-      mergeCard[cardIdx] = { $merge: { Criterias: cardStatus.INPROGRESS } };
       return {
         ...state,
         list: update(state.list, {
@@ -264,6 +288,7 @@ export default function(state = initialState, action) {
           }
         })
       };
+    }
     default:
       return state;
   }

@@ -8,13 +8,17 @@ export const entity_test = {
   Type: cardType.Task
 };
 export const entity_test_created = { Id: "1", ...entity_test };
-export const entity_test_card2Criteria_false = {
+
+export const entity_test_criteria_basic = {
+  Criterias: [{ Id: "IdCrit1", Value: false }]
+};
+export const entity_test_2criteria_false = {
   Criterias: [{ Id: "1", Value: false }, { Id: "2", Value: false }]
 };
 
 export const entity_test_created_with_criterias = {
   ...entity_test_created,
-  ...entity_test_card2Criteria_false
+  ...entity_test_2criteria_false
 };
 
 export const stateWith1Card = {
