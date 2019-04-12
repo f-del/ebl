@@ -1,6 +1,5 @@
 import { entity_test, entity_test_created } from "../datas";
 import { mapping, mappingTo } from "../../API/cards";
-import * as mappers from "../../API/cards";
 
 import MockFirebase from "mock-cloud-firestore";
 import apiCards from "../../API/cards";
@@ -27,6 +26,14 @@ const fixtureData = {
     }
   }
 };
+
+export const expect_post_create = val => ({
+  Id: val || expect.any(String)
+});
+
+export const expect_post_update = () => ({
+  update: true
+});
 
 describe("Card mapping to Firestore", () => {
   test("no arg", () => {
@@ -201,9 +208,7 @@ describe("POST method", () => {
     const db = firebase.firestore();
     const api = apiCards(db);
 
-    await expect(api.Post(entity_test)).resolves.toEqual({
-      id: expect.any(String)
-    });
+    await expect(api.Post(entity_test)).resolves.toEqual(expect_post_create());
   });
 
   test("Return true on updated card", async () => {
@@ -232,8 +237,6 @@ describe("POST method", () => {
         { ...entity_test_created, Id: "id1" },
         { Value: cardStatus.TODO }
       )
-    ).resolves.toEqual({
-      update: true
-    });
+    ).resolves.toEqual(expect_post_update());
   });
 });

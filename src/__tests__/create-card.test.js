@@ -2,10 +2,18 @@ import React from "react";
 import { shallow, configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import reducer from "../redux/store/index";
+
+import * as cardsSelector from "../redux/modules/cards";
 import CreateCard from "../components/CreateCard";
+import CreateTaskCard from "../containers/createTaskCard";
 
 configure({ adapter: new Adapter() });
 
+let store;
 const onValidate = jest.fn();
 
 describe("Componant tests", () => {
@@ -76,8 +84,42 @@ describe("Componant tests", () => {
     input.simulate("keyDown", { which: 13, preventDefault });
     expect(preventDefault.mock.calls.length).toBe(1);
     expect(onValidate.mock.calls.length).toBe(1);
-    expect(onValidate.mock.calls[0][0]).toBe(text);
+    expect(onValidate.mock.calls[0][0]).toEqual(text);
     expectInitState(wrapper);
+
+    wrapper.unmount();
+  });
+});
+
+describe("Containers", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+    store = createStore(reducer, applyMiddleware(thunk));
+  });
+
+  test("createTask", () => {
+    const text = "Unit test task";
+    const preventDefault = jest.fn();
+    cardsSelector.createCard = jest.fn().mockImplementationOnce(id => {
+      return dispatch => {
+        return id;
+      };
+    });
+
+    const wrapper = mount(
+      <Provider store={store}>
+        <CreateTaskCard />
+      </Provider>
+    );
+    expect(wrapper.props("onValidate")).toBeDefined();
+
+    expect(wrapper.find("button").simulate("click"));
+    const input = wrapper.find("textarea");
+    expect(input.length).toBe(1);
+    input.simulate("change", { target: { value: text } });
+    input.simulate("keyDown", { which: 13, preventDefault });
+    expect(cardsSelector.createCard.mock.calls.length).toBe(1);
+    expect(cardsSelector.createCard.mock.calls[0][0]).toBe(text);
 
     wrapper.unmount();
   });

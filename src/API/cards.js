@@ -1,5 +1,4 @@
 import { cardStatus } from "../redux/modules/cards";
-import { unescapeLeadingUnderscores } from "typescript";
 
 /**
  * Mapping from Firestore model to JS model
@@ -59,9 +58,11 @@ function post(db) {
       _post(db.collection("cards"))
         .then(ref => {
           console.log(
-            "Document successfully " + (isUpdate ? "updated" : "written") + "!"
+            "Document successfully " +
+              (isUpdate ? "updated" : "written " + ref.id) +
+              "!"
           );
-          resolve(isUpdate ? { update: true } : { id: ref.id });
+          resolve(isUpdate ? { update: true } : { Id: ref.id });
         })
         .catch(error => {
           console.error("Error writing document: ", error);

@@ -159,16 +159,15 @@ export const toggleCardCriteria = (id, idCriteria, valueCriteria) => {
 
 export const retrieveAllCards = type => {
   if (type === undefined) throw new Error("Argument type is mandatory");
-  return (dispatch, getState, { api }) => {
+  return async (dispatch, getState, { api }) => {
     if (getAllCards(getState()).length !== 0)
       throw new Error("Could not retrieve cards in the current state");
 
     if (getLoadingStatus(getState()) === LOADING_STATE.NULL) {
       dispatch(retrieveAllCards_Starting());
 
-      return api.Cards.Get(type).then(res => {
-        dispatch(retrieveAllCards_End(res));
-      });
+      const cards = await api.Cards.Get(type);
+      dispatch(retrieveAllCards_End(cards));
     }
   };
 };
@@ -191,10 +190,12 @@ function _getCard(getState, id) {
  *
  */
 
-export const createCardSuccess = (id, card) => ({
-  type: CREATE,
-  payload: { Id: id, ...card }
-});
+export const createCardSuccess = (id, card) => {
+  return {
+    type: CREATE,
+    payload: { Id: id, ...card }
+  };
+};
 
 export const addCriteria = (id, criteria) => ({
   type: ADD_CRITERIA,
@@ -269,7 +270,6 @@ const initialState = {
 };
 
 export default function(state = initialState, action) {
-  //console.debug(action);
   switch (action.type) {
     case RETRIEVE: {
       return { ...state, status: LOADING_STATE.INPROGRESS };

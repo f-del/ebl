@@ -11,12 +11,12 @@ import "firebase/storage";
 import { api } from "./API/api";
 
 import reducer from "./redux/store/index";
-import CreateCard from "./components/CreateCard";
-import { createCard, cardStatus, cardType } from "./redux/modules/cards";
 import CardListByStatus from "./containers/CardsListByStatus";
+import TaskCardsBoard from "./containers/TaskCardsBoard";
+import CreateTaskCard from "./containers/createTaskCard";
 
 import "./styles.css";
-import TaskCardsBoard from "./containers/TaskCardsBoard";
+import { cardType, cardStatus } from "./redux/modules/cards";
 
 let config = {
   apiKey: "AIzaSyBwM4YVUVijCR35f9D_vg1qHbF3OTotVb0",
@@ -40,11 +40,7 @@ function App() {
   return (
     <Provider store={store}>
       <div className="App">
-        <CreateCard
-          onValidate={title => {
-            store.dispatch(createCard(title));
-          }}
-        />
+        <CreateTaskCard />
         <TaskCardsBoard type={cardType.Task}>
           <CardListByStatus status={cardStatus.TODO} />
           <CardListByStatus status={cardStatus.INPROGRESS} />

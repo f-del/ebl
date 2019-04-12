@@ -44,6 +44,7 @@ import {
   retMockGetCriteriaBASIC,
   entity_criteria_basic
 } from "./criteria.test";
+import { expect_post_create, expect_post_update } from "../API/cards.test";
 
 var middlewares = undefined;
 var store,
@@ -298,7 +299,7 @@ describe("API tests", () => {
         () =>
           new Promise((resolve, reject) => {
             setTimeout(t => {
-              resolve({ Id: "10" });
+              resolve(expect_post_create("10"));
             }, 20);
           })
       );
@@ -335,7 +336,7 @@ describe("API tests", () => {
         () =>
           new Promise((resolve, reject) => {
             setTimeout(t => {
-              resolve({ update: true });
+              resolve(expect_post_update());
             }, 20);
           })
       );
@@ -402,7 +403,7 @@ describe("API tests", () => {
         () =>
           new Promise((resolve, reject) => {
             setTimeout(t => {
-              resolve({ update: true });
+              resolve(expect_post_update());
             }, 20);
           })
       );
@@ -481,7 +482,7 @@ describe("API tests", () => {
         () =>
           new Promise((resolve, reject) => {
             setTimeout(t => {
-              resolve({ update: true });
+              resolve(expect_post_update());
             }, 20);
           })
       );
@@ -589,15 +590,12 @@ describe("API tests", () => {
       expect(actions[1]).toEqual(retrieve_end_action);
     });
 
-    test("retrieve all cards of type TASK on existing state with cards", () => {
+    test("retrieve all cards of type TASK on existing state with cards", async () => {
       const store = mockStore(storeStateWith1Card);
-      const errorWrapper = () => {
-        store.dispatch(retrieveAllCards(cardType.Task));
-      };
 
-      expect(errorWrapper).toThrowError(
-        "Could not retrieve cards in the current state"
-      );
+      await expect(
+        store.dispatch(retrieveAllCards(cardType.Task))
+      ).rejects.toThrowError("Could not retrieve cards in the current state");
     });
   });
 });

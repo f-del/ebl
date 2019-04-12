@@ -5,8 +5,8 @@ import Adapter from "enzyme-adapter-react-16";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
-
 import reducer from "../redux/store/index";
+
 import * as cardsSelector from "../redux/modules/cards";
 import { cardStatus } from "../redux/modules/cards";
 import CardActions from "../components/CardActions";
@@ -121,19 +121,12 @@ describe("Componant tests", () => {
       />
     );
 
-    expect(wrapper.find('input[type="checkbox"]').length).toBeGreaterThan(0);
-    expect(
-      wrapper
-        .find('input[type="checkbox"]')
-        .at(1)
-        .props().readonly
-    ).toBeTruthy();
-    expect(
-      wrapper
-        .find('input[type="checkbox"]')
-        .at(1)
-        .props().checked
-    ).toBeTruthy();
+    const checkboxes = wrapper.find('input[type="checkbox"]');
+    expect(checkboxes.length).toBeGreaterThan(0);
+
+    const readOnly = checkboxes.at(1).props().readOnly;
+    expect(readOnly).toEqual(true);
+    expect(checkboxes.at(1).props().checked).toBeTruthy();
 
     expect(wrapper.find("button").length).toBe(0);
   });
@@ -157,7 +150,7 @@ describe("Componant tests", () => {
   test("Click on all checkbox validate Status", () => {
     const mockAction = jest.fn(() => {});
 
-    const wrapper = shallow(
+    const wrapper = mount(
       <CardActions
         card={entity_card_created_on_progress}
         onAction={mockAction}
@@ -171,9 +164,16 @@ describe("Componant tests", () => {
     expect(mockAction.mock.calls[0][0]).toEqual(checkboxActionparams());
     expect(mockAction.mock.calls[1][0]).toEqual(checkboxActionparams("2"));
 
-    // Checkbox are readonly after a
-    const updatedCheckbox = wrapper.find('input[type="checkbox"]');
-    updatedCheckbox.forEach(ckb => expect(ckb.props().readonly).toBeTruthy());
+    entity_card_created_on_progress.Criterias[0].Value = true;
+    entity_card_created_on_progress.Criterias[1].Value = true;
+    wrapper.setProps({ card: entity_card_created_on_progress });
+    const checkboxChecked = wrapper.find('input[type="checkbox"]');
+    checkboxChecked.forEach(ckb => {
+      expect(ckb.props().readOnly).toEqual(true);
+      expect(ckb.props().checked).toBeTruthy();
+    });
+
+    wrapper.unmount();
   });
 });
 
