@@ -9,9 +9,6 @@ export const entity_test = {
 };
 export const entity_test_created = { Id: "1", ...entity_test };
 
-export const entity_test_criteria_basic = {
-  Criterias: [{ Id: "IdCrit1", Value: false }]
-};
 export const entity_test_2criteria_false = {
   Criterias: [{ Id: "1", Value: false }, { Id: "2", Value: false }]
 };

@@ -1,4 +1,5 @@
 import update from "immutability-helper";
+import { criteriaType, getCriteria } from "./criterias";
 
 const CREATE = "CARD/CREATE";
 const STARTED = "CARD/STARTED";
@@ -58,22 +59,27 @@ export const createCard = title => {
     throw new Error("Argument title is mandatory");
   return async (dispatch, getState, { api }) => {
     const newCard = card(title);
-    await api.Cards.Post(newCard).then(res => {
-      dispatch(createCardSuccess(res.Id, newCard));
-    });
+    const res = await api.Cards.Post(newCard);
+    dispatch(createCardSuccess(res.Id, newCard));
   };
 };
-export const setCriteriasTypology = type => {
-  return async (dispatch, getState, { api }) => {};
+export const setCriteriasTypology = (id, type = criteriaType.BASIC) => {
+  if (id === undefined) throw new Error("Argument id is mandatory");
+  return async (dispatch, getState, { api }) => {
+    _getCard(getState, id);
+
+    const crit = getCriteria(getState(), type);
+    crit.forEach(c => {
+      dispatch(addCriteria(id, c));
+    });
+  };
 };
 
 export const updateCardStatusForward = id => {
   if (id === undefined) throw new Error("Argument id is mandatory");
 
   return async (dispatch, getState, { api }) => {
-    const card = getCard(getState(), id);
-    if (card === undefined)
-      throw new Error("Card with id " + id + " can't be found");
+    const card = _getCard(getState, id);
     switch (card.Status) {
       case cardStatus.TODO:
         if (card.Criterias === undefined || card.Criterias.length === 0)
@@ -107,9 +113,7 @@ export const toggleCardCriteria = (id, idCriteria, valueCriteria) => {
       "Id Card, Id Criteria and Value Criteria arguments are mandatory"
     );
   return async (dispatch, getState, { api }) => {
-    const card = getCard(getState(), id);
-    if (card === undefined)
-      throw new Error("Card with id " + id + " can't be found");
+    const card = _getCard(getState, id);
 
     if (card.Criterias === undefined || card.Criterias.length === 0)
       throw new Error("No criterias are attached to the card " + id);
@@ -148,6 +152,14 @@ export const retrieveAllCards = type => {
   };
 };
 
+/* Functionnal helper */
+function _getCard(getState, id) {
+  const card = getCard(getState(), id);
+  if (card === undefined)
+    throw new Error("Card with id " + id + " can't be found");
+  return card;
+}
+
 /***
  *     █████╗  ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
  *    ██╔══██╗██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
@@ -163,13 +175,13 @@ export const createCardSuccess = (id, card) => ({
   payload: { Id: id, ...card }
 });
 
-export const addCriteria = (id, { idCriteria, defaultValue }) => ({
+export const addCriteria = (id, criteria) => ({
   type: ADD_CRITERIA,
   payload: {
     Id: id,
     Criteria: {
-      Id: idCriteria,
-      Value: defaultValue
+      Id: criteria.Id,
+      Value: criteria.Value
     }
   }
 });
