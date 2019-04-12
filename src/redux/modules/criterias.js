@@ -38,6 +38,11 @@ export function getCriteria(state, type) {
   if (type === undefined) throw new Error("Type argument is mandatory");
   return getState(state).list[type] || [];
 }
+export function getAllCriterias(state) {
+  return Array.from(Object.keys(getState(state).list), key => ({
+    [key]: getState(state).list[key]
+  }));
+}
 function getState(state) {
   return state.criterias || {};
 }

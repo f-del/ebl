@@ -1,5 +1,6 @@
 import { entity_test, entity_test_created } from "../datas";
 import { mapping, mappingTo } from "../../API/cards";
+import * as mappers from "../../API/cards";
 
 import MockFirebase from "mock-cloud-firestore";
 import apiCards from "../../API/cards";
@@ -157,6 +158,9 @@ describe("GET method", () => {
 });
 
 describe("POST method", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
   test("Error on empty card arg", async () => {
     expect.assertions(1);
     const firebase = new MockFirebase(fixtureData);
@@ -211,6 +215,23 @@ describe("POST method", () => {
 
     await expect(
       api.Post({ ...entity_test_created, Id: "id1" }, { Value: false })
+    ).resolves.toEqual({
+      update: true
+    });
+  });
+
+  test("Return true on updated card with symbol property", async () => {
+    expect.assertions(1);
+    const firebase = new MockFirebase(fixtureData);
+
+    const db = firebase.firestore();
+    const api = apiCards(db);
+
+    await expect(
+      api.Post(
+        { ...entity_test_created, Id: "id1" },
+        { Value: cardStatus.TODO }
+      )
     ).resolves.toEqual({
       update: true
     });

@@ -3,21 +3,19 @@ import PropTypes from "prop-types";
 
 import { cardStatus } from "../redux/modules/cards";
 
-function CardActions({ status, onAction }) {
-  const devDoneCriteria = [
-    { Id: 1, Name: "Dev" },
-    { Id: 2, Name: "Unit Test" }
-  ];
+function CardActions({ card, onAction, criterias_typology_list }) {
   const displayINPROGRESS = () => (
     <div>
       Done criterias:
       <ul>
-        {devDoneCriteria.map(c => (
+        {card.Criterias.map(c => (
           <li key={c.Id}>
             <input
               id={"tdod_" + c.Id}
               type="checkbox"
               value={c.Id}
+              checked={c.Value === true}
+              readOnly={c.Value === true}
               onChange={e => handleCheckBox(e, c.Id)}
             />
             <label htmlFor={"tdod_" + c.Id}>{c.Name}</label>
@@ -33,9 +31,30 @@ function CardActions({ status, onAction }) {
     </div>
   );
 
-  if (status === cardStatus.TODO) return displayTODO();
+  const displayTODO_AffectCriterias = () => (
+    <div>
+      <select onChange={handleSelect}>
+        <option>Affect a DoD to task</option>
+        {criterias_typology_list.map((ct, i) => (
+          <option key={i} value={Object.keys(ct)[0]}>
+            {ct.Text || Object.keys(ct)}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
 
-  if (status === cardStatus.INPROGRESS) return displayINPROGRESS();
+  if (card.Status === cardStatus.TODO)
+    if (card.Criterias !== undefined && card.Criterias.length > 0)
+      return displayTODO();
+    else return displayTODO_AffectCriterias();
+
+  if (card.Status === cardStatus.INPROGRESS) return displayINPROGRESS();
+
+  return null;
+  function handleSelect(e) {
+    onAction({ value: e.target.value });
+  }
 
   function handleCheckBox(e, id) {
     onAction({ id: "" + id, value: e.target.checked });
@@ -43,7 +62,7 @@ function CardActions({ status, onAction }) {
 }
 
 CardActions.propTypes = {
-  status: PropTypes.symbol.isRequired,
+  card: PropTypes.object.isRequired,
   onAction: PropTypes.func.isRequired
 };
 

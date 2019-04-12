@@ -6,7 +6,7 @@ function Card({ card }) {
   return (
     <div>
       {card.Title}
-      <CardActionnable id={card.Id} status={card.Status} />
+      <CardActionnable card={card} />
     </div>
   );
 }

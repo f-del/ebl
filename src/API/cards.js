@@ -1,4 +1,5 @@
 import { cardStatus } from "../redux/modules/cards";
+import { unescapeLeadingUnderscores } from "typescript";
 
 /**
  * Mapping from Firestore model to JS model
@@ -27,6 +28,7 @@ export const mapping = card => {
  */
 export const mappingTo = card => {
   if (card === undefined) throw new Error("Argument card is mandatory");
+  if (card.Criterias !== undefined) return card;
   const mappedCard = {};
   if (card.Title !== undefined) mappedCard["Title"] = card.Title;
   if (card.Type !== undefined) mappedCard["Type"] = card.Type;
@@ -42,7 +44,7 @@ function post(db) {
     if (card === undefined) throw new Error("Argument card is mandatory");
     const isUpdate = card.Id !== undefined;
     const _post = db => {
-      if (isUpdate) return db.doc(card.Id).update(fields);
+      if (isUpdate) return db.doc(card.Id).update(mappingTo(fields));
       else return db.add(mappingTo(card));
     };
     return new Promise((resolve, reject) => {

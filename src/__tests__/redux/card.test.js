@@ -44,7 +44,6 @@ import {
   retMockGetCriteriaBASIC,
   entity_criteria_basic
 } from "./criteria.test";
-import { cpus } from "os";
 
 var middlewares = undefined;
 var store,
@@ -234,9 +233,21 @@ describe("API tests", () => {
 
     await store.dispatch(toggleCardCriteria("1", "1", true));
 
-    expect(fnMockPostCards.mock.calls.length).toBe(1);
+    expect(fnMockPostCards.mock.calls.length).toBe(2);
     expect(fnMockPostCards.mock.calls[0][0]).toEqual(card);
-    expect(fnMockPostCards.mock.calls[0][1]).toEqual({ Id: "1", Value: true });
+    expect(fnMockPostCards.mock.calls[0][1]).toEqual({
+      Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: true }]
+    });
+
+    expect(fnMockPostCards.mock.calls[1][0]).toEqual({
+      ...entity_test_created,
+      Status: cardStatus.INPROGRESS,
+      Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: true }]
+    });
+    expect(fnMockPostCards.mock.calls[1][1]).toEqual({
+      Status: cardStatus.DONE
+    });
+
     expect(getCard(store.getState(), "1")).toEqual({
       ...entity_test_created,
       Criterias: [{ Id: "1", Value: true }, { Id: "2", Value: true }],
@@ -318,10 +329,50 @@ describe("API tests", () => {
       };
     }
 
+    async function testSetCriteriaTypology_basic(type = undefined) {
+      const store = mockStore(storeStateWith1Card);
+      fnMockPostCards.mockImplementationOnce(
+        () =>
+          new Promise((resolve, reject) => {
+            setTimeout(t => {
+              resolve({ update: true });
+            }, 20);
+          })
+      );
+      criteriaRedux.getCriteria = jest
+        .fn()
+        .mockImplementationOnce((state, basic) => {
+          return retMockGetCriteriaBASIC;
+        });
+      await store.dispatch(setCriteriasTypology("1", type));
+      expect(fnMockPostCards.mock.calls.length).toBe(1);
+      expect(fnMockPostCards.mock.calls[0][0]).toEqual(entity_test_created);
+      expect(fnMockPostCards.mock.calls[0][1]).toEqual({
+        Criterias: retMockGetCriteriaBASIC
+      });
+      expect(criteriaRedux.getCriteria.mock.calls.length).toBe(1);
+      expect(criteriaRedux.getCriteria.mock.calls[0][1]).toEqual(
+        criteriaType.BASIC
+      );
+      const actions = store.getActions();
+      expect(actions.length).toBe(1);
+      expect(actions[0]).toEqual(addCriteria_action);
+    }
+
     test(
       "Affect a BASIC Dod Criterias typology to a card (no parameter)",
       _isUndefined(setCriteriasTypology, "id")
     );
+
+    test("Affect a BASIC Dod Criterias typology to a card with already criterias set", async () => {
+      const store = mockStore(
+        storeStateDyn([entity_test_created_with_criterias])
+      );
+
+      await expect(
+        store.dispatch(setCriteriasTypology("1"))
+      ).rejects.toThrowError("Card 1 has already criterias attached");
+    });
 
     test("Affect a BASIC Dod Criterias typology on a non existing card", async () => {
       const store = mockStore(storeStateWith1Card);
@@ -332,60 +383,42 @@ describe("API tests", () => {
     });
 
     test("Affect a BASIC Dod Criterias typology to a card (no parameter)", async () => {
-      const store = mockStore(storeStateWith1Card);
-
-      criteriaRedux.getCriteria = jest
-        .fn()
-        .mockImplementationOnce((state, basic) => {
-          return retMockGetCriteriaBASIC;
-        });
-
-      await store.dispatch(setCriteriasTypology("1"));
-
-      expect(criteriaRedux.getCriteria.mock.calls.length).toBe(1);
-      expect(criteriaRedux.getCriteria.mock.calls[0][1]).toEqual(
-        criteriaType.BASIC
-      );
-      const actions = store.getActions();
-      expect(actions.length).toBe(1);
-      expect(actions[0]).toEqual(addCriteria_action);
+      await testSetCriteriaTypology_basic();
     });
     test("Affect a BASIC Dod Criterias typology to a card", async () => {
-      const store = mockStore(storeStateWith1Card);
-
-      criteriaRedux.getCriteria = jest
-        .fn()
-        .mockImplementationOnce((state, basic) => {
-          return retMockGetCriteriaBASIC;
-        });
-
-      await store.dispatch(setCriteriasTypology("1", criteriaType.BASIC));
-
-      expect(criteriaRedux.getCriteria.mock.calls.length).toBe(1);
-      expect(criteriaRedux.getCriteria.mock.calls[0][1]).toEqual(
-        criteriaType.BASIC
-      );
-      const actions = store.getActions();
-      expect(actions.length).toBe(1);
-      expect(actions[0]).toEqual(addCriteria_action);
+      await testSetCriteriaTypology_basic(criteriaType.BASIC);
     });
 
-    test("Affect a Dev Dod Criterias typology to a card", async () => {
+    test("Affect a DEV Dod Criterias typology to a card", async () => {
       const store = mockStore(storeStateWith1Card);
+      const entity_criterias_dev = [
+        ...retMockGetCriteriaBASIC,
+        {
+          Id: "IdCritBas2",
+          Value: "defaultBas2"
+        }
+      ];
+      fnMockPostCards.mockImplementationOnce(
+        () =>
+          new Promise((resolve, reject) => {
+            setTimeout(t => {
+              resolve({ update: true });
+            }, 20);
+          })
+      );
 
       criteriaRedux.getCriteria = jest
         .fn()
         .mockImplementationOnce((state, basic) => {
-          return [
-            ...retMockGetCriteriaBASIC,
-            {
-              Id: "IdCritBas2",
-              Value: "defaultBas2"
-            }
-          ];
+          return entity_criterias_dev;
         });
 
       await store.dispatch(setCriteriasTypology("1", criteriaType.DEV));
+      expect(fnMockPostCards.mock.calls.length).toBe(1);
+      expect(fnMockPostCards.mock.calls[0][0]).toEqual(entity_test_created);
+      expect(fnMockPostCards.mock.calls[0][1]).toEqual({
+        Criterias: entity_criterias_dev
+      });
 
       expect(criteriaRedux.getCriteria.mock.calls.length).toBe(1);
       expect(criteriaRedux.getCriteria.mock.calls[0][1]).toEqual(
@@ -466,6 +499,7 @@ describe("API tests", () => {
       expect(actions.length).toBe(1);
       expect(actions[0]).toEqual(start_action);
     });
+
     test("Toogle 1 Card Criteria without parameters", () => {
       const store = mockStore(storeStateInitial);
       let wrapper = () => {
@@ -512,8 +546,16 @@ describe("API tests", () => {
       expect(fnMockPostCards.mock.calls.length).toBe(1);
       expect(fnMockPostCards.mock.calls[0][0]).toEqual(card);
       expect(fnMockPostCards.mock.calls[0][1]).toEqual({
-        Id: "1",
-        Value: true
+        Criterias: [
+          {
+            Id: "1",
+            Value: true
+          },
+          {
+            Id: "2",
+            Value: false
+          }
+        ]
       });
     });
 

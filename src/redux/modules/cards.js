@@ -66,9 +66,18 @@ export const createCard = title => {
 export const setCriteriasTypology = (id, type = criteriaType.BASIC) => {
   if (id === undefined) throw new Error("Argument id is mandatory");
   return async (dispatch, getState, { api }) => {
-    _getCard(getState, id);
+    const card = _getCard(getState, id);
+
+    if (
+      card.Criterias !== undefined ||
+      (card.Criterias !== undefined && card.Criterias.length > 0)
+    )
+      throw new Error("Card " + id + " has already criterias attached");
 
     const crit = getCriteria(getState(), type);
+
+    await api.Cards.Post(card, { Criterias: crit });
+
     crit.forEach(c => {
       dispatch(addCriteria(id, c));
     });
@@ -117,21 +126,33 @@ export const toggleCardCriteria = (id, idCriteria, valueCriteria) => {
 
     if (card.Criterias === undefined || card.Criterias.length === 0)
       throw new Error("No criterias are attached to the card " + id);
-    const idxCriteria = card.Criterias.findIndex(c => c.Id === idCriteria);
 
+    const criteriasToUpdate = { Criterias: [...card.Criterias] };
+    const idxCriteria = criteriasToUpdate.Criterias.findIndex(
+      c => c.Id === idCriteria
+    );
     if (idxCriteria === -1)
       throw new Error(
         "Criteria with id " + idCriteria + " can't be found in card " + id
       );
 
-    if (card.Criterias[idxCriteria].Value === false) {
-      await api.Cards.Post(card, { Id: idCriteria, Value: valueCriteria });
+    if (criteriasToUpdate.Criterias[idxCriteria].Value === false) {
+      await api.Cards.Post(
+        card,
+        update(criteriasToUpdate, {
+          Criterias: {
+            [idxCriteria]: {
+              $merge: { Value: valueCriteria }
+            }
+          }
+        })
+      );
 
       dispatch(setCardCriteria(id, idCriteria, valueCriteria));
 
       const updatedCard = getCard(getState(), id);
       if (updatedCard.Criterias.every(c => c.Value === true))
-        dispatch(doneCard(id));
+        await dispatch(updateCardStatusForward(id));
     }
   };
 };

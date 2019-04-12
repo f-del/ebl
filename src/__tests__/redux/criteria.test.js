@@ -3,7 +3,8 @@ import thunk from "redux-thunk";
 import configureMockStore from "redux-mock-store";
 import criteriaReducer, {
   getCriteria,
-  criteriaType
+  criteriaType,
+  getAllCriterias
 } from "../../redux/modules/criterias";
 
 const middlewares = [thunk.withExtraArgument({})];
@@ -13,7 +14,7 @@ export const entity_criteria_basic = {
   Id: "IdCritBas1",
   Value: "defaultBas"
 };
-const entity_storecriteria_basic = {
+export const entity_storecriteria_basic = {
   BASIC: [entity_criteria_basic]
 };
 const stateWith1Criteria = {
@@ -66,4 +67,9 @@ test("GetCriteria BASIC", () => {
   expect(getCriteria(storeStateInitial, criteriaType.BASIC)).toEqual(
     retMockGetCriteriaBASIC
   );
+});
+test("Get All Criterias", () => {
+  expect(getAllCriterias(storeStateInitial)).toEqual([
+    entity_storecriteria_basic
+  ]);
 });
