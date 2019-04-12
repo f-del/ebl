@@ -203,7 +203,8 @@ export const addCriteria = (id, criteria) => ({
     Id: id,
     Criteria: {
       Id: criteria.Id,
-      Value: criteria.Value
+      Value: criteria.Value,
+      Text: criteria.Text
     }
   }
 });

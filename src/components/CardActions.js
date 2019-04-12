@@ -8,17 +8,19 @@ function CardActions({ card, onAction, criterias_typology_list }) {
     <div>
       Done criterias:
       <ul>
-        {card.Criterias.map(c => (
-          <li key={c.Id}>
+        {card.Criterias.map(crit => (
+          <li key={crit.Id}>
             <input
-              id={"tdod_" + c.Id}
+              id={"tdod_" + card.Id + "_" + crit.Id}
               type="checkbox"
-              value={c.Id}
-              checked={c.Value === true}
-              readOnly={c.Value === true}
-              onChange={e => handleCheckBox(e, c.Id)}
+              value={crit.Id}
+              checked={crit.Value === true}
+              readOnly={crit.Value === true}
+              onChange={e => handleCheckBox(e, crit.Id)}
             />
-            <label htmlFor={"tdod_" + c.Id}>{c.Name}</label>
+            <label htmlFor={"tdod_" + card.Id + "_" + crit.Id}>
+              {crit.Text}
+            </label>
           </li>
         ))}
       </ul>

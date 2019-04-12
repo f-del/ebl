@@ -95,7 +95,7 @@ const retrieve_end_action = {
 
 const addCriteria_action = {
   type: "CARD/CRITERIA/ADD",
-  payload: { Id: "1", Criteria: entity_criteria_basic }
+  payload: { Id: "1", Criteria: entity_criteria_basic() }
 };
 
 describe("API tests", () => {
@@ -394,10 +394,7 @@ describe("API tests", () => {
       const store = mockStore(storeStateWith1Card);
       const entity_criterias_dev = [
         ...retMockGetCriteriaBASIC,
-        {
-          Id: "IdCritBas2",
-          Value: "defaultBas2"
-        }
+        entity_criteria_basic("IdCritBas2", "defaultBas2", "TextCrit2")
       ];
       fnMockPostCards.mockImplementationOnce(
         () =>
@@ -432,10 +429,11 @@ describe("API tests", () => {
       expect(actions[1]).toEqual({
         payload: {
           Id: "1",
-          Criteria: {
-            Id: "IdCritBas2",
-            Value: "defaultBas2"
-          }
+          Criteria: entity_criteria_basic(
+            "IdCritBas2",
+            "defaultBas2",
+            "TextCrit2"
+          )
         },
         type: "CARD/CRITERIA/ADD"
       });
@@ -619,7 +617,9 @@ describe("Actions creators", () => {
   });
 
   test("Add criteria to a card", () => {
-    expect(addCriteria("1", entity_criteria_basic)).toEqual(addCriteria_action);
+    expect(addCriteria("1", entity_criteria_basic())).toEqual(
+      addCriteria_action
+    );
   });
 
   test("Start a card without Id", () => {
@@ -711,7 +711,7 @@ describe("reducers", () => {
       list: [
         {
           ...entity_test_created,
-          Criterias: [entity_criteria_basic]
+          Criterias: [entity_criteria_basic()]
         }
       ],
       status: LOADING_STATE.NULL

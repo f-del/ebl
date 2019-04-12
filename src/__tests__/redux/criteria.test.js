@@ -10,12 +10,17 @@ import criteriaReducer, {
 const middlewares = [thunk.withExtraArgument({})];
 const mockStore = configureMockStore(middlewares);
 
-export const entity_criteria_basic = {
-  Id: "IdCritBas1",
-  Value: "defaultBas"
-};
+export const entity_criteria_basic = (
+  id = "IdCritBas1",
+  value = "defaultBas",
+  text = "Criteria Title"
+) => ({
+  Id: id,
+  Value: value,
+  Text: text
+});
 export const entity_storecriteria_basic = {
-  BASIC: [entity_criteria_basic]
+  BASIC: [entity_criteria_basic()]
 };
 const stateWith1Criteria = {
   list: entity_storecriteria_basic
@@ -62,7 +67,7 @@ test("GetCriteria NOTSUPPORTED", () => {
   );
 });
 
-export const retMockGetCriteriaBASIC = [entity_criteria_basic];
+export const retMockGetCriteriaBASIC = [entity_criteria_basic()];
 test("GetCriteria BASIC", () => {
   expect(getCriteria(storeStateInitial, criteriaType.BASIC)).toEqual(
     retMockGetCriteriaBASIC
