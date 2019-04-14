@@ -114,6 +114,7 @@ describe("Containers", () => {
           <CreateTaskCard />
         </Provider>
       );
+      expect(wrapper).toMatchSnapshot();
       expect(wrapper.props("onValidate")).toBeDefined();
 
       expect(wrapper.find("button").simulate("click"));
@@ -145,6 +146,7 @@ describe("Containers", () => {
           />
         </Provider>
       );
+      expect(wrapper).toMatchSnapshot();
       expect(wrapper.props("onValidate")).toBeDefined();
       expect(wrapper.find("button").simulate("click"));
       const input = wrapper.find("textarea");
