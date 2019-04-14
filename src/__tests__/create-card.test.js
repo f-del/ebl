@@ -73,7 +73,7 @@ describe("Componant tests", () => {
 
     expect(input.length).toBe(1);
     // TODO : expect focus ?
-    //expect(document.activeElement).toEqual(input.getDOMNode());
+    //expect(document.activeElement).toStrictEqual(input.getDOMNode());
 
     const text = "Unit test task";
     // [...text].forEach((c, i) => {
@@ -84,7 +84,7 @@ describe("Componant tests", () => {
     input.simulate("keyDown", { which: 13, preventDefault });
     expect(preventDefault.mock.calls.length).toBe(1);
     expect(onValidate.mock.calls.length).toBe(1);
-    expect(onValidate.mock.calls[0][0]).toEqual(text);
+    expect(onValidate.mock.calls[0][0]).toStrictEqual(text);
     expectInitState(wrapper);
 
     wrapper.unmount();

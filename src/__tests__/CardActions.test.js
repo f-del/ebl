@@ -15,7 +15,7 @@ import {
   entity_test_created,
   entity_test_created_with_criterias
 } from "./datas";
-import { entity_storecriteria_basic } from "./redux/criteria.test";
+import { entity_criteria, entity_criteria_type } from "./redux/criteria.test";
 import { criteriaType } from "../redux/modules/criterias";
 
 configure({ adapter: new Adapter() });
@@ -37,8 +37,8 @@ describe("Componant tests", () => {
         card={entity_test_created}
         onAction={mockAction}
         criterias_typology_list={[
-          entity_storecriteria_basic,
-          { ...entity_storecriteria_basic, Text: "TEST" }
+          entity_criteria_type(),
+          entity_criteria_type("NOTEXT", entity_criteria)
         ]}
       />
     );
@@ -63,13 +63,13 @@ describe("Componant tests", () => {
         .find("select>option")
         .at(1)
         .props().value
-    ).toEqual("BASIC");
+    ).toStrictEqual("BASIC");
     expect(
       wrapper
         .find("select>option")
         .at(2)
         .text()
-    ).toBe("TEST");
+    ).toBe("NOTEXT");
     expect(mockAction.mock.calls.length).toBe(0);
   });
 
@@ -80,8 +80,8 @@ describe("Componant tests", () => {
         card={entity_test_created}
         onAction={mockAction}
         criterias_typology_list={[
-          entity_storecriteria_basic,
-          { ...entity_storecriteria_basic, Text: "TEST" }
+          entity_criteria_type(),
+          entity_criteria_type("NOTEXT", entity_criteria)
         ]}
       />
     );
@@ -90,7 +90,7 @@ describe("Componant tests", () => {
     expect(mockAction.mock.calls.length).toBe(1);
     const onActionArg = mockAction.mock.calls[0][0];
     expect(onActionArg).toBeDefined();
-    expect(onActionArg).toEqual({ value: "BASIC" });
+    expect(onActionArg).toStrictEqual({ value: "BASIC" });
   });
 
   test("Initial state in status TODO with criteria", () => {
@@ -125,7 +125,7 @@ describe("Componant tests", () => {
     expect(checkboxes.length).toBeGreaterThan(0);
 
     const readOnly = checkboxes.at(1).props().readOnly;
-    expect(readOnly).toEqual(true);
+    expect(readOnly).toStrictEqual(true);
     expect(checkboxes.at(1).props().checked).toBeTruthy();
 
     expect(wrapper.find("button").length).toBe(0);
@@ -144,7 +144,7 @@ describe("Componant tests", () => {
     checkbox.first().simulate("change", { target: { checked: true } });
 
     expect(mockAction.mock.calls.length).toBe(1);
-    expect(mockAction.mock.calls[0][0]).toEqual(checkboxActionparams());
+    expect(mockAction.mock.calls[0][0]).toStrictEqual(checkboxActionparams());
   });
 
   test("Click on all checkbox validate Status", () => {
@@ -161,15 +161,17 @@ describe("Componant tests", () => {
     checkbox.forEach(c => c.simulate("change", { target: { checked: true } }));
 
     expect(mockAction.mock.calls.length).toBe(2);
-    expect(mockAction.mock.calls[0][0]).toEqual(checkboxActionparams());
-    expect(mockAction.mock.calls[1][0]).toEqual(checkboxActionparams("2"));
+    expect(mockAction.mock.calls[0][0]).toStrictEqual(checkboxActionparams());
+    expect(mockAction.mock.calls[1][0]).toStrictEqual(
+      checkboxActionparams("2")
+    );
 
     entity_card_created_on_progress.Criterias[0].Value = true;
     entity_card_created_on_progress.Criterias[1].Value = true;
     wrapper.setProps({ card: entity_card_created_on_progress });
     const checkboxChecked = wrapper.find('input[type="checkbox"]');
     checkboxChecked.forEach(ckb => {
-      expect(ckb.props().readOnly).toEqual(true);
+      expect(ckb.props().readOnly).toStrictEqual(true);
       expect(ckb.props().checked).toBeTruthy();
     });
 

@@ -197,17 +197,20 @@ export const createCardSuccess = (id, card) => {
   };
 };
 
-export const addCriteria = (id, criteria) => ({
-  type: ADD_CRITERIA,
-  payload: {
-    Id: id,
-    Criteria: {
-      Id: criteria.Id,
-      Value: criteria.Value,
-      Text: criteria.Text
+export const addCriteria = (id, criteria) => {
+  const action = {
+    type: ADD_CRITERIA,
+    payload: {
+      Id: id,
+      Criteria: {
+        Id: criteria.Id,
+        Value: criteria.Value
+      }
     }
-  }
-});
+  };
+  if (criteria.Text !== undefined) action.payload.Criteria.Text = criteria.Text;
+  return action;
+};
 
 export const setCardCriteria = (id, idCriteria, valueCriteria) => ({
   type: SET_CRITERIA,

@@ -47,12 +47,12 @@ describe("Card mapping to Firestore", () => {
   test("empty card literal", () => {
     const card = mappingTo({});
 
-    expect(card).toEqual({});
+    expect(card).toStrictEqual({});
   });
 
   test("Card with all properties, expect no more Symbol", () => {
     const card = mappingTo(entity_test_created);
-    expect(card).toEqual({
+    expect(card).toStrictEqual({
       Status: "TODO",
       Title: "test",
       Type: "TASK"
@@ -72,7 +72,7 @@ describe("Card mapping from Firestore", () => {
   test("empty card literal", () => {
     const card = mapping({});
 
-    expect(card).toEqual({});
+    expect(card).toStrictEqual({});
   });
 
   test("card as firestore type", () => {
@@ -90,7 +90,7 @@ describe("Card mapping from Firestore", () => {
     const card = mapping(mockFirestore);
 
     expect(fnData.mock.calls.length).toBe(1);
-    expect(card).toEqual(entity_test_created);
+    expect(card).toStrictEqual(entity_test_created);
   });
 
   test("card without status", () => {
@@ -108,7 +108,7 @@ describe("Card mapping from Firestore", () => {
     const card = mapping(mockFirestore);
 
     expect(fnData.mock.calls.length).toBe(1);
-    expect(card).toEqual({
+    expect(card).toStrictEqual({
       Id: "1",
       Title: "test",
       Type: "test"
@@ -127,7 +127,7 @@ describe("Card mapping from Firestore", () => {
     const card = mapping(mockFirestore);
 
     expect(fnData.mock.calls.length).toBe(1);
-    expect(card).toEqual({
+    expect(card).toStrictEqual({
       Id: "1",
       Title: "test",
       Type: "TASK",
@@ -144,7 +144,7 @@ describe("GET method", () => {
     const db = firebase.firestore();
     const api = apiCards(db);
 
-    await expect(api.Get()).resolves.toEqual([
+    await expect(api.Get()).resolves.toStrictEqual([
       { Id: "id1", ...entity_test },
       { Id: "id2", ...entity_test, Status: cardStatus.INPROGRESS },
       { Id: "id3", ...entity_test, Type: "STORY", Status: cardStatus.DONE }
@@ -157,7 +157,7 @@ describe("GET method", () => {
     const db = firebase.firestore();
     const api = apiCards(db);
 
-    await expect(api.Get("TASK")).resolves.toEqual([
+    await expect(api.Get("TASK")).resolves.toStrictEqual([
       { Id: "id1", ...entity_test },
       { Id: "id2", ...entity_test, Status: cardStatus.INPROGRESS }
     ]);
@@ -208,7 +208,9 @@ describe("POST method", () => {
     const db = firebase.firestore();
     const api = apiCards(db);
 
-    await expect(api.Post(entity_test)).resolves.toEqual(expect_post_create());
+    await expect(api.Post(entity_test)).resolves.toStrictEqual(
+      expect_post_create()
+    );
   });
 
   test("Return true on updated card", async () => {
@@ -220,7 +222,7 @@ describe("POST method", () => {
 
     await expect(
       api.Post({ ...entity_test_created, Id: "id1" }, { Value: false })
-    ).resolves.toEqual({
+    ).resolves.toStrictEqual({
       update: true
     });
   });
@@ -237,6 +239,6 @@ describe("POST method", () => {
         { ...entity_test_created, Id: "id1" },
         { Value: cardStatus.TODO }
       )
-    ).resolves.toEqual(expect_post_update());
+    ).resolves.toStrictEqual(expect_post_update());
   });
 });
