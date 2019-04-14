@@ -15,7 +15,11 @@ import {
   entity_test_created,
   entity_test_created_with_criterias
 } from "./datas";
-import { entity_criteria, entity_criteria_type } from "./redux/criteria.test";
+import {
+  entity_criteria,
+  entity_criteria_type,
+  retMockGetCriteria
+} from "./redux/criteria.test";
 import { criteriaType } from "../redux/modules/criterias";
 
 configure({ adapter: new Adapter() });
@@ -71,6 +75,7 @@ describe("Componant tests", () => {
         .text()
     ).toBe("NOTEXT");
     expect(mockAction.mock.calls.length).toBe(0);
+    expect(wrapper).toMatchSnapshot();
   });
 
   test("Expect assert call onAction, on Select a Dod criteria", () => {
@@ -91,6 +96,7 @@ describe("Componant tests", () => {
     const onActionArg = mockAction.mock.calls[0][0];
     expect(onActionArg).toBeDefined();
     expect(onActionArg).toStrictEqual({ value: "BASIC" });
+    expect(wrapper).toMatchSnapshot();
   });
 
   test("Initial state in status TODO with criteria", () => {
@@ -108,6 +114,7 @@ describe("Componant tests", () => {
     expect(wrapper.find("button").text()).toBe("Start");
     expect(mockAction.mock.calls.length).toBe(1);
     expect(mockAction.mock.calls[0][0]).not.toBeDefined();
+    expect(wrapper).toMatchSnapshot();
   });
 
   test("Initial state in status INPROGRESS", () => {
@@ -129,6 +136,8 @@ describe("Componant tests", () => {
     expect(checkboxes.at(1).props().checked).toBeTruthy();
 
     expect(wrapper.find("button").length).toBe(0);
+    expect(wrapper).toMatchSnapshot();
+    wrapper.unmount();
   });
 
   test("Click checkbox on Status PROGRESS", () => {
@@ -145,6 +154,7 @@ describe("Componant tests", () => {
 
     expect(mockAction.mock.calls.length).toBe(1);
     expect(mockAction.mock.calls[0][0]).toStrictEqual(checkboxActionparams());
+    expect(wrapper).toMatchSnapshot();
   });
 
   test("Click on all checkbox validate Status", () => {
@@ -174,7 +184,7 @@ describe("Componant tests", () => {
       expect(ckb.props().readOnly).toStrictEqual(true);
       expect(ckb.props().checked).toBeTruthy();
     });
-
+    expect(wrapper).toMatchSnapshot();
     wrapper.unmount();
   });
 });
@@ -217,6 +227,7 @@ describe("Containers tests", () => {
     expect(cardsSelector.setCriteriasTypology.mock.calls[0][1]).toBe(
       criteriaType.BASIC
     );
+    expect(wrapper).toMatchSnapshot();
     wrapper.unmount();
   });
 
@@ -239,10 +250,39 @@ describe("Containers tests", () => {
     btnStart.simulate("click");
     expect(cardsSelector.updateCardStatusForward.mock.calls.length).toBe(1);
     expect(cardsSelector.updateCardStatusForward.mock.calls[0][0]).toBe("1");
+    expect(wrapper).toMatchSnapshot();
     wrapper.unmount();
   });
 
-  // test.todo(
-  //   "Call onAction with status INPROGRESS expect mock on toggleCardCriteria"
-  // );
+  test("Call onAction with status INPROGRESS expect mock on toggleCardCriteria", () => {
+    cardsSelector.toggleCardCriteria = jest.fn().mockImplementationOnce(id => {
+      return dispatch => {
+        return id;
+      };
+    });
+    store = createStore(reducer, applyMiddleware(thunk));
+
+    const wrapper = mount(
+      <Provider store={store}>
+        <CardActionnable
+          card={{
+            ...entity_test_created,
+            Status: cardStatus.INPROGRESS,
+            Criterias: [...retMockGetCriteria]
+          }}
+        />
+        ,
+      </Provider>
+    );
+    const checkbox = wrapper.find('input[type="checkbox"]');
+    checkbox.forEach(c => c.simulate("change", { target: { checked: true } }));
+    expect(cardsSelector.toggleCardCriteria.mock.calls.length).toBe(1);
+    expect(cardsSelector.toggleCardCriteria.mock.calls[0][0]).toBe("1");
+    expect(cardsSelector.toggleCardCriteria.mock.calls[0][1]).toBe(
+      "IdCritBas1"
+    );
+    expect(cardsSelector.toggleCardCriteria.mock.calls[0][2]).toBe(true);
+    expect(wrapper).toMatchSnapshot();
+    wrapper.unmount();
+  });
 });

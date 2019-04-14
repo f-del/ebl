@@ -30,5 +30,6 @@ test("CardsListByStatus with todo", () => {
   );
 
   expect(cardsSelector.retrieveAllCards.mock.calls.length).toBe(1);
+  expect(wrapper).toMatchSnapshot();
   wrapper.unmount();
 });

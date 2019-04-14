@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Containers tests CardsListByStatus CardsListByStatus with DONE 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <Connect(CardsList)
+    status={Symbol(DONE)}
+  >
+    <CardsList
+      list={Array []}
+      status={Symbol(DONE)}
+    >
+      <div
+        style={
+          Object {
+            "color": "gray",
+          }
+        }
+      />
+    </CardsList>
+  </Connect(CardsList)>
+</Provider>
+`;
+
+exports[`Containers tests CardsListByStatus CardsListByStatus with Inprogress 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <Connect(CardsList)
+    status={Symbol(INPROGRESS)}
+  >
+    <CardsList
+      list={Array []}
+      status={Symbol(INPROGRESS)}
+    >
+      <div
+        style={
+          Object {
+            "color": "green",
+          }
+        }
+      />
+    </CardsList>
+  </Connect(CardsList)>
+</Provider>
+`;
+
+exports[`Containers tests CardsListByStatus CardsListByStatus with todo 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <Connect(CardsList)
+    status={Symbol(TODO)}
+  >
+    <CardsList
+      list={Array []}
+      status={Symbol(TODO)}
+    >
+      <div
+        style={
+          Object {
+            "color": "blue",
+          }
+        }
+      />
+    </CardsList>
+  </Connect(CardsList)>
+</Provider>
+`;

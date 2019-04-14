@@ -30,7 +30,6 @@ describe("Containers tests", () => {
         );
         wrapper.unmount();
       };
-
       expect(wrapper).toThrowError(
         "Status not recognized, should come from cardStatus"
       );
@@ -48,6 +47,7 @@ describe("Containers tests", () => {
       );
 
       expect(cardsSelector.getAllCardsTodo.mock.calls.length).toBe(1);
+      expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });
 
@@ -63,6 +63,7 @@ describe("Containers tests", () => {
       );
 
       expect(cardsSelector.getAllCardsInProgess.mock.calls.length).toBe(1);
+      expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });
 
@@ -78,6 +79,7 @@ describe("Containers tests", () => {
       );
 
       expect(cardsSelector.getAllCardsDone.mock.calls.length).toBe(1);
+      expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });
   });

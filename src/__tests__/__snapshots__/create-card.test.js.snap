@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Componant tests Click on create new task and cancel by ESCAPE 1`] = `
+<div
+  className="create-card--actif"
+>
+  <textarea
+    autoFocus={true}
+    cols="17"
+    onChange={[Function]}
+    onKeyDown={[Function]}
+    rows="8"
+  />
+</div>
+`;
+
+exports[`Componant tests Click on create new task and validate by ENTER 1`] = `
+<CreateCard
+  onValidate={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          "Unit test task",
+        ],
+      ],
+      "results": Array [
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+      ],
+    }
+  }
+>
+  <div
+    className="create-card"
+  >
+    <button
+      onClick={[Function]}
+    >
+      Create new task
+    </button>
+  </div>
+</CreateCard>
+`;
+
+exports[`Componant tests Initial state 1`] = `
+<div
+  className="create-card"
+>
+  <button
+    onClick={[Function]}
+  >
+    Create new task
+  </button>
+</div>
+`;
+
+exports[`Containers createTask 1`] = `
+<Provider
+  store={
+    Object {
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(observable): [Function],
+    }
+  }
+>
+  <Connect(CreateCard)>
+    <CreateCard
+      onValidate={[Function]}
+    >
+      <div
+        className="create-card"
+      >
+        <button
+          onClick={[Function]}
+        >
+          Create new task
+        </button>
+      </div>
+    </CreateCard>
+  </Connect(CreateCard)>
+</Provider>
+`;
