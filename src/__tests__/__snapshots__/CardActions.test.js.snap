@@ -1,0 +1,531 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Componant tests Click checkbox on Status PROGRESS 1`] = `
+<div>
+  Done criterias:
+  <ul>
+    <li
+      key="1"
+    >
+      <input
+        checked={false}
+        id="tdod_1_1"
+        onChange={[Function]}
+        readOnly={false}
+        type="checkbox"
+        value="1"
+      />
+      <label
+        htmlFor="tdod_1_1"
+      />
+    </li>
+    <li
+      key="2"
+    >
+      <input
+        checked={true}
+        id="tdod_1_2"
+        onChange={[Function]}
+        readOnly={true}
+        type="checkbox"
+        value="2"
+      />
+      <label
+        htmlFor="tdod_1_2"
+      />
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`Componant tests Click on all checkbox validate Status 1`] = `
+<CardActions
+  card={
+    Object {
+      "Criterias": Array [
+        Object {
+          "Id": "1",
+          "Value": true,
+        },
+        Object {
+          "Id": "2",
+          "Value": true,
+        },
+      ],
+      "Id": "1",
+      "Status": Symbol(INPROGRESS),
+      "Title": "test",
+      "Type": "TASK",
+    }
+  }
+  onAction={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          Object {
+            "id": "1",
+            "value": true,
+          },
+        ],
+        Array [
+          Object {
+            "id": "2",
+            "value": true,
+          },
+        ],
+      ],
+      "results": Array [
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+        Object {
+          "isThrow": false,
+          "value": undefined,
+        },
+      ],
+    }
+  }
+>
+  <div>
+    Done criterias:
+    <ul>
+      <li
+        key="1"
+      >
+        <input
+          checked={true}
+          id="tdod_1_1"
+          onChange={[Function]}
+          readOnly={true}
+          type="checkbox"
+          value="1"
+        />
+        <label
+          htmlFor="tdod_1_1"
+        />
+      </li>
+      <li
+        key="2"
+      >
+        <input
+          checked={true}
+          id="tdod_1_2"
+          onChange={[Function]}
+          readOnly={true}
+          type="checkbox"
+          value="2"
+        />
+        <label
+          htmlFor="tdod_1_2"
+        />
+      </li>
+    </ul>
+  </div>
+</CardActions>
+`;
+
+exports[`Componant tests Expect assert call onAction, on Select a Dod criteria 1`] = `
+<div>
+  <select
+    onChange={[Function]}
+  >
+    <option>
+      Affect a DoD to task
+    </option>
+    <option
+      key="0"
+      value="BASIC"
+    >
+      BASIC
+    </option>
+    <option
+      key="1"
+      value="NOTEXT"
+    >
+      NOTEXT
+    </option>
+  </select>
+</div>
+`;
+
+exports[`Componant tests Initial state in status INPROGRESS 1`] = `
+<CardActions
+  card={
+    Object {
+      "Criterias": Array [
+        Object {
+          "Id": "1",
+          "Value": false,
+        },
+        Object {
+          "Id": "2",
+          "Value": true,
+        },
+      ],
+      "Id": "1",
+      "Status": Symbol(INPROGRESS),
+      "Title": "test",
+      "Type": "TASK",
+    }
+  }
+  onAction={[MockFunction]}
+>
+  <div>
+    Done criterias:
+    <ul>
+      <li
+        key="1"
+      >
+        <input
+          checked={false}
+          id="tdod_1_1"
+          onChange={[Function]}
+          readOnly={false}
+          type="checkbox"
+          value="1"
+        />
+        <label
+          htmlFor="tdod_1_1"
+        />
+      </li>
+      <li
+        key="2"
+      >
+        <input
+          checked={true}
+          id="tdod_1_2"
+          onChange={[Function]}
+          readOnly={true}
+          type="checkbox"
+          value="2"
+        />
+        <label
+          htmlFor="tdod_1_2"
+        />
+      </li>
+    </ul>
+  </div>
+</CardActions>
+`;
+
+exports[`Componant tests Initial state in status TODO with criteria 1`] = `
+<div>
+  <button
+    onClick={
+      [MockFunction] {
+        "calls": Array [
+          Array [],
+        ],
+        "results": Array [
+          Object {
+            "isThrow": false,
+            "value": undefined,
+          },
+        ],
+      }
+    }
+  >
+    Start
+  </button>
+</div>
+`;
+
+exports[`Componant tests Initial state in status TODO, without Criterias 1`] = `
+<div>
+  <select
+    onChange={[Function]}
+  >
+    <option>
+      Affect a DoD to task
+    </option>
+    <option
+      key="0"
+      value="BASIC"
+    >
+      BASIC
+    </option>
+    <option
+      key="1"
+      value="NOTEXT"
+    >
+      NOTEXT
+    </option>
+  </select>
+</div>
+`;
+
+exports[`Containers tests Call onAction with status INPROGRESS expect mock on toggleCardCriteria 1`] = `
+<Provider
+  store={
+    Object {
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(observable): [Function],
+    }
+  }
+>
+  <Connect(CardActions)
+    card={
+      Object {
+        "Criterias": Array [
+          Object {
+            "Id": "IdCritBas1",
+            "Value": "defaultBas",
+          },
+        ],
+        "Id": "1",
+        "Status": Symbol(INPROGRESS),
+        "Title": "test",
+        "Type": "TASK",
+      }
+    }
+  >
+    <CardActions
+      card={
+        Object {
+          "Criterias": Array [
+            Object {
+              "Id": "IdCritBas1",
+              "Value": "defaultBas",
+            },
+          ],
+          "Id": "1",
+          "Status": Symbol(INPROGRESS),
+          "Title": "test",
+          "Type": "TASK",
+        }
+      }
+      criterias_typology_list={
+        Array [
+          Object {
+            "BASIC": Array [
+              Object {
+                "Id": "IdCritBas1",
+                "Value": false,
+              },
+            ],
+          },
+          Object {
+            "DEV": Array [
+              Object {
+                "Id": "IdCritDev1",
+                "Text": "Development",
+                "Value": false,
+              },
+              Object {
+                "Id": "IdCritDev2",
+                "Text": "Unit testing",
+                "Value": false,
+              },
+            ],
+          },
+        ]
+      }
+      onAction={[Function]}
+    >
+      <div>
+        Done criterias:
+        <ul>
+          <li
+            key="IdCritBas1"
+          >
+            <input
+              checked={false}
+              id="tdod_1_IdCritBas1"
+              onChange={[Function]}
+              readOnly={false}
+              type="checkbox"
+              value="IdCritBas1"
+            />
+            <label
+              htmlFor="tdod_1_IdCritBas1"
+            />
+          </li>
+        </ul>
+      </div>
+    </CardActions>
+  </Connect(CardActions)>
+  ,
+</Provider>
+`;
+
+exports[`Containers tests Call onAction with status TODO and no criteria expect mock on setCriteriasTypology 1`] = `
+<Provider
+  store={
+    Object {
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(observable): [Function],
+    }
+  }
+>
+  <Connect(CardActions)
+    card={
+      Object {
+        "Id": "1",
+        "Status": Symbol(TODO),
+        "Title": "test",
+        "Type": "TASK",
+      }
+    }
+  >
+    <CardActions
+      card={
+        Object {
+          "Id": "1",
+          "Status": Symbol(TODO),
+          "Title": "test",
+          "Type": "TASK",
+        }
+      }
+      criterias_typology_list={
+        Array [
+          Object {
+            "BASIC": Array [
+              Object {
+                "Id": "IdCritBas1",
+                "Value": false,
+              },
+            ],
+          },
+          Object {
+            "DEV": Array [
+              Object {
+                "Id": "IdCritDev1",
+                "Text": "Development",
+                "Value": false,
+              },
+              Object {
+                "Id": "IdCritDev2",
+                "Text": "Unit testing",
+                "Value": false,
+              },
+            ],
+          },
+        ]
+      }
+      onAction={[Function]}
+    >
+      <div>
+        <select
+          onChange={[Function]}
+        >
+          <option>
+            Affect a DoD to task
+          </option>
+          <option
+            key="0"
+            value="BASIC"
+          >
+            BASIC
+          </option>
+          <option
+            key="1"
+            value="DEV"
+          >
+            DEV
+          </option>
+        </select>
+      </div>
+    </CardActions>
+  </Connect(CardActions)>
+  ,
+</Provider>
+`;
+
+exports[`Containers tests Call onAction with status TODO expect mock on startCard 1`] = `
+<Provider
+  store={
+    Object {
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(observable): [Function],
+    }
+  }
+>
+  <Connect(CardActions)
+    card={
+      Object {
+        "Criterias": Array [
+          Object {
+            "Id": "1",
+            "Value": true,
+          },
+          Object {
+            "Id": "2",
+            "Value": true,
+          },
+        ],
+        "Id": "1",
+        "Status": Symbol(TODO),
+        "Title": "test",
+        "Type": "TASK",
+      }
+    }
+  >
+    <CardActions
+      card={
+        Object {
+          "Criterias": Array [
+            Object {
+              "Id": "1",
+              "Value": true,
+            },
+            Object {
+              "Id": "2",
+              "Value": true,
+            },
+          ],
+          "Id": "1",
+          "Status": Symbol(TODO),
+          "Title": "test",
+          "Type": "TASK",
+        }
+      }
+      criterias_typology_list={
+        Array [
+          Object {
+            "BASIC": Array [
+              Object {
+                "Id": "IdCritBas1",
+                "Value": false,
+              },
+            ],
+          },
+          Object {
+            "DEV": Array [
+              Object {
+                "Id": "IdCritDev1",
+                "Text": "Development",
+                "Value": false,
+              },
+              Object {
+                "Id": "IdCritDev2",
+                "Text": "Unit testing",
+                "Value": false,
+              },
+            ],
+          },
+        ]
+      }
+      onAction={[Function]}
+    >
+      <div>
+        <button
+          onClick={[Function]}
+        >
+          Start
+        </button>
+      </div>
+    </CardActions>
+  </Connect(CardActions)>
+  ,
+</Provider>
+`;

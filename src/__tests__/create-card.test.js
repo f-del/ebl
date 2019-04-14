@@ -30,7 +30,7 @@ describe("Componant tests", () => {
 
     expectInitState(wrapper);
     //expect(wrapper.state("mode")).toBe(1);
-
+    expect(wrapper).toMatchSnapshot();
     wrapper.unmount();
   });
 
@@ -39,7 +39,7 @@ describe("Componant tests", () => {
 
     expectInitState(wrapper);
     expect(wrapper.find("button").simulate("click"));
-
+    expect(wrapper).toMatchSnapshot();
     //expect(wrapper.state("mode")).toBe(2);
     expect(wrapper.find("button").length).toBe(0);
 
@@ -88,7 +88,7 @@ describe("Componant tests", () => {
     expect(onValidate.mock.calls.length).toBe(1);
     expect(onValidate.mock.calls[0][0]).toStrictEqual(text);
     expectInitState(wrapper);
-
+    expect(wrapper).toMatchSnapshot();
     wrapper.unmount();
   });
 });
