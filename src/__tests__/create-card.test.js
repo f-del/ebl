@@ -10,6 +10,8 @@ import reducer from "../redux/store/index";
 import * as cardsSelector from "../redux/modules/cards";
 import CreateCard from "../components/CreateCard";
 import CreateTaskCard from "../containers/createTaskCard";
+import CreateUserStoryCard from "../containers/CreateUserStoryCard";
+import { entity_persona_created } from "./redux/personas";
 
 configure({ adapter: new Adapter() });
 
@@ -97,30 +99,68 @@ describe("Containers", () => {
     store = createStore(reducer, applyMiddleware(thunk));
   });
 
-  test("createTask", () => {
-    const text = "Unit test task";
-    const preventDefault = jest.fn();
-    cardsSelector.createCard = jest.fn().mockImplementationOnce(id => {
-      return dispatch => {
-        return id;
-      };
+  describe("createTask", () => {
+    test("createTask", () => {
+      const text = "Unit test task";
+      const preventDefault = jest.fn();
+      cardsSelector.createCard = jest.fn().mockImplementationOnce(id => {
+        return dispatch => {
+          return id;
+        };
+      });
+
+      const wrapper = mount(
+        <Provider store={store}>
+          <CreateTaskCard />
+        </Provider>
+      );
+      expect(wrapper.props("onValidate")).toBeDefined();
+
+      expect(wrapper.find("button").simulate("click"));
+      const input = wrapper.find("textarea");
+      expect(input.length).toBe(1);
+      input.simulate("change", { target: { value: text } });
+      input.simulate("keyDown", { which: 13, preventDefault });
+      expect(cardsSelector.createCard.mock.calls.length).toBe(1);
+      expect(cardsSelector.createCard.mock.calls[0][0]).toBe(text);
+
+      wrapper.unmount();
     });
+  });
 
-    const wrapper = mount(
-      <Provider store={store}>
-        <CreateTaskCard />
-      </Provider>
-    );
-    expect(wrapper.props("onValidate")).toBeDefined();
+  describe("create User Story", () => {
+    test("should Exist", () => {
+      const text = "Unit test User Story";
+      const preventDefault = jest.fn();
+      cardsSelector.createCard = jest.fn().mockImplementationOnce(id => {
+        return dispatch => {
+          return id;
+        };
+      });
+      const wrapper = mount(
+        <Provider store={store}>
+          <CreateUserStoryCard
+            personaId={entity_persona_created.Id}
+            personaNeedsIndex={1}
+          />
+        </Provider>
+      );
+      expect(wrapper.props("onValidate")).toBeDefined();
+      expect(wrapper.find("button").simulate("click"));
+      const input = wrapper.find("textarea");
+      expect(input.length).toBe(1);
+      input.simulate("change", { target: { value: text } });
+      input.simulate("keyDown", { which: 13, preventDefault });
 
-    expect(wrapper.find("button").simulate("click"));
-    const input = wrapper.find("textarea");
-    expect(input.length).toBe(1);
-    input.simulate("change", { target: { value: text } });
-    input.simulate("keyDown", { which: 13, preventDefault });
-    expect(cardsSelector.createCard.mock.calls.length).toBe(1);
-    expect(cardsSelector.createCard.mock.calls[0][0]).toBe(text);
-
-    wrapper.unmount();
+      expect(cardsSelector.createCard.mock.calls.length).toBe(1);
+      expect(cardsSelector.createCard.mock.calls[0][0]).toBe(text);
+      expect(cardsSelector.createCard.mock.calls[0][1]).toBe(
+        cardsSelector.cardType.UserStory
+      );
+      expect(cardsSelector.createCard.mock.calls[0][2]).toStrictEqual({
+        persona: { id: entity_persona_created.Id, needsIndex: 1 }
+      });
+      wrapper.unmount();
+    });
   });
 });

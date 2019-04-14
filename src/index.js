@@ -17,6 +17,8 @@ import CreateTaskCard from "./containers/createTaskCard";
 
 import "./styles.css";
 import { cardType, cardStatus } from "./redux/modules/cards";
+import Persona from "./components/Persona";
+import { getAllPersonas } from "./redux/modules/personas";
 
 let config = {
   apiKey: "AIzaSyBwM4YVUVijCR35f9D_vg1qHbF3OTotVb0",
@@ -40,6 +42,9 @@ function App() {
   return (
     <Provider store={store}>
       <div className="App">
+        {getAllPersonas(store.getState()).map(p => (
+          <Persona key={p.Id} persona={p} addStory={true} />
+        ))}
         <CreateTaskCard />
         <TaskCardsBoard type={cardType.Task}>
           <CardListByStatus status={cardStatus.TODO} />

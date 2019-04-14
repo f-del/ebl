@@ -25,7 +25,7 @@ export const mapping = card => {
 /**
  * Mapping from JS model to Firestore model
  */
-export const mappingTo = card => {
+export const mappingTo = (card, db) => {
   if (card === undefined) throw new Error("Argument card is mandatory");
   if (card.Criterias !== undefined) return card;
   const mappedCard = {};
@@ -35,6 +35,12 @@ export const mappingTo = card => {
   if (card.Status !== undefined)
     mappedCard["Status"] = cardStatus.mapFrom(card.Status);
 
+  if (card.Persona !== undefined) {
+    mappedCard["Persona"] = {
+      Id: db.collection("Persona").doc(card.Persona.Id),
+      Needs: card.Persona.NeedsIndex
+    };
+  }
   return mappedCard;
 };
 
@@ -42,9 +48,10 @@ function post(db) {
   return (card, fields) => {
     if (card === undefined) throw new Error("Argument card is mandatory");
     const isUpdate = card.Id !== undefined;
-    const _post = db => {
-      if (isUpdate) return db.doc(card.Id).update(mappingTo(fields));
-      else return db.add(mappingTo(card));
+    const _post = collection => {
+      if (isUpdate)
+        return collection.doc(card.Id).update(mappingTo(fields, db));
+      else return collection.add(mappingTo(card, db));
     };
     return new Promise((resolve, reject) => {
       if (

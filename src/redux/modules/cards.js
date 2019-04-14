@@ -11,10 +11,10 @@ const SET_CRITERIA = "CARD/CRITERIA/SET";
 const RETRIEVE = "CARD/RETRIEVE/START";
 const RETRIEVED = "CARD/RETRIEVE/END";
 
-const card = title => ({
+const card = (title, type = cardType.Task) => ({
   Title: title,
   Status: cardStatus.TODO,
-  Type: cardType.Task
+  Type: type
 });
 
 export const LOADING_STATE = Object.freeze({
@@ -41,7 +41,8 @@ export const cardStatus = Object.freeze({
 });
 
 export const cardType = {
-  Task: "TASK"
+  Task: "TASK",
+  UserStory: "USER-STORY"
 };
 
 /***
@@ -54,11 +55,29 @@ export const cardType = {
  *
  */
 
-export const createCard = title => {
+/*
+  title
+  type = cardType.Task
+  persona : { id, needsIndex }
+ */
+export const createCard = (title, type = cardType.Task, { persona } = {}) => {
   if (title === undefined || title.length === 0)
     throw new Error("Argument title is mandatory");
+  if (type !== cardType.Task && type !== cardType.UserStory)
+    throw new Error(
+      "Optionnal argument type is not correct, should be come from cardType enum"
+    );
   return async (dispatch, getState, { api }) => {
-    const newCard = card(title);
+    const newCard = card(title, type);
+
+    if (persona !== undefined) {
+      if (persona.id === undefined || persona.needsIndex === undefined)
+        throw new Error(
+          "Optionnal argument persona is not correct, should be {persona : {id, needsIndex}}"
+        );
+
+      newCard.Persona = { Id: persona.id, NeedsIndex: persona.needsIndex };
+    }
     const res = await api.Cards.Post(newCard);
     dispatch(createCardSuccess(res.Id, newCard));
   };

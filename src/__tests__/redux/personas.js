@@ -28,6 +28,11 @@ const entity_persona_featureTeam_Id = () => ({
   Id: "e6wTJIBsAw5puwwrNEsR"
 });
 
+export const entity_persona_created = {
+  ...entity_persona_productOwner_Id(),
+  ...entity_persona_productOwner()
+};
+
 const personas_state = () => ({
   list: {
     [entity_persona_productOwner_Id().Id]: entity_persona_productOwner(),
@@ -69,7 +74,7 @@ describe("Selectors", () => {
 
   test("Get All personas, expect [{productOwner, Id},{FT, ID}]", () => {
     expect(getAllPersonas(personas_store())).toStrictEqual([
-      { ...entity_persona_productOwner_Id(), ...entity_persona_productOwner() },
+      entity_persona_created,
       { ...entity_persona_featureTeam_Id(), ...entity_persona_featureTeam() }
     ]);
   });

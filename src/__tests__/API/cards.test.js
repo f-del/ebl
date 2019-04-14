@@ -3,7 +3,7 @@ import { mapping, mappingTo } from "../../API/cards";
 
 import MockFirebase from "mock-cloud-firestore";
 import apiCards from "../../API/cards";
-import { cardStatus } from "../../redux/modules/cards";
+import { cardStatus, cardType } from "../../redux/modules/cards";
 
 const fixtureData = {
   __collection__: {
@@ -211,6 +211,26 @@ describe("POST method", () => {
     await expect(api.Post(entity_test)).resolves.toStrictEqual(
       expect_post_create()
     );
+  });
+
+  test("Return id of created card with ref to persona", async () => {
+    expect.assertions(1);
+    const firebase = new MockFirebase(fixtureData);
+
+    const db = firebase.firestore();
+
+    const api = apiCards(db);
+
+    await expect(
+      api.Post({
+        ...entity_test,
+        Type: cardType.UserStory,
+        Persona: {
+          Id: "ldksjflkdsj",
+          NeedsIndex: 3
+        }
+      })
+    ).resolves.toStrictEqual(expect_post_create());
   });
 
   test("Return true on updated card", async () => {
