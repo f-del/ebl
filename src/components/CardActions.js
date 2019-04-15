@@ -71,7 +71,11 @@ function CardActions({ card, onAction, criterias_typology_list, classes }) {
   const displayTODO_AffectCriterias = () => (
     <UiFormControl>
       <UiInputLabel htmlFor={`criteriaSelect${card.Id}`}>DoD</UiInputLabel>
-      <UiSelect id={`criteriaSelect${card.Id}`} onChange={handleSelect}>
+      <UiSelect
+        id={`criteriaSelect${card.Id}`}
+        onChange={handleSelect}
+        value=""
+      >
         {criterias_typology_list.map((ct, i) => (
           <UiMenuItem key={i} value={Object.keys(ct)[0]}>
             {ct.Text || Object.keys(ct)}

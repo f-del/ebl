@@ -7,6 +7,10 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import reducer from "../redux/store/index";
 
+import UiSelect from "@material-ui/core/Select";
+import UiButton from "@material-ui/core/Button";
+import UiMenuItem from "@material-ui/core/MenuItem";
+import UiCheckbox from "@material-ui/core/Checkbox";
 import * as cardsSelector from "../redux/modules/cards";
 import { cardStatus } from "../redux/modules/cards";
 import CardActions from "../components/CardActions";
@@ -45,37 +49,16 @@ describe("Componant tests", () => {
           entity_criteria_type("NOTEXT", entity_criteria)
         ]}
       />
-    );
+    ).dive();
 
-    expect(wrapper.find("button").length).toBe(0);
-    expect(wrapper.find("select").length).toBe(1);
-    expect(wrapper.find("select>option").length).toBe(3);
-    expect(
-      wrapper
-        .find("select>option")
-        .at(0)
-        .text()
-    ).toBe("Affect a DoD to task");
-    expect(
-      wrapper
-        .find("select>option")
-        .at(1)
-        .text()
-    ).toBe("BASIC");
-    expect(
-      wrapper
-        .find("select>option")
-        .at(1)
-        .props().value
-    ).toStrictEqual("BASIC");
-    expect(
-      wrapper
-        .find("select>option")
-        .at(2)
-        .text()
-    ).toBe("NOTEXT");
-    expect(mockAction.mock.calls.length).toBe(0);
+    expect(wrapper.find(UiButton).length).toBe(0);
+    expect(wrapper.find(UiSelect).length).toBe(1);
+    const listitem = wrapper.find(UiMenuItem);
+    expect(listitem.length).toBe(2);
+
     expect(wrapper).toMatchSnapshot();
+
+    wrapper.unmount();
   });
 
   test("Expect assert call onAction, on Select a Dod criteria", () => {
@@ -89,8 +72,8 @@ describe("Componant tests", () => {
           entity_criteria_type("NOTEXT", entity_criteria)
         ]}
       />
-    );
-    const selectDod = wrapper.find("select");
+    ).dive();
+    const selectDod = wrapper.find(UiSelect);
     selectDod.simulate("change", { target: { value: "BASIC" } });
     expect(mockAction.mock.calls.length).toBe(1);
     const onActionArg = mockAction.mock.calls[0][0];
@@ -106,12 +89,11 @@ describe("Componant tests", () => {
         card={entity_test_created_with_criterias}
         onAction={mockAction}
       />
-    );
+    ).dive();
 
-    const btnStart = wrapper.find("button");
+    const btnStart = wrapper.find(UiButton);
     btnStart.simulate("click");
-    expect(wrapper.find("button").length).toBe(1);
-    expect(wrapper.find("button").text()).toBe("Start");
+    expect(btnStart.length).toBe(1);
     expect(mockAction.mock.calls.length).toBe(1);
     expect(mockAction.mock.calls[0][0]).not.toBeDefined();
     expect(wrapper).toMatchSnapshot();
@@ -128,11 +110,11 @@ describe("Componant tests", () => {
       />
     );
 
-    const checkboxes = wrapper.find('input[type="checkbox"]');
+    const checkboxes = wrapper.find(UiCheckbox);
     expect(checkboxes.length).toBeGreaterThan(0);
 
-    const readOnly = checkboxes.at(1).props().readOnly;
-    expect(readOnly).toStrictEqual(true);
+    const disabled = checkboxes.at(1).props().disabled;
+    expect(disabled).toStrictEqual(true);
     expect(checkboxes.at(1).props().checked).toBeTruthy();
 
     expect(wrapper.find("button").length).toBe(0);
@@ -142,19 +124,23 @@ describe("Componant tests", () => {
 
   test("Click checkbox on Status PROGRESS", () => {
     const mockAction = jest.fn(() => {});
-    const wrapper = shallow(
+    const wrapper = mount(
       <CardActions
         card={entity_card_created_on_progress}
         onAction={mockAction}
       />
     );
 
-    const checkbox = wrapper.find('input[type="checkbox"]');
-    checkbox.first().simulate("change", { target: { checked: true } });
+    const checkbox = wrapper.find(UiCheckbox);
+    checkbox
+      .at(0)
+      .props()
+      .onChange({ target: { checked: true } });
 
     expect(mockAction.mock.calls.length).toBe(1);
     expect(mockAction.mock.calls[0][0]).toStrictEqual(checkboxActionparams());
     expect(wrapper).toMatchSnapshot();
+    wrapper.unmount();
   });
 
   test("Click on all checkbox validate Status", () => {
@@ -167,8 +153,8 @@ describe("Componant tests", () => {
       />
     );
 
-    const checkbox = wrapper.find('input[type="checkbox"]');
-    checkbox.forEach(c => c.simulate("change", { target: { checked: true } }));
+    const checkbox = wrapper.find(UiCheckbox);
+    checkbox.forEach(c => c.props().onChange({ target: { checked: true } }));
 
     expect(mockAction.mock.calls.length).toBe(2);
     expect(mockAction.mock.calls[0][0]).toStrictEqual(checkboxActionparams());
@@ -179,9 +165,9 @@ describe("Componant tests", () => {
     entity_card_created_on_progress.Criterias[0].Value = true;
     entity_card_created_on_progress.Criterias[1].Value = true;
     wrapper.setProps({ card: entity_card_created_on_progress });
-    const checkboxChecked = wrapper.find('input[type="checkbox"]');
+    const checkboxChecked = wrapper.find(UiCheckbox);
     checkboxChecked.forEach(ckb => {
-      expect(ckb.props().readOnly).toStrictEqual(true);
+      expect(ckb.props().disabled).toStrictEqual(true);
       expect(ckb.props().checked).toBeTruthy();
     });
     expect(wrapper).toMatchSnapshot();
@@ -220,8 +206,11 @@ describe("Containers tests", () => {
       </Provider>
     );
 
-    const selectDod = wrapper.find("select");
-    selectDod.simulate("change", { target: { value: "BASIC" } });
+    const selectDod = wrapper.find(UiSelect);
+    selectDod
+      .at(0)
+      .props()
+      .onChange({ target: { value: "BASIC" } });
     expect(cardsSelector.setCriteriasTypology.mock.calls.length).toBe(1);
     expect(cardsSelector.setCriteriasTypology.mock.calls[0][0]).toBe("1");
     expect(cardsSelector.setCriteriasTypology.mock.calls[0][1]).toBe(

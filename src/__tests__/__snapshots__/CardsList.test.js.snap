@@ -20,13 +20,7 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with DONE 1`] = `
       list={Array []}
       status={Symbol(DONE)}
     >
-      <div
-        style={
-          Object {
-            "color": "gray",
-          }
-        }
-      />
+      <div />
     </CardsList>
   </Connect(CardsList)>
 </Provider>
@@ -52,13 +46,7 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with Inprogress 1`
       list={Array []}
       status={Symbol(INPROGRESS)}
     >
-      <div
-        style={
-          Object {
-            "color": "green",
-          }
-        }
-      />
+      <div />
     </CardsList>
   </Connect(CardsList)>
 </Provider>
@@ -84,13 +72,7 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with todo 1`] = `
       list={Array []}
       status={Symbol(TODO)}
     >
-      <div
-        style={
-          Object {
-            "color": "blue",
-          }
-        }
-      />
+      <div />
     </CardsList>
   </Connect(CardsList)>
 </Provider>
