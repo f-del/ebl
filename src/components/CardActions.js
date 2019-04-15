@@ -1,49 +1,86 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { withStyles } from "@material-ui/core/styles";
+import green from "@material-ui/core/colors/green";
+import UiTypography from "@material-ui/core/Typography";
+import UiMenuItem from "@material-ui/core/MenuItem";
+import UiSelect from "@material-ui/core/Select";
+import UiInputLabel from "@material-ui/core/InputLabel";
+import UiFormControl from "@material-ui/core/FormControl";
+import UiFormControlLabel from "@material-ui/core/FormControlLabel";
+import UiFormGroup from "@material-ui/core/FormGroup";
+import UiFormHelperText from "@material-ui/core/FormHelperText";
+import UiButton from "@material-ui/core/Button";
+import UiCheckbox from "@material-ui/core/Checkbox";
+
 import { cardStatus } from "../redux/modules/cards";
 
-function CardActions({ card, onAction, criterias_typology_list }) {
+const styles = theme => ({
+  root: {
+    color: green[600],
+    "&$checked": {
+      color: green[500]
+    }
+  },
+  checked: {},
+  button: {
+    spacing: theme.spacing.unit
+  }
+});
+function CardActions({ card, onAction, criterias_typology_list, classes }) {
   const displayINPROGRESS = () => (
-    <div>
-      Done criterias:
-      <ul>
+    <UiFormControl component="fieldset">
+      <UiTypography component="legend">Done criterias :</UiTypography>
+      <UiFormGroup>
         {card.Criterias.map(crit => (
-          <li key={crit.Id}>
-            <input
-              id={"tdod_" + card.Id + "_" + crit.Id}
-              type="checkbox"
-              value={crit.Id}
-              checked={crit.Value === true}
-              readOnly={crit.Value === true}
-              onChange={e => handleCheckBox(e, crit.Id)}
-            />
-            <label htmlFor={"tdod_" + card.Id + "_" + crit.Id}>
-              {crit.Text}
-            </label>
-          </li>
+          <UiFormControlLabel
+            key={crit.Id}
+            disabled={crit.Value === true}
+            control={
+              <UiCheckbox
+                id={"tdod_" + card.Id + "_" + crit.Id}
+                classes={{
+                  root: classes.root,
+                  checked: classes.checked
+                }}
+                value={crit.Id}
+                checked={crit.Value === true}
+                onChange={e => handleCheckBox(e, crit.Id)}
+              />
+            }
+            label={crit.Text}
+            labelPlacement="start"
+          />
         ))}
-      </ul>
-    </div>
+      </UiFormGroup>
+    </UiFormControl>
   );
 
   const displayTODO = () => (
-    <div>
-      <button onClick={onAction}>Start</button>
-    </div>
+    <UiButton
+      color="primary"
+      size="small"
+      className={classes.button}
+      onClick={onAction}
+    >
+      Start
+    </UiButton>
   );
 
   const displayTODO_AffectCriterias = () => (
-    <div>
-      <select onChange={handleSelect}>
-        <option>Affect a DoD to task</option>
+    <UiFormControl>
+      <UiInputLabel htmlFor={`criteriaSelect${card.Id}`}>DoD</UiInputLabel>
+      <UiSelect id={`criteriaSelect${card.Id}`} onChange={handleSelect}>
         {criterias_typology_list.map((ct, i) => (
-          <option key={i} value={Object.keys(ct)[0]}>
+          <UiMenuItem key={i} value={Object.keys(ct)[0]}>
             {ct.Text || Object.keys(ct)}
-          </option>
+          </UiMenuItem>
         ))}
-      </select>
-    </div>
+      </UiSelect>
+
+      <UiFormHelperText>Affect a Definition of Done workflow</UiFormHelperText>
+    </UiFormControl>
   );
 
   if (card.Status === cardStatus.TODO)
@@ -68,4 +105,4 @@ CardActions.propTypes = {
   onAction: PropTypes.func.isRequired
 };
 
-export default CardActions;
+export default withStyles(styles)(CardActions);

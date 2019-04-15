@@ -4,15 +4,7 @@ import { cardStatus } from "../redux/modules/cards";
 
 function CardsList({ list, status }) {
   return (
-    <div
-      style={
-        status === cardStatus.TODO
-          ? { color: "blue" }
-          : status === cardStatus.INPROGRESS
-          ? { color: "green" }
-          : { color: "gray" }
-      }
-    >
+    <div>
       {list.map((c, i) => (
         <Card key={i} card={c} />
       ))}

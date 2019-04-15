@@ -4,6 +4,8 @@ import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
+import CssBaseline from "@material-ui/core/CssBaseline";
+
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
@@ -41,6 +43,7 @@ const store = createStore(
 function App() {
   return (
     <Provider store={store}>
+      <CssBaseline />
       <div className="App">
         {getAllPersonas(store.getState()).map(p => (
           <Persona key={p.Id} persona={p} addStory={true} />
