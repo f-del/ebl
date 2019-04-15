@@ -391,7 +391,7 @@ describe("API tests", () => {
           }
         })
       );
-      /*
+
       expect(fnMockPostCards.mock.calls.length).toBe(1);
       expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual({
         ...entity_test,
@@ -400,7 +400,7 @@ describe("API tests", () => {
           Id: persona.Id,
           NeedsIndex: 3
         }
-      });*/
+      });
       const actions = store.getActions();
       expect(actions.length).toBe(1);
       expect(actions[0]).toStrictEqual({
