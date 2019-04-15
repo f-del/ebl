@@ -1,6 +1,5 @@
 import React from "react";
 import Card from "./Card";
-import { cardStatus } from "../redux/modules/cards";
 
 function CardsList({ list, status }) {
   return (
