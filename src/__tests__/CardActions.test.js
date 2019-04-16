@@ -38,7 +38,7 @@ describe("Componant tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
-  test.skip("Initial state in status TODO, without Criterias", () => {
+  test("Initial state in status TODO, without Criterias", () => {
     const mockAction = jest.fn(() => {});
     const wrapper = shallow(
       <CardActions
@@ -61,7 +61,7 @@ describe("Componant tests", () => {
     wrapper.unmount();
   });
 
-  test.skip("Expect assert call onAction, on Select a Dod criteria", () => {
+  test("Expect assert call onAction, on Select a Dod criteria", () => {
     const mockAction = jest.fn(() => {});
     const wrapper = shallow(
       <CardActions
@@ -82,7 +82,7 @@ describe("Componant tests", () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  test.skip("Initial state in status TODO with criteria", () => {
+  test("Initial state in status TODO with criteria", () => {
     const mockAction = jest.fn(id => {});
     const wrapper = shallow(
       <CardActions
@@ -99,7 +99,7 @@ describe("Componant tests", () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  test.skip("Initial state in status INPROGRESS", () => {
+  test("Initial state in status INPROGRESS", () => {
     const mockAction = jest.fn(() => {});
 
     entity_card_created_on_progress.Criterias[1].Value = true;
@@ -122,7 +122,7 @@ describe("Componant tests", () => {
     wrapper.unmount();
   });
 
-  test.skip("Click checkbox on Status PROGRESS", () => {
+  test("Click checkbox on Status PROGRESS", () => {
     const mockAction = jest.fn(() => {});
     const wrapper = mount(
       <CardActions
@@ -143,7 +143,7 @@ describe("Componant tests", () => {
     wrapper.unmount();
   });
 
-  test.skip("Click on all checkbox validate Status", () => {
+  test("Click on all checkbox validate Status", () => {
     const mockAction = jest.fn(() => {});
 
     const wrapper = mount(
@@ -179,7 +179,7 @@ describe("Containers tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
-  test.skip("Expect props onAction is defined", () => {
+  test("Expect props onAction is defined", () => {
     const wrapper = shallow(
       <CardActionnable
         card={entity_test_created_with_criterias}
@@ -189,7 +189,7 @@ describe("Containers tests", () => {
 
     expect(wrapper.props("onAction")).toBeDefined();
   });
-  test.skip("Call onAction with status TODO and no criteria expect mock on setCriteriasTypology", () => {
+  test("Call onAction with status TODO and no criteria expect mock on setCriteriasTypology", () => {
     cardsSelector.setCriteriasTypology = jest
       .fn()
       .mockImplementationOnce(id => {
@@ -220,7 +220,7 @@ describe("Containers tests", () => {
     wrapper.unmount();
   });
 
-  test.skip("Call onAction with status TODO expect mock on startCard", () => {
+  test("Call onAction with status TODO expect mock on startCard", () => {
     cardsSelector.updateCardStatusForward = jest
       .fn()
       .mockImplementationOnce(id => {
@@ -243,7 +243,7 @@ describe("Containers tests", () => {
     wrapper.unmount();
   });
 
-  test.skip("Call onAction with status INPROGRESS expect mock on toggleCardCriteria", () => {
+  test("Call onAction with status INPROGRESS expect mock on toggleCardCriteria", () => {
     cardsSelector.toggleCardCriteria = jest.fn().mockImplementationOnce(id => {
       return dispatch => {
         return id;

@@ -11,16 +11,19 @@ const fixtureData = {
       __doc__: {
         id1: {
           ...entity_test,
-          Status: "TODO"
+          Status: "TODO",
+          CreatedAt: new Date(2000, 1, 1, 12, 0, 0, 0).toJSON()
         },
         id2: {
           ...entity_test,
-          Status: "INPROGRESS"
+          Status: "INPROGRESS",
+          CreatedAt: new Date(2000, 1, 1, 12, 0, 0, 0).toJSON()
         },
         id3: {
           ...entity_test,
           Type: "STORY",
-          Status: "DONE"
+          Status: "DONE",
+          CreatedAt: new Date(2000, 1, 1, 12, 0, 0, 0).toJSON()
         }
       }
     }
@@ -36,7 +39,7 @@ export const expect_post_update = () => ({
 });
 
 describe("Card mapping to Firestore", () => {
-  test.skip("no arg", () => {
+  test("no arg", () => {
     const wrapper = () => {
       mappingTo();
     };
@@ -44,24 +47,50 @@ describe("Card mapping to Firestore", () => {
     expect(wrapper).toThrowError("Argument card is mandatory");
   });
 
-  test.skip("empty card literal", () => {
+  test("empty card literal", () => {
     const card = mappingTo({});
 
     expect(card).toStrictEqual({});
   });
 
-  test.skip("Card with all properties, expect no more Symbol", () => {
+  test("Card with all properties, expect no more Symbol", () => {
     const card = mappingTo(entity_test_created);
     expect(card).toStrictEqual({
       Status: "TODO",
       Title: "test",
-      Type: "TASK"
+      Type: "TASK",
+      CreatedAt: expect.any(String)
+    });
+  });
+
+  test("card with date & array of UserStories", () => {
+    const firebase = new MockFirebase(fixtureData);
+
+    const db = firebase.firestore();
+    const date = new Date();
+    const card = mappingTo(
+      {
+        Title: "test",
+        Status: cardStatus.TODO,
+        CreatedAt: date,
+        Type: cardType.Hypothesis,
+        UserStories: [{ Id: "IdLinked" }]
+      },
+      db
+    );
+
+    expect(card).toStrictEqual({
+      Title: "test",
+      Type: cardType.Hypothesis,
+      Status: "TODO",
+      CreatedAt: date.toJSON(),
+      UserStories: [{ Id: db.collection("Cards").doc("IdLinked") }]
     });
   });
 });
 
 describe("Card mapping from Firestore", () => {
-  test.skip("no arg", () => {
+  test("no arg", () => {
     const wrapper = () => {
       mapping();
     };
@@ -69,13 +98,13 @@ describe("Card mapping from Firestore", () => {
     expect(wrapper).toThrowError("Argument card is mandatory");
   });
 
-  test.skip("empty card literal", () => {
+  test("empty card literal", () => {
     const card = mapping({});
 
     expect(card).toStrictEqual({});
   });
 
-  test.skip("card as firestore type", () => {
+  test("card as firestore type", () => {
     const fnData = jest.fn(() => {
       return {
         ...entity_test,
@@ -93,7 +122,7 @@ describe("Card mapping from Firestore", () => {
     expect(card).toStrictEqual(entity_test_created);
   });
 
-  test.skip("card without status", () => {
+  test("card without status", () => {
     const fnData = jest.fn(() => {
       return {
         Title: "test",
@@ -115,9 +144,15 @@ describe("Card mapping from Firestore", () => {
     });
   });
 
-  test.skip("card with status", () => {
+  test("card with status and date", () => {
+    const date = new Date();
     const fnData = jest.fn(() => {
-      return { Title: "test", Type: "TASK", Status: "TODO" };
+      return {
+        Title: "test",
+        Type: "TASK",
+        Status: "TODO",
+        CreatedAt: date.toJSON()
+      };
     });
 
     const mockFirestore = {
@@ -131,13 +166,14 @@ describe("Card mapping from Firestore", () => {
       Id: "1",
       Title: "test",
       Type: "TASK",
-      Status: cardStatus.TODO
+      Status: cardStatus.TODO,
+      CreatedAt: date
     });
   });
 });
 
 describe("GET method", () => {
-  test.skip("Return array of all cards", async () => {
+  test("Return array of all cards", async () => {
     expect.assertions(1);
     const firebase = new MockFirebase(fixtureData);
 
@@ -150,7 +186,7 @@ describe("GET method", () => {
       { Id: "id3", ...entity_test, Type: "STORY", Status: cardStatus.DONE }
     ]);
   });
-  test.skip("Return array of card filtred by arg", async () => {
+  test("Return array of card filtred by arg", async () => {
     expect.assertions(1);
     const firebase = new MockFirebase(fixtureData);
 
@@ -168,7 +204,7 @@ describe("POST method", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
-  test.skip("Error on empty card arg", async () => {
+  test("Error on empty card arg", async () => {
     expect.assertions(1);
     const firebase = new MockFirebase(fixtureData);
 
@@ -181,7 +217,7 @@ describe("POST method", () => {
     expect(result).toThrowError("Argument card is mandatory");
   });
 
-  test.skip("Error on not asserted card (Status as Symbol OR invalid property)", async () => {
+  test("Error on not asserted card (Status as Symbol OR invalid property)", async () => {
     expect.assertions(3);
     const firebase = new MockFirebase(fixtureData);
 
@@ -201,7 +237,7 @@ describe("POST method", () => {
     ).rejects.toBe("Argument card is not expected type");
   });
 
-  test.skip("Return id of created card", async () => {
+  test("Return id of created card", async () => {
     expect.assertions(1);
     const firebase = new MockFirebase(fixtureData);
 
@@ -213,7 +249,7 @@ describe("POST method", () => {
     );
   });
 
-  test.skip("Return id of created card with ref to persona", async () => {
+  test("Return id of created card with ref to persona", async () => {
     expect.assertions(1);
     const firebase = new MockFirebase(fixtureData);
 
@@ -233,7 +269,7 @@ describe("POST method", () => {
     ).resolves.toStrictEqual(expect_post_create());
   });
 
-  test.skip("Return true on updated card", async () => {
+  test("Return true on updated card", async () => {
     expect.assertions(1);
     const firebase = new MockFirebase(fixtureData);
 
@@ -247,7 +283,7 @@ describe("POST method", () => {
     });
   });
 
-  test.skip("Return true on updated card with symbol property", async () => {
+  test("Return true on updated card with symbol property", async () => {
     expect.assertions(1);
     const firebase = new MockFirebase(fixtureData);
 
@@ -260,5 +296,22 @@ describe("POST method", () => {
         { Value: cardStatus.TODO }
       )
     ).resolves.toStrictEqual(expect_post_update());
+  });
+
+  test("Return true on updated card with array of stories Id", async () => {
+    expect.assertions(1);
+    const firebase = new MockFirebase(fixtureData);
+
+    const db = firebase.firestore();
+
+    const api = apiCards(db);
+
+    await expect(
+      api.Post({
+        ...entity_test,
+        Type: cardType.Hypothesis,
+        UserStories: [{ Id: "IdLinked" }]
+      })
+    ).resolves.toStrictEqual(expect_post_create());
   });
 });

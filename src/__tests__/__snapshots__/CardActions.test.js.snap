@@ -4,6 +4,7 @@ exports[`Componant tests Click checkbox on Status PROGRESS 1`] = `
 <WithStyles(CardActions)
   card={
     Object {
+      "CreatedAt": 2000-02-01T11:00:00.000Z,
       "Criterias": Array [
         Object {
           "Id": "1",
@@ -42,6 +43,7 @@ exports[`Componant tests Click checkbox on Status PROGRESS 1`] = `
   <CardActions
     card={
       Object {
+        "CreatedAt": 2000-02-01T11:00:00.000Z,
         "Criterias": Array [
           Object {
             "Id": "1",
@@ -2202,6 +2204,7 @@ exports[`Componant tests Click on all checkbox validate Status 1`] = `
 <WithStyles(CardActions)
   card={
     Object {
+      "CreatedAt": 2000-02-01T11:00:00.000Z,
       "Criterias": Array [
         Object {
           "Id": "1",
@@ -2250,6 +2253,7 @@ exports[`Componant tests Click on all checkbox validate Status 1`] = `
   <CardActions
     card={
       Object {
+        "CreatedAt": 2000-02-01T11:00:00.000Z,
         "Criterias": Array [
           Object {
             "Id": "1",
@@ -4415,6 +4419,7 @@ exports[`Componant tests Initial state in status INPROGRESS 1`] = `
 <WithStyles(CardActions)
   card={
     Object {
+      "CreatedAt": 2000-02-01T11:00:00.000Z,
       "Criterias": Array [
         Object {
           "Id": "1",
@@ -4436,6 +4441,7 @@ exports[`Componant tests Initial state in status INPROGRESS 1`] = `
   <CardActions
     card={
       Object {
+        "CreatedAt": 2000-02-01T11:00:00.000Z,
         "Criterias": Array [
           Object {
             "Id": "1",
@@ -6644,6 +6650,7 @@ exports[`Containers tests Call onAction with status INPROGRESS expect mock on to
   <Connect(WithStyles(CardActions))
     card={
       Object {
+        "CreatedAt": 2000-02-01T11:00:00.000Z,
         "Criterias": Array [
           Object {
             "Id": "IdCritBas1",
@@ -6660,6 +6667,7 @@ exports[`Containers tests Call onAction with status INPROGRESS expect mock on to
     <WithStyles(CardActions)
       card={
         Object {
+          "CreatedAt": 2000-02-01T11:00:00.000Z,
           "Criterias": Array [
             Object {
               "Id": "IdCritBas1",
@@ -6703,6 +6711,7 @@ exports[`Containers tests Call onAction with status INPROGRESS expect mock on to
       <CardActions
         card={
           Object {
+            "CreatedAt": 2000-02-01T11:00:00.000Z,
             "Criterias": Array [
               Object {
                 "Id": "IdCritBas1",
@@ -8087,6 +8096,7 @@ exports[`Containers tests Call onAction with status TODO and no criteria expect 
   <Connect(WithStyles(CardActions))
     card={
       Object {
+        "CreatedAt": 2000-02-01T11:00:00.000Z,
         "Id": "1",
         "Status": Symbol(TODO),
         "Title": "test",
@@ -8097,6 +8107,7 @@ exports[`Containers tests Call onAction with status TODO and no criteria expect 
     <WithStyles(CardActions)
       card={
         Object {
+          "CreatedAt": 2000-02-01T11:00:00.000Z,
           "Id": "1",
           "Status": Symbol(TODO),
           "Title": "test",
@@ -8134,6 +8145,7 @@ exports[`Containers tests Call onAction with status TODO and no criteria expect 
       <CardActions
         card={
           Object {
+            "CreatedAt": 2000-02-01T11:00:00.000Z,
             "Id": "1",
             "Status": Symbol(TODO),
             "Title": "test",
@@ -9418,6 +9430,7 @@ exports[`Containers tests Call onAction with status TODO expect mock on startCar
   <Connect(WithStyles(CardActions))
     card={
       Object {
+        "CreatedAt": 2000-02-01T11:00:00.000Z,
         "Criterias": Array [
           Object {
             "Id": "1",
@@ -9438,6 +9451,7 @@ exports[`Containers tests Call onAction with status TODO expect mock on startCar
     <WithStyles(CardActions)
       card={
         Object {
+          "CreatedAt": 2000-02-01T11:00:00.000Z,
           "Criterias": Array [
             Object {
               "Id": "1",
@@ -9485,6 +9499,7 @@ exports[`Containers tests Call onAction with status TODO expect mock on startCar
       <CardActions
         card={
           Object {
+            "CreatedAt": 2000-02-01T11:00:00.000Z,
             "Criterias": Array [
               Object {
                 "Id": "1",

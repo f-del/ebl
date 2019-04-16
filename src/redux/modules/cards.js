@@ -44,7 +44,8 @@ export const cardStatus = Object.freeze({
 
 export const cardType = {
   Task: "TASK",
-  Hypothesis: "HYPOTHESIS"
+  Hypothesis: "HYPOTHESIS",
+  UserStory: "USER-STORY"
 };
 
 /***
@@ -65,7 +66,11 @@ export const cardType = {
 export const createCard = (title, type = cardType.Task, { persona } = {}) => {
   if (title === undefined || title.length === 0)
     throw new Error("Argument title is mandatory");
-  if (type !== cardType.Task && type !== cardType.Hypothesis)
+  if (
+    type !== cardType.Task &&
+    type !== cardType.Hypothesis &&
+    type !== cardType.UserStory
+  )
     throw new Error(
       "Optionnal argument type is not correct, should be come from cardType enum"
     );
@@ -83,6 +88,8 @@ export const createCard = (title, type = cardType.Task, { persona } = {}) => {
     }
     const res = await api.Cards.Post(newCard);
     dispatch(createCardSuccess(res.Id, newCard));
+
+    return { ...newCard, Id: res.Id };
   };
 };
 export const setCriteriasTypology = (id, type = criteriaType.BASIC) => {
@@ -107,7 +114,19 @@ export const setCriteriasTypology = (id, type = criteriaType.BASIC) => {
 };
 
 export const addUserStoryToHypothesis = (idHypothesis, titleUserStory) => {
-  return async (dispatch, getState, { api }) => {};
+  return async (dispatch, getState, { api }) => {
+    const cardHypotyhesis = _getCard(getState, idHypothesis);
+
+    const userStory = await dispatch(
+      createCard(titleUserStory, cardType.UserStory)
+    );
+
+    await api.Cards.Post(cardHypotyhesis, {
+      UserStories: [{ Id: userStory.Id }]
+    });
+
+    dispatch(attachCards(cardHypotyhesis.Id, userStory.Id));
+  };
 };
 
 export const updateCardStatusForward = id => {
@@ -326,13 +345,20 @@ export default function(state = initialState, action) {
       const cardParentIdx = state.list.findIndex(
         c => c.Id === action.payload.IdParent
       );
-      console.log("cardParentIdx " + cardParentIdx);
+      const cardChildIdx = state.list.findIndex(
+        c => c.Id === action.payload.IdChild
+      );
+
       return {
         ...state,
         list: update(state.list, {
           [cardParentIdx]: {
             Stories: stories =>
               update(stories || [], { $push: [action.payload.IdChild] })
+          },
+          [cardChildIdx]: {
+            Hypothesis: hypothesis =>
+              update(hypothesis || [], { $push: [action.payload.IdParent] })
           }
         })
       };

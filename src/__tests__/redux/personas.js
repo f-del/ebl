@@ -42,7 +42,7 @@ const personas_state = () => ({
 const personas_store = () => ({ personas: personas_state() });
 
 describe("Reducer", () => {
-  test.skip("Should get Initial Static State", () => {
+  test("Should get Initial Static State", () => {
     expect(personnasReducer(undefined, { type: "fakeaction" })).toStrictEqual(
       personas_state()
     );
@@ -62,17 +62,17 @@ describe("Selectors", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
-  test.skip("Get All personas without param, expect Error", () => {
+  test("Get All personas without param, expect Error", () => {
     const wrapper = () => getAllPersonas();
 
     expect(wrapper).toThrowError(new Error("State arg is mandatory"));
   });
 
-  test.skip("Get All personas with a empty state, expect []", () => {
+  test("Get All personas with a empty state, expect []", () => {
     expect(getAllPersonas({})).toStrictEqual([]);
   });
 
-  test.skip("Get All personas, expect [{productOwner, Id},{FT, ID}]", () => {
+  test("Get All personas, expect [{productOwner, Id},{FT, ID}]", () => {
     expect(getAllPersonas(personas_store())).toStrictEqual([
       entity_persona_created,
       { ...entity_persona_featureTeam_Id(), ...entity_persona_featureTeam() }

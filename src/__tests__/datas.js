@@ -5,12 +5,13 @@ import { cardStatus, cardType, LOADING_STATE } from "../redux/modules/cards";
 export const entity_test = {
   Title: "test",
   Status: cardStatus.TODO,
-  Type: cardType.Task
+  Type: cardType.Task,
+  CreatedAt: new Date(2000, 1, 1, 12, 0, 0, 0)
 };
 export const entity_test_created = {
   Id: "1",
   ...entity_test,
-  CreatedAt: new Date()
+  CreatedAt: new Date(2000, 1, 1, 12, 0, 0, 0)
 };
 
 export const entity_test_2criteria_false = {
@@ -27,7 +28,7 @@ export const stateWith1Card = {
   status: LOADING_STATE.NULL
 };
 export const stateWithDynCard = card => ({
-  list: [card],
+  list: card,
   status: LOADING_STATE.NULL
 });
 export const storeStateInitial = {

@@ -16,6 +16,7 @@ export const mapping = card => {
           Status: cardStatus.mapTo(card.Status)
         }
       : {};
+  if (card.CreatedAt !== undefined) card.CreatedAt = new Date(card.CreatedAt);
   return {
     ...card,
     ...status
@@ -35,11 +36,21 @@ export const mappingTo = (card, db) => {
   if (card.Status !== undefined)
     mappedCard["Status"] = cardStatus.mapFrom(card.Status);
 
+  if (card.CreatedAt !== undefined)
+    mappedCard["CreatedAt"] = card.CreatedAt.toJSON();
+
   if (card.Persona !== undefined) {
     mappedCard["Persona"] = {
       Id: db.collection("Persona").doc(card.Persona.Id),
       Needs: card.Persona.NeedsIndex
     };
+  }
+
+  if (card.UserStories !== undefined) {
+    mappedCard["UserStories"] = card.UserStories.reduce((acc, us) => {
+      acc.push({ Id: db.collection("Cards").doc(us.Id) });
+      return acc;
+    }, []);
   }
   return mappedCard;
 };

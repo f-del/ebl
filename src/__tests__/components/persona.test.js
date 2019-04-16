@@ -16,7 +16,7 @@ describe("Componant tests", () => {
     store = createStore(reducer, applyMiddleware(thunk));
   });
 
-  test.skip("Display a persona without children", () => {
+  test("Display a persona without children", () => {
     const wrapper = shallow(
       <Persona persona={entity_persona_created} addStory={false} />
     );
@@ -29,7 +29,7 @@ describe("Componant tests", () => {
     expect(wrapper.find("button").length).toBe(0);
   });
 
-  test.skip("Display a persona with children", () => {
+  test("Display a persona with children", () => {
     const wrapper = mount(
       <Provider store={store}>
         <Persona persona={entity_persona_created} addStory={true} />
