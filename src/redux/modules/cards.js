@@ -5,6 +5,8 @@ const CREATE = "CARD/CREATE";
 const STARTED = "CARD/STARTED";
 const DONE = "CARD/DONE";
 
+const ATTACH = "CARD/ATTACH";
+
 const ADD_CRITERIA = "CARD/CRITERIA/ADD";
 const SET_CRITERIA = "CARD/CRITERIA/SET";
 
@@ -42,7 +44,7 @@ export const cardStatus = Object.freeze({
 
 export const cardType = {
   Task: "TASK",
-  UserStory: "USER-STORY"
+  Hypothesis: "HYPOTHESIS"
 };
 
 /***
@@ -63,12 +65,13 @@ export const cardType = {
 export const createCard = (title, type = cardType.Task, { persona } = {}) => {
   if (title === undefined || title.length === 0)
     throw new Error("Argument title is mandatory");
-  if (type !== cardType.Task && type !== cardType.UserStory)
+  if (type !== cardType.Task && type !== cardType.Hypothesis)
     throw new Error(
       "Optionnal argument type is not correct, should be come from cardType enum"
     );
   return async (dispatch, getState, { api }) => {
     const newCard = card(title, type);
+    newCard.CreatedAt = new Date();
 
     if (persona !== undefined) {
       if (persona.id === undefined || persona.needsIndex === undefined)
@@ -101,6 +104,10 @@ export const setCriteriasTypology = (id, type = criteriaType.BASIC) => {
       dispatch(addCriteria(id, c));
     });
   };
+};
+
+export const addUserStoryToHypothesis = (idHypothesis, titleUserStory) => {
+  return async (dispatch, getState, { api }) => {};
 };
 
 export const updateCardStatusForward = id => {
@@ -216,6 +223,14 @@ export const createCardSuccess = (id, card) => {
   };
 };
 
+export const attachCards = (idParent, idChild) => ({
+  type: ATTACH,
+  payload: {
+    IdParent: idParent,
+    IdChild: idChild
+  }
+});
+
 export const addCriteria = (id, criteria) => {
   const action = {
     type: ADD_CRITERIA,
@@ -307,6 +322,21 @@ export default function(state = initialState, action) {
     case CREATE:
       return { ...state, list: [...state.list, action.payload] };
 
+    case ATTACH: {
+      const cardParentIdx = state.list.findIndex(
+        c => c.Id === action.payload.IdParent
+      );
+      console.log("cardParentIdx " + cardParentIdx);
+      return {
+        ...state,
+        list: update(state.list, {
+          [cardParentIdx]: {
+            Stories: stories =>
+              update(stories || [], { $push: [action.payload.IdChild] })
+          }
+        })
+      };
+    }
     case STARTED:
       return reducerUpdateCardStatus(state, action, cardStatus.INPROGRESS);
 

@@ -8,7 +8,7 @@ const mapStateToProps = (state, ownProps) => ({});
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onValidate: title => {
     dispatch(
-      createCard(title, cardType.UserStory, {
+      createCard(title, cardType.Hypothesis, {
         persona: {
           id: ownProps.personaId,
           needsIndex: ownProps.personaNeedsIndex
@@ -18,14 +18,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   }
 });
 
-const CreateUserStoryCard = connect(
+const CreateHypothesisCard = connect(
   mapStateToProps,
   mapDispatchToProps
 )(CreateCard);
 
-CreateUserStoryCard.propTypes = {
+CreateHypothesisCard.propTypes = {
   personaId: PropTypes.string.isRequired,
   personaNeedsIndex: PropTypes.number.isRequired
 };
 
-export default CreateUserStoryCard;
+export default CreateHypothesisCard;

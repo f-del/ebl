@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import CreateUserStoryCard from "../containers/CreateUserStoryCard";
+import CreateHypothesisCard from "../containers/CreateHypothesisCard";
 
 function Persona({ persona, addStory }) {
   return (
@@ -11,7 +11,7 @@ function Persona({ persona, addStory }) {
           <li key={i}>
             {p}
             {addStory !== undefined && (
-              <CreateUserStoryCard
+              <CreateHypothesisCard
                 personaId={persona.Id}
                 personaNeedsIndex={i}
               />
