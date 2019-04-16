@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 
 import reducer from "../redux/store/index";
 import * as cardsSelector from "../redux/modules/cards";
-import TaskCardsBoard from "../containers/TaskCardsBoard";
+import CardsBoard from "../containers/CardsBoard";
 
 configure({ adapter: new Adapter() });
 let store;
@@ -16,7 +16,7 @@ beforeEach(() => {
   jest.resetAllMocks();
   store = createStore(reducer, applyMiddleware(thunk));
 });
-test.skip("CardsListByStatus with todo", () => {
+test("CardsListByStatus with todo", () => {
   cardsSelector.retrieveAllCards = jest.fn(type => {
     return dispatch => {
       return [];
@@ -25,11 +25,14 @@ test.skip("CardsListByStatus with todo", () => {
 
   const wrapper = mount(
     <Provider store={store}>
-      <TaskCardsBoard />
+      <CardsBoard />
     </Provider>
   );
 
   expect(cardsSelector.retrieveAllCards.mock.calls.length).toBe(1);
+  expect(cardsSelector.retrieveAllCards.mock.calls[0][0]).toStrictEqual(
+    cardsSelector.cardType.Task
+  );
   expect(wrapper).toMatchSnapshot();
   wrapper.unmount();
 });

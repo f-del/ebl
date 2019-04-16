@@ -7,11 +7,11 @@ import UiCard from "@material-ui/core/Card";
 import UiCardContent from "@material-ui/core/CardContent";
 import UiCardActions from "@material-ui/core/CardActions";
 import UiTypography from "@material-ui/core/Typography";
-import UiCardHeader from "@material-ui/core/CardHeader";
-import UiAvatar from "@material-ui/core/Avatar";
-import UiIconButton from "@material-ui/core/IconButton";
+// import UiCardHeader from "@material-ui/core/CardHeader";
+// import UiAvatar from "@material-ui/core/Avatar";
+// import UiIconButton from "@material-ui/core/IconButton";
 
-import IcoMoreVertIcon from "@material-ui/icons/MoreVert";
+// import IcoMoreVertIcon from "@material-ui/icons/MoreVert";
 import { green, red, grey } from "@material-ui/core/colors";
 
 import CardActionnable from "../containers/CardActionnable";
@@ -33,14 +33,14 @@ const styles = {
 };
 
 function Card({ card, classes }) {
-  const avatarColor = () => {
-    if (card.Status === cardStatus.TODO) return classes.status_todo;
-    if (card.Status === cardStatus.INPROGRESS) return classes.status_inprogress;
-    if (card.Status === cardStatus.DONE) return classes.status_done;
-  };
+  // const avatarColor = () => {
+  //   if (card.Status === cardStatus.TODO) return classes.status_todo;
+  //   if (card.Status === cardStatus.INPROGRESS) return classes.status_inprogress;
+  //   if (card.Status === cardStatus.DONE) return classes.status_done;
+  // };
   return (
     <UiCard className={classes.card}>
-      <UiCardHeader
+      {/* <UiCardHeader
         avatar={
           <UiAvatar aria-label="Recipe" className={avatarColor()}>
             R
@@ -51,7 +51,7 @@ function Card({ card, classes }) {
             <IcoMoreVertIcon />
           </UiIconButton>
         }
-      />
+      /> */}
       <UiCardContent>
         <UiTypography variant="h6">{card.Title}</UiTypography>
       </UiCardContent>

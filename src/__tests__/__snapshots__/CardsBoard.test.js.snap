@@ -12,12 +12,12 @@ exports[`CardsListByStatus with todo 1`] = `
     }
   }
 >
-  <Connect(TaskCardsBoard)>
-    <TaskCardsBoard
+  <Connect(CardsBoard)>
+    <CardsBoard
       getCards={[Function]}
     >
       <div />
-    </TaskCardsBoard>
-  </Connect(TaskCardsBoard)>
+    </CardsBoard>
+  </Connect(CardsBoard)>
 </Provider>
 `;

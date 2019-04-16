@@ -14,7 +14,7 @@ import { api } from "./API/api";
 
 import reducer from "./redux/store/index";
 import CardListByStatus from "./containers/CardsListByStatus";
-import TaskCardsBoard from "./containers/TaskCardsBoard";
+import CardsBoard from "./containers/CardsBoard";
 import CreateTaskCard from "./containers/createTaskCard";
 
 import "./styles.css";
@@ -49,11 +49,11 @@ function App() {
           <Persona key={p.Id} persona={p} addStory={true} />
         ))}
         <CreateTaskCard />
-        <TaskCardsBoard type={cardType.Task}>
+        <CardsBoard type={cardType.Task}>
           <CardListByStatus status={cardStatus.TODO} />
           <CardListByStatus status={cardStatus.INPROGRESS} />
           <CardListByStatus status={cardStatus.DONE} />
-        </TaskCardsBoard>
+        </CardsBoard>
       </div>
     </Provider>
   );

@@ -8,7 +8,7 @@ const mapDispatchToProps = (dispatch, ownsProp) => ({
   getCards: () => dispatch(retrieveAllCards(cardType.Task))
 });
 
-function TaskCardsBoard({ type, getCards, children }) {
+function CardsBoard({ type, getCards, children }) {
   getCards(type);
   return <div>{children}</div>;
 }
@@ -16,4 +16,4 @@ function TaskCardsBoard({ type, getCards, children }) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TaskCardsBoard);
+)(CardsBoard);
