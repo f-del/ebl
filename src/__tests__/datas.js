@@ -23,23 +23,29 @@ export const entity_test_created_with_criterias = {
   ...entity_test_2criteria_false
 };
 
+export const expect_loadingstate = () =>
+  Object.keys(cardType).reduce(
+    (acc, ct) => ({ ...acc, [ct]: LOADING_STATE.NULL }),
+    {}
+  );
+
 export const stateWith1Card = {
   list: [entity_test_created],
-  status: LOADING_STATE.NULL
+  status: expect_loadingstate()
 };
 export const stateWithDynCard = card => ({
   list: card,
-  status: LOADING_STATE.NULL
+  status: expect_loadingstate()
 });
 export const storeStateInitial = {
-  cards: { list: [], status: LOADING_STATE.NULL }
+  cards: { list: [], status: expect_loadingstate() }
 };
 export const storeStateWith1Card = {
-  cards: { list: [entity_test_created], status: LOADING_STATE.NULL }
+  cards: { list: [entity_test_created], status: expect_loadingstate() }
 };
 export const storeStateDyn = cards => {
   return {
-    cards: { list: cards, status: LOADING_STATE.NULL }
+    cards: { list: cards, status: expect_loadingstate() }
   };
 };
 

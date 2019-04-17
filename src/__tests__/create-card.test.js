@@ -25,7 +25,7 @@ describe("Componant tests", () => {
     expect(wrapper.find("input").length).toBe(0);
   }
 
-  test.skip("Initial state", () => {
+  test("Initial state", () => {
     const wrapper = shallow(<CreateCard onValidate={onValidate} />);
 
     expectInitState(wrapper);
@@ -34,7 +34,7 @@ describe("Componant tests", () => {
     wrapper.unmount();
   });
 
-  test.skip("Click on create new task and cancel by ESCAPE", () => {
+  test("Click on create new task and cancel by ESCAPE", () => {
     const wrapper = shallow(<CreateCard onValidate={onValidate} />);
 
     expectInitState(wrapper);
@@ -59,7 +59,7 @@ describe("Componant tests", () => {
     wrapper.unmount();
   });
 
-  test.skip("Click on create new task and validate by ENTER", () => {
+  test("Click on create new task and validate by ENTER", () => {
     const wrapper = mount(<CreateCard onValidate={onValidate} />);
 
     const preventDefault = jest.fn();
@@ -100,7 +100,7 @@ describe("Containers", () => {
   });
 
   describe("createTask", () => {
-    test.skip("createTask", () => {
+    test("createTask", () => {
       const text = "Unit test task";
       const preventDefault = jest.fn();
       cardsSelector.createCard = jest.fn().mockImplementationOnce(id => {
@@ -130,7 +130,7 @@ describe("Containers", () => {
   });
 
   describe("create User Story", () => {
-    test.skip("should Exist", () => {
+    test("should Exist", () => {
       const text = "Unit test User Story";
       const preventDefault = jest.fn();
       cardsSelector.createCard = jest.fn().mockImplementationOnce(id => {

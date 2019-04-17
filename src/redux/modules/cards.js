@@ -276,18 +276,21 @@ export const setCardCriteria = (id, idCriteria, valueCriteria) => ({
   }
 });
 
-export const retrieveAllCards_Starting = type => {
+export const retrieveAllCards_Starting = (type = cardType.Task) => {
   return {
     type: RETRIEVE,
-    payload: {}
+    payload: {
+      Type: type
+    }
   };
 };
 
-export const retrieveAllCards_End = cards => {
+export const retrieveAllCards_End = (cards, type = cardType.Task) => {
   return {
     type: RETRIEVED,
     payload: {
-      cards
+      Type: type,
+      Cards: cards
     }
   };
 };
@@ -323,7 +326,10 @@ export const doneCard = id => {
 
 const initialState = {
   list: [],
-  status: LOADING_STATE.NULL
+  status: Object.keys(cardType).reduce(
+    (acc, ct) => ({ ...acc, [ct]: LOADING_STATE.NULL }),
+    {}
+  )
 };
 
 export default function(state = initialState, action) {
@@ -334,7 +340,7 @@ export default function(state = initialState, action) {
     case RETRIEVED: {
       return {
         ...state,
-        list: action.payload.cards,
+        list: action.payload.Cards,
         status: LOADING_STATE.DONE
       };
     }
@@ -426,8 +432,8 @@ export function getCard(state, id) {
   return getAllCards(state).find(c => c.Id === id);
 }
 export function getAllCards(state, { ...option } = {}) {
-  return (getCards(validateState(state)).list || []).filter(
-    e => isTypeCard(e, option.type)
+  return (getCards(validateState(state)).list || []).filter(e =>
+    isTypeCard(e, option.type)
   );
 }
 
@@ -447,8 +453,8 @@ export function getAllCardsDone(state) {
   return getAllCards(state).filter(isCardStatusDone);
 }
 
-export function getLoadingStatus(state) {
-  return getCards(validateState(state)).status;
+export function getLoadingStatus(state, type = cardType.Task) {
+  return getCards(validateState(state)).status[type];
 }
 
 /* Functionnal helper */

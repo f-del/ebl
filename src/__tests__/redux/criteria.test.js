@@ -40,7 +40,7 @@ const criteriasStore = (criteriaList = entity_criteria_type()) => ({
 const globalStore = (criterias = criteriasStore()) => ({
   criterias: criterias
 });
-test.skip("Expect inital state, on call to reducer", () => {
+test("Expect inital state, on call to reducer", () => {
   expect(criteriaReducer(undefined, { type: "on-action" })).toStrictEqual({
     list: {
       BASIC: [
@@ -65,7 +65,7 @@ test.skip("Expect inital state, on call to reducer", () => {
   });
 });
 
-test.skip("GetCriteria without param", () => {
+test("GetCriteria without param", () => {
   const wrapper = () => {
     getCriteria({}, undefined);
   };
@@ -73,19 +73,19 @@ test.skip("GetCriteria without param", () => {
   expect(wrapper).toThrowError("Type argument is mandatory");
 });
 
-test.skip("GetCriteria NOTSUPPORTED", () => {
+test("GetCriteria NOTSUPPORTED", () => {
   expect(getCriteria(globalStore(), "criteriaType.NOTSUPPORTED")).toStrictEqual(
     []
   );
 });
 
-test.skip("GetCriteria With Text", () => {
+test("GetCriteria With Text", () => {
   expect(getCriteria(globalStore(), criteriaType.BASIC)).toStrictEqual(
     retMockGetCriteriaWithText
   );
 });
 
-test.skip("GetCriteria Without Text", () => {
+test("GetCriteria Without Text", () => {
   expect(
     getCriteria(
       globalStore(
@@ -95,7 +95,7 @@ test.skip("GetCriteria Without Text", () => {
     )
   ).toStrictEqual(retMockGetCriteria);
 });
-test.skip("Get All Criterias", () => {
+test("Get All Criterias", () => {
   expect(getAllCriterias(globalStore())).toStrictEqual(
     getAllCriteriasMockReturn
   );
