@@ -7,15 +7,15 @@ import UiCard from "@material-ui/core/Card";
 import UiCardContent from "@material-ui/core/CardContent";
 import UiCardActions from "@material-ui/core/CardActions";
 import UiTypography from "@material-ui/core/Typography";
-// import UiCardHeader from "@material-ui/core/CardHeader";
-// import UiAvatar from "@material-ui/core/Avatar";
+import UiCardHeader from "@material-ui/core/CardHeader";
+import UiAvatar from "@material-ui/core/Avatar";
 // import UiIconButton from "@material-ui/core/IconButton";
 
 // import IcoMoreVertIcon from "@material-ui/icons/MoreVert";
 import { green, red, grey } from "@material-ui/core/colors";
 
 import CardActionnable from "../containers/CardActionnable";
-import { cardStatus } from "../redux/modules/cards";
+import { cardType } from "../redux/modules/cards";
 
 const styles = {
   card: {
@@ -33,25 +33,25 @@ const styles = {
 };
 
 function Card({ card, classes }) {
-  // const avatarColor = () => {
-  //   if (card.Status === cardStatus.TODO) return classes.status_todo;
-  //   if (card.Status === cardStatus.INPROGRESS) return classes.status_inprogress;
-  //   if (card.Status === cardStatus.DONE) return classes.status_done;
-  // };
+  const avatarColor = () => {
+    if (card.Type === cardType.Task) return classes.status_todo;
+    if (card.Type === cardType.Hypothesis) return classes.status_inprogress;
+    if (card.Type === cardType.UserStory) return classes.status_done;
+  };
   return (
     <UiCard className={classes.card}>
-      {/* <UiCardHeader
+      <UiCardHeader
         avatar={
           <UiAvatar aria-label="Recipe" className={avatarColor()}>
-            R
+            {card.Type.substring(0, 1).toUpperCase()}
           </UiAvatar>
         }
-        action={
-          <UiIconButton>
-            <IcoMoreVertIcon />
-          </UiIconButton>
-        }
-      /> */}
+        // action={
+        //   <UiIconButton>
+        //     <IcoMoreVertIcon />
+        //   </UiIconButton>
+        // }
+      />
       <UiCardContent>
         <UiTypography variant="h6">{card.Title}</UiTypography>
       </UiCardContent>

@@ -16,7 +16,7 @@ beforeEach(() => {
   jest.resetAllMocks();
   store = createStore(reducer, applyMiddleware(thunk));
 });
-test("CardsListByStatus with todo", () => {
+test("Cards board default param : task", () => {
   cardsSelector.retrieveAllCards = jest.fn(type => {
     return dispatch => {
       return [];
@@ -30,9 +30,30 @@ test("CardsListByStatus with todo", () => {
   );
 
   expect(cardsSelector.retrieveAllCards.mock.calls.length).toBe(1);
-  expect(cardsSelector.retrieveAllCards.mock.calls[0][0]).toStrictEqual(
+  expect(cardsSelector.retrieveAllCards.mock.calls[0][0]).toEqual(
     cardsSelector.cardType.Task
   );
-  expect(wrapper).toMatchSnapshot();
+  //expect(wrapper).toMatchSnapshot();
+  wrapper.unmount();
+});
+
+test("Cards board with param Hypothesis", () => {
+  cardsSelector.retrieveAllCards = jest.fn(type => {
+    return dispatch => {
+      return [];
+    };
+  });
+
+  const wrapper = mount(
+    <Provider store={store}>
+      <CardsBoard type={cardsSelector.cardType.Hypothesis} />
+    </Provider>
+  );
+
+  expect(cardsSelector.retrieveAllCards.mock.calls.length).toBe(1);
+  expect(cardsSelector.retrieveAllCards.mock.calls[0][0]).toEqual(
+    cardsSelector.cardType.Hypothesis
+  );
+  //expect(wrapper).toMatchSnapshot();
   wrapper.unmount();
 });
