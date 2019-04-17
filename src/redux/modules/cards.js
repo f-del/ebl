@@ -205,14 +205,14 @@ export const toggleCardCriteria = (id, idCriteria, valueCriteria) => {
 export const retrieveAllCards = type => {
   if (type === undefined) throw new Error("Argument type is mandatory");
   return async (dispatch, getState, { api }) => {
-    if (getAllCards(getState(), type).length !== 0)
+    if (getAllCards(getState(), { type }).length !== 0)
       throw new Error("Could not retrieve cards in the current state");
 
-    if (getLoadingStatus(getState()) === LOADING_STATE.NULL) {
-      dispatch(retrieveAllCards_Starting());
+    if (getLoadingStatus(getState(), type) === LOADING_STATE.NULL) {
+      dispatch(retrieveAllCards_Starting(type));
 
       const cards = await api.Cards.Get(type);
-      dispatch(retrieveAllCards_End(cards));
+      dispatch(retrieveAllCards_End(cards, type));
     }
   };
 };
@@ -326,7 +326,7 @@ export const doneCard = id => {
 
 const initialState = {
   list: [],
-  status: Object.keys(cardType).reduce(
+  status: Object.values(cardType).reduce(
     (acc, ct) => ({ ...acc, [ct]: LOADING_STATE.NULL }),
     {}
   )
@@ -335,13 +335,19 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case RETRIEVE: {
-      return { ...state, status: LOADING_STATE.INPROGRESS };
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          [action.payload.Type]: LOADING_STATE.INPROGRESS
+        }
+      };
     }
     case RETRIEVED: {
       return {
         ...state,
-        list: action.payload.Cards,
-        status: LOADING_STATE.DONE
+        list: [...state.list, ...action.payload.Cards],
+        status: { ...state.status, [action.payload.Type]: LOADING_STATE.DONE }
       };
     }
     case CREATE:
@@ -431,26 +437,34 @@ export default function(state = initialState, action) {
 export function getCard(state, id) {
   return getAllCards(state).find(c => c.Id === id);
 }
+
+/*
+  Get all cards from state
+  option : {
+    type = cardType of cards
+  }
+*/
 export function getAllCards(state, { ...option } = {}) {
   return (getCards(validateState(state)).list || []).filter(e =>
     isTypeCard(e, option.type)
   );
 }
-
-function isTypeCard(card, type) {
-  return card.Type === (type || card.Type);
+export function getAllCardsInProgess(state, { ...option } = {}) {
+  return getAllCards(state).filter(c =>
+    and(isCardStatusInProgess(c), isTypeCard(c, option.type))
+  );
 }
 
-export function getAllCardsInProgess(state) {
-  return getAllCards(state).filter(isCardStatusInProgess);
+export function getAllCardsTodo(state, { ...option } = {}) {
+  return getAllCards(state).filter(c =>
+    and(isCardStatusToDo(c), isTypeCard(c, option.type))
+  );
 }
 
-export function getAllCardsTodo(state) {
-  return getAllCards(state).filter(isCardStatusToDo);
-}
-
-export function getAllCardsDone(state) {
-  return getAllCards(state).filter(isCardStatusDone);
+export function getAllCardsDone(state, { ...option } = {}) {
+  return getAllCards(state).filter(c =>
+    and(isCardStatusDone(c), isTypeCard(c, option.type))
+  );
 }
 
 export function getLoadingStatus(state, type = cardType.Task) {
@@ -464,6 +478,14 @@ function validateState(state) {
 }
 function getCards(state) {
   return state.cards || {};
+}
+
+function and(fn1, fn2) {
+  return fn1 && fn2;
+}
+
+function isTypeCard(card, type) {
+  return card.Type === (type || card.Type);
 }
 
 function isCardStatusInProgess(card) {

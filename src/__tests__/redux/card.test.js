@@ -179,6 +179,7 @@ describe("API tests", () => {
       )
     );
   });
+
   test("call action createcard & expect change in state with getAllCards selector", async () => {
     fnMockPostCards.mockImplementationOnce(
       () =>
@@ -238,7 +239,7 @@ describe("API tests", () => {
     expect(getAllCardsInProgess(store.getState()).length).toBe(1);
   });
 
-  test("call action getAllCards and expect to retrieve different type of card (task & Hypothesis)", async () => {
+  test("call action getAllCards and expect to retrieve different type of card (task & Hypothesis)", async done => {
     fnMockGetCards
       .mockImplementationOnce(
         () =>
@@ -265,20 +266,34 @@ describe("API tests", () => {
                   ...entity_test_created,
                   Type: cardType.Hypothesis,
                   Id: 22,
-                  Status: cardStatus.INPROGRESS
+                  Status: cardStatus.DONE
                 }
               ]);
             }, 20);
           })
       );
 
-    await store.dispatch(retrieveAllCards(cardType.Task));
+    const fn1 = async () => {
+      await store.dispatch(retrieveAllCards(cardType.Task));
+    };
 
-    await store.dispatch(retrieveAllCards(cardType.Hypothesis));
+    const fn2 = async () => {
+      await store.dispatch(retrieveAllCards(cardType.Hypothesis));
+    };
+
+    const fn3 = async () => {
+      await store.dispatch(retrieveAllCards(cardType.Hypothesis));
+    };
+
+    await Promise.all([fn1(), fn2(), fn3()]);
+
     expect(fnMockGetCards.mock.calls.length).toBe(2);
     expect(getAllCards(store.getState()).length).toBe(4);
     expect(getAllCardsTodo(store.getState()).length).toBe(2);
-    expect(getAllCardsInProgess(store.getState()).length).toBe(2);
+    expect(getAllCardsInProgess(store.getState()).length).toBe(1);
+    expect(getAllCardsDone(store.getState()).length).toBe(1);
+
+    done();
   });
 
   test("retrieve all cards in // calls, expect only 1 call on API Get", async done => {
@@ -458,7 +473,7 @@ describe("API tests", () => {
       );
 
       expect(fnMockPostCards.mock.calls.length).toBe(1);
-      expect(fnMockPostCards.mock.calls[0][0]).toEqual({
+      expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual({
         ...entity_test,
         CreatedAt: expect.any(Date),
         Type: cardType.Hypothesis,
@@ -469,7 +484,7 @@ describe("API tests", () => {
       });
       const actions = store.getActions();
       expect(actions.length).toBe(1);
-      expect(actions[0]).toEqual({
+      expect(actions[0]).toStrictEqual({
         type: "CARD/CREATE",
         payload: {
           ...entity_test,
@@ -878,7 +893,7 @@ describe("Actions creators", () => {
 
   test("Attach card to another card, hierarchy mode", () => {
     const attachAction = attachCards("IdParent", "IdChild");
-    expect(attachAction).toEqual(attach_action);
+    expect(attachAction).toStrictEqual(attach_action);
   });
 
   test("Add criteria with text to a card", () => {
@@ -1000,7 +1015,7 @@ describe("reducers", () => {
         ]),
         attach_action
       )
-    ).toEqual({
+    ).toStrictEqual({
       list: [
         { ...entity_test_created, Id: "IdParent", Stories: ["IdChild"] },
         {
@@ -1084,14 +1099,53 @@ describe("reducers", () => {
   test("RETRIEVE action start on empty state", () => {
     expect(cardReducer(undefined, retrieve_start_action())).toStrictEqual({
       list: [],
-      status: { [cardType.Task]: LOADING_STATE.INPROGRESS }
+      status: expect_loadingstate({
+        type: cardType.Task,
+        state: LOADING_STATE.INPROGRESS
+      })
     });
   });
 
   test("RETRIEVE action end on empty state", () => {
     expect(cardReducer(undefined, retrieve_end_action())).toStrictEqual({
       list: [entity_test_created],
-      status: LOADING_STATE.DONE
+      status: expect_loadingstate({
+        type: cardType.Task,
+        state: LOADING_STATE.DONE
+      })
+    });
+  });
+
+  test("RETRIEVE action start on 1 card Hypothesis state", () => {
+    expect(
+      cardReducer(
+        stateWithDynCard([{ ...entity_test, Type: cardType.Hypothesis }]),
+        retrieve_start_action()
+      )
+    ).toStrictEqual({
+      list: [{ ...entity_test, Type: cardType.Hypothesis }],
+      status: expect_loadingstate({
+        type: cardType.Task,
+        state: LOADING_STATE.INPROGRESS
+      })
+    });
+  });
+
+  test("RETRIEVE action end on 1 card Hypothesis state", () => {
+    expect(
+      cardReducer(
+        stateWithDynCard([{ ...entity_test, Type: cardType.Hypothesis }]),
+        retrieve_end_action()
+      )
+    ).toStrictEqual({
+      list: [
+        { ...entity_test, Type: cardType.Hypothesis },
+        entity_test_created
+      ],
+      status: expect_loadingstate({
+        type: cardType.Task,
+        state: LOADING_STATE.DONE
+      })
     });
   });
 });
@@ -1122,7 +1176,23 @@ describe("Selectors", () => {
   });
 
   test("GetAllCards from state with 1 card", () => {
-    expect(getAllCards(storeStateWith1Card)).toEqual([entity_test_created]);
+    expect(getAllCards(storeStateWith1Card)).toStrictEqual([
+      entity_test_created
+    ]);
+  });
+
+  test("GetAllCards without type from state with 2 cards", () => {
+    expect(
+      getAllCards(
+        storeStateDyn([
+          { ...entity_test_created },
+          { ...entity_test_created, Type: cardType.Hypothesis }
+        ])
+      )
+    ).toStrictEqual([
+      { ...entity_test_created },
+      { ...entity_test_created, Type: cardType.Hypothesis }
+    ]);
   });
 
   test("GetAllCards Hypothesis from state with 2 cards", () => {
@@ -1134,7 +1204,7 @@ describe("Selectors", () => {
         ]),
         { type: cardType.Hypothesis }
       )
-    ).toEqual([{ ...entity_test_created, Type: cardType.Hypothesis }]);
+    ).toStrictEqual([{ ...entity_test_created, Type: cardType.Hypothesis }]);
   });
 
   test("GetAllCards InProgress", () => {
@@ -1149,16 +1219,18 @@ describe("Selectors", () => {
     ).toStrictEqual([cardIp]);
   });
 
-  test("GetAllCards Todo", () => {
+  test("GetAllCards Todo Hypothesis", () => {
     const cardIp = {
       Title: "test - inprogress",
-      Status: cardStatus.INPROGRESS,
-      Type: cardType.Task
+      Status: cardStatus.TODO,
+      Type: cardType.Hypothesis
     };
 
     expect(
-      getAllCardsTodo(storeStateDyn([entity_test_created, cardIp]))
-    ).toStrictEqual([entity_test_created]);
+      getAllCardsTodo(storeStateDyn([entity_test_created, cardIp]), {
+        type: cardType.Hypothesis
+      })
+    ).toStrictEqual([cardIp]);
   });
 
   test("GetAllCards DONE", () => {

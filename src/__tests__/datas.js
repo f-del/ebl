@@ -23,9 +23,9 @@ export const entity_test_created_with_criterias = {
   ...entity_test_2criteria_false
 };
 
-export const expect_loadingstate = () =>
-  Object.keys(cardType).reduce(
-    (acc, ct) => ({ ...acc, [ct]: LOADING_STATE.NULL }),
+export const expect_loadingstate = ({ type, state } = {}) =>
+  Object.values(cardType).reduce(
+    (acc, ct) => ({ ...acc, [ct]: type === ct ? state : LOADING_STATE.NULL }),
     {}
   );
 

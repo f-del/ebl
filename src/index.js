@@ -50,9 +50,12 @@ function App() {
         ))}
         <CreateTaskCard />
         <CardsBoard type={cardType.Task}>
-          <CardListByStatus status={cardStatus.TODO} />
-          <CardListByStatus status={cardStatus.INPROGRESS} />
-          <CardListByStatus status={cardStatus.DONE} />
+          <CardListByStatus type={cardType.Task} status={cardStatus.TODO} />
+          <CardListByStatus
+            type={cardType.Task}
+            status={cardStatus.INPROGRESS}
+          />
+          <CardListByStatus type={cardType.Task} status={cardStatus.DONE} />
         </CardsBoard>
       </div>
     </Provider>

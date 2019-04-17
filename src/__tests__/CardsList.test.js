@@ -10,22 +10,23 @@ import { cardStatus } from "../redux/modules/cards";
 import * as cardsSelector from "../redux/modules/cards";
 
 configure({ adapter: new Adapter() });
-let store;
+let mockStore;
 
 describe("Containers tests", () => {
   describe("CardsListByStatus", () => {
     beforeEach(() => {
-      store = configureMockStore();
+      mockStore = configureMockStore();
       jest.resetAllMocks();
     });
     test("CardsListByStatus with bad symbol status parameter", () => {
       const falseStatus = Object.freeze({
         TODO: Symbol("FALSETODO")
       });
+      const store = mockStore({});
       const wrapper = () => {
         const wrapper = mount(
-          <Provider store={store({})}>
-            <CardListByStatus status={falseStatus.TODO} />
+          <Provider store={store}>
+            <CardListByStatus status={falseStatus.TODO} type={"sdsd"} />
           </Provider>
         );
         wrapper.unmount();
@@ -39,14 +40,20 @@ describe("Containers tests", () => {
       cardsSelector.getAllCardsTodo = jest.fn(state => {
         return [];
       });
-
+      const store = mockStore({});
       const wrapper = mount(
-        <Provider store={store({})}>
-          <CardListByStatus status={cardStatus.TODO} />
+        <Provider store={store}>
+          <CardListByStatus
+            status={cardStatus.TODO}
+            type={cardsSelector.cardType.Hypothesis}
+          />
         </Provider>
       );
 
       expect(cardsSelector.getAllCardsTodo.mock.calls.length).toBe(1);
+      expect(cardsSelector.getAllCardsTodo.mock.calls[0][1]).toStrictEqual({
+        type: cardsSelector.cardType.Hypothesis
+      });
       expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });
@@ -56,13 +63,23 @@ describe("Containers tests", () => {
         return [];
       });
 
+      const store = mockStore({});
       const wrapper = mount(
-        <Provider store={store({})}>
-          <CardListByStatus status={cardStatus.INPROGRESS} />
+        <Provider store={store}>
+          <CardListByStatus
+            status={cardStatus.INPROGRESS}
+            type={cardsSelector.cardType.UserStory}
+          />
         </Provider>
       );
 
       expect(cardsSelector.getAllCardsInProgess.mock.calls.length).toBe(1);
+      expect(cardsSelector.getAllCardsInProgess.mock.calls[0][0]).toStrictEqual(
+        store.getState()
+      );
+      expect(cardsSelector.getAllCardsInProgess.mock.calls[0][1]).toStrictEqual(
+        { type: cardsSelector.cardType.UserStory }
+      );
       expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });
@@ -72,13 +89,20 @@ describe("Containers tests", () => {
         return [];
       });
 
+      const store = mockStore({});
       const wrapper = mount(
-        <Provider store={store({})}>
-          <CardListByStatus status={cardStatus.DONE} />
+        <Provider store={store}>
+          <CardListByStatus
+            status={cardStatus.DONE}
+            type={cardsSelector.cardType.Task}
+          />
         </Provider>
       );
 
       expect(cardsSelector.getAllCardsDone.mock.calls.length).toBe(1);
+      expect(cardsSelector.getAllCardsDone.mock.calls[0][1]).toStrictEqual({
+        type: cardsSelector.cardType.Task
+      });
       expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });

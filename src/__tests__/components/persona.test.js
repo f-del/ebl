@@ -7,13 +7,24 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import reducer from "../../redux/store/index";
+import * as cardsSelector from "../../redux/modules/cards";
 
 configure({ adapter: new Adapter() });
-var store;
+var store, api;
 describe("Componant tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    store = createStore(reducer, applyMiddleware(thunk));
+    api = {
+      Cards: {
+        Post: jest.fn(),
+        Get: jest.fn()
+      }
+    };
+
+    store = createStore(
+      reducer,
+      applyMiddleware(thunk.withExtraArgument({ api }))
+    );
   });
 
   test("Display a persona without children", () => {
@@ -30,6 +41,11 @@ describe("Componant tests", () => {
   });
 
   test("Display a persona with children", () => {
+    cardsSelector.retrieveAllCards = jest.fn(type => {
+      return dispatch => {
+        return [];
+      };
+    });
     const wrapper = mount(
       <Provider store={store}>
         <Persona persona={entity_persona_created} addStory={true} />

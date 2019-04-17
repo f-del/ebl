@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 import reducer from "../redux/store/index";
 import * as cardsSelector from "../redux/modules/cards";
 import CardsBoard from "../containers/CardsBoard";
+import CardListByStatus from "../containers/CardsListByStatus";
+import CardsList from "../components/CardsList";
 
 configure({ adapter: new Adapter() });
 let store;
@@ -16,27 +18,6 @@ beforeEach(() => {
   jest.resetAllMocks();
   store = createStore(reducer, applyMiddleware(thunk));
 });
-test("Cards board default param : task", () => {
-  cardsSelector.retrieveAllCards = jest.fn(type => {
-    return dispatch => {
-      return [];
-    };
-  });
-
-  const wrapper = mount(
-    <Provider store={store}>
-      <CardsBoard />
-    </Provider>
-  );
-
-  expect(cardsSelector.retrieveAllCards.mock.calls.length).toBe(1);
-  expect(cardsSelector.retrieveAllCards.mock.calls[0][0]).toEqual(
-    cardsSelector.cardType.Task
-  );
-  //expect(wrapper).toMatchSnapshot();
-  wrapper.unmount();
-});
-
 test("Cards board with param Hypothesis", () => {
   cardsSelector.retrieveAllCards = jest.fn(type => {
     return dispatch => {
@@ -46,14 +27,21 @@ test("Cards board with param Hypothesis", () => {
 
   const wrapper = mount(
     <Provider store={store}>
-      <CardsBoard type={cardsSelector.cardType.Hypothesis} />
+      <CardsBoard type={cardsSelector.cardType.Hypothesis}>
+        <CardListByStatus
+          type={cardsSelector.cardType.Hypothesis}
+          status={cardsSelector.cardStatus.DONE}
+        />
+      </CardsBoard>
     </Provider>
   );
 
   expect(cardsSelector.retrieveAllCards.mock.calls.length).toBe(1);
-  expect(cardsSelector.retrieveAllCards.mock.calls[0][0]).toEqual(
+  expect(cardsSelector.retrieveAllCards.mock.calls[0][0]).toStrictEqual(
     cardsSelector.cardType.Hypothesis
   );
-  //expect(wrapper).toMatchSnapshot();
+  expect(wrapper.find(CardListByStatus).length).toBe(1);
+  expect(wrapper.find(CardListByStatus).at(0).props.type).toBeDefined();
+  expect(wrapper).toMatchSnapshot();
   wrapper.unmount();
 });

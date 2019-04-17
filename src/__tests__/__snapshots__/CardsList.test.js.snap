@@ -15,10 +15,12 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with DONE 1`] = `
 >
   <Connect(CardsList)
     status={Symbol(DONE)}
+    type="TASK"
   >
     <CardsList
       list={Array []}
       status={Symbol(DONE)}
+      type="TASK"
     >
       <div />
     </CardsList>
@@ -41,10 +43,12 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with Inprogress 1`
 >
   <Connect(CardsList)
     status={Symbol(INPROGRESS)}
+    type="USER-STORY"
   >
     <CardsList
       list={Array []}
       status={Symbol(INPROGRESS)}
+      type="USER-STORY"
     >
       <div />
     </CardsList>
@@ -67,10 +71,12 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with todo 1`] = `
 >
   <Connect(CardsList)
     status={Symbol(TODO)}
+    type="HYPOTHESIS"
   >
     <CardsList
       list={Array []}
       status={Symbol(TODO)}
+      type="HYPOTHESIS"
     >
       <div />
     </CardsList>

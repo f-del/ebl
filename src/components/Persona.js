@@ -20,7 +20,10 @@ function Persona({ persona, addStory }) {
                   personaNeedsIndex={i}
                 />
                 <CardsBoard type={cardType.Hypothesis}>
-                  <CardListByStatus status={cardStatus.TODO} />
+                  <CardListByStatus
+                    type={cardType.Hypothesis}
+                    status={cardStatus.TODO}
+                  />
                 </CardsBoard>
               </React.Fragment>
             )}

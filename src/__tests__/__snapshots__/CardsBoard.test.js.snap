@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CardsListByStatus with todo 1`] = `
+exports[`Cards board with param Hypothesis 1`] = `
 <Provider
   store={
     Object {
@@ -12,9 +12,12 @@ exports[`CardsListByStatus with todo 1`] = `
     }
   }
 >
-  <Connect(CardsBoard)>
+  <Connect(CardsBoard)
+    type="HYPOTHESIS"
+  >
     <CardsBoard
       getCards={[Function]}
+      type="HYPOTHESIS"
     >
       <div />
     </CardsBoard>

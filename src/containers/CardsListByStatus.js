@@ -9,10 +9,12 @@ import {
 import CardsList from "../components/CardsList";
 
 function helperGetCards(state, ownProps) {
-  if (ownProps.status === cardStatus.TODO) return getAllCardsTodo(state);
+  if (ownProps.status === cardStatus.TODO)
+    return getAllCardsTodo(state, { type: ownProps.type });
   if (ownProps.status === cardStatus.INPROGRESS)
-    return getAllCardsInProgess(state);
-  if (ownProps.status === cardStatus.DONE) return getAllCardsDone(state);
+    return getAllCardsInProgess(state, { type: ownProps.type });
+  if (ownProps.status === cardStatus.DONE)
+    return getAllCardsDone(state, { type: ownProps.type });
 
   throw new Error("Status not recognized, should come from cardStatus");
 }
@@ -29,7 +31,8 @@ const CardListByStatus = connect(
 )(CardsList);
 
 CardListByStatus.propTypes = {
-  status: PropTypes.symbol.isRequired
+  status: PropTypes.symbol.isRequired,
+  type: PropTypes.string.isRequired
 };
 
 export default CardListByStatus;
