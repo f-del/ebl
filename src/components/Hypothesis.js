@@ -20,7 +20,11 @@ function Hypothesis({ hypothesis, persona }) {
         <UiCard>
           {persona && (
             <UiCardContent>
-              <Persona persona={persona} selectedNeeds={getNeedsIdx()} />
+              <Persona
+                persona={persona}
+                addStory={false}
+                selectedNeeds={getNeedsIdx()}
+              />
             </UiCardContent>
           )}
         </UiCard>

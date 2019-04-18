@@ -170,6 +170,50 @@ describe("Card mapping from Firestore", () => {
       CreatedAt: date
     });
   });
+
+  test("card with Persona", () => {
+    const date = new Date();
+    const firebase = new MockFirebase(fixtureData);
+    const db = firebase.firestore();
+
+    const fnData = jest.fn(() => {
+      let ret = {
+        Title: "test",
+        Type: "TASK",
+        Status: "TODO",
+        CreatedAt: date.toJSON(),
+        Persona: {
+          Id: db.collection("Persona").doc("e6wTJIBsAw5puwwrNEsR"),
+          Needs: 3
+        }
+      };
+      Object.defineProperty(ret.Persona.Id, "id", {
+        get: jest.fn(() => "e6wTJIBsAw5puwwrNEsR"),
+        set: jest.fn()
+      });
+
+      return ret;
+    });
+
+    const mockFirestore = {
+      id: 1,
+      data: fnData
+    };
+    const card = mapping(mockFirestore);
+
+    expect(fnData.mock.calls.length).toBe(1);
+    expect(card).toStrictEqual({
+      Id: "1",
+      Title: "test",
+      Type: "TASK",
+      Status: cardStatus.TODO,
+      CreatedAt: date,
+      Persona: {
+        Id: "e6wTJIBsAw5puwwrNEsR",
+        NeedsIndex: 3
+      }
+    });
+  });
 });
 
 describe("GET method", () => {

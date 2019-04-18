@@ -17,6 +17,16 @@ export const mapping = card => {
         }
       : {};
   if (card.CreatedAt !== undefined) card.CreatedAt = new Date(card.CreatedAt);
+
+  if (card.Persona !== undefined) {
+    card.Persona = {
+      Id:
+        typeof card.Persona.Id === "object"
+          ? card.Persona.Id.id
+          : card.Persona.Id,
+      NeedsIndex: card.Persona.Needs
+    };
+  }
   return {
     ...card,
     ...status

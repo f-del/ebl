@@ -21,8 +21,8 @@ import "./styles.css";
 import { cardType, cardStatus } from "./redux/modules/cards";
 import Persona from "./components/Persona";
 import { getAllPersonas } from "./redux/modules/personas";
-import Hypothesis from "./components/Hypothesis";
 import { selectHypothesis } from "./redux/modules/ui";
+import HypothesisSelected from "./containers/HypothesisSelected";
 
 let config = {
   apiKey: "AIzaSyBwM4YVUVijCR35f9D_vg1qHbF3OTotVb0",
@@ -60,7 +60,7 @@ function App() {
         >
           Select Hypothesis
         </button>
-        <Hypothesis />
+        <HypothesisSelected />
         <h1>Tasks Board : </h1>
         <CardsBoard type={cardType.Task}>
           <CardListByStatus type={cardType.Task} status={cardStatus.TODO} />
