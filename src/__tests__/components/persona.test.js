@@ -38,6 +38,7 @@ describe("Componant tests", () => {
     expect(needsList.length).toBe(entity_persona_created.Needs.length);
     expect(needsList.at(0).text()).toContain(entity_persona_created.Needs[0]);
     expect(wrapper.find("button").length).toBe(0);
+    expect(wrapper).toMatchSnapshot();
   });
 
   test("Display a persona with children", () => {
@@ -59,7 +60,7 @@ describe("Componant tests", () => {
     expect(needsList.at(0).text()).toContain(entity_persona_created.Needs[0]);
 
     expect(wrapper.find("button").length).toBe(4);
-
+    expect(wrapper).toMatchSnapshot();
     wrapper.unmount();
   });
 
@@ -86,7 +87,7 @@ describe("Componant tests", () => {
     expect(needsList.at(0).text()).toContain(entity_persona_created.Needs[1]);
 
     expect(wrapper.find("button").length).toBe(0);
-
+    expect(wrapper).toMatchSnapshot();
     wrapper.unmount();
   });
 });

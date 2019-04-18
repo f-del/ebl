@@ -1,0 +1,307 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Componant tests Display a persona and a specific needs 1`] = `
+<Provider
+  store={
+    Object {
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(observable): [Function],
+    }
+  }
+>
+  <Persona
+    addStory={false}
+    persona={
+      Object {
+        "Details": "Product Owner for a new product, work in a startup",
+        "Id": "uOCF2GLFiJl6fvxdlq4b",
+        "Name": "Paul Deligny",
+        "Needs": Array [
+          "To have a clear understanding about the product vision & objectives",
+          "To write real User Stories, ie have a Customer Driven thinking",
+          "To share at the right time and with the rigth level of information the User Stories with his team",
+          "To have a clear vision on the job he'll have to do AND the job already or currently done",
+        ],
+        "Picture": "",
+      }
+    }
+    selectedNeeds={1}
+  >
+    <div>
+      Paul Deligny
+      <ul>
+        <li
+          key="0"
+        >
+          To write real User Stories, ie have a Customer Driven thinking
+        </li>
+      </ul>
+    </div>
+  </Persona>
+</Provider>
+`;
+
+exports[`Componant tests Display a persona with children 1`] = `
+<Provider
+  store={
+    Object {
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(observable): [Function],
+    }
+  }
+>
+  <Persona
+    addStory={true}
+    persona={
+      Object {
+        "Details": "Product Owner for a new product, work in a startup",
+        "Id": "uOCF2GLFiJl6fvxdlq4b",
+        "Name": "Paul Deligny",
+        "Needs": Array [
+          "To have a clear understanding about the product vision & objectives",
+          "To write real User Stories, ie have a Customer Driven thinking",
+          "To share at the right time and with the rigth level of information the User Stories with his team",
+          "To have a clear vision on the job he'll have to do AND the job already or currently done",
+        ],
+        "Picture": "",
+      }
+    }
+  >
+    <div>
+      Paul Deligny
+      <ul>
+        <li
+          key="0"
+        >
+          To have a clear understanding about the product vision & objectives
+          <Connect(CreateCard)
+            personaId="uOCF2GLFiJl6fvxdlq4b"
+            personaNeedsIndex={0}
+          >
+            <CreateCard
+              onValidate={[Function]}
+              personaId="uOCF2GLFiJl6fvxdlq4b"
+              personaNeedsIndex={0}
+            >
+              <div
+                className="create-card"
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  Create new task
+                </button>
+              </div>
+            </CreateCard>
+          </Connect(CreateCard)>
+          <Connect(CardsBoard)
+            type="HYPOTHESIS"
+          >
+            <CardsBoard
+              getCards={[Function]}
+              type="HYPOTHESIS"
+            >
+              <div>
+                <Connect(CardsList)
+                  key=".0"
+                  status={Symbol(TODO)}
+                  type="HYPOTHESIS"
+                >
+                  <CardsList
+                    list={Array []}
+                    status={Symbol(TODO)}
+                    type="HYPOTHESIS"
+                  >
+                    <div />
+                  </CardsList>
+                </Connect(CardsList)>
+              </div>
+            </CardsBoard>
+          </Connect(CardsBoard)>
+        </li>
+        <li
+          key="1"
+        >
+          To write real User Stories, ie have a Customer Driven thinking
+          <Connect(CreateCard)
+            personaId="uOCF2GLFiJl6fvxdlq4b"
+            personaNeedsIndex={1}
+          >
+            <CreateCard
+              onValidate={[Function]}
+              personaId="uOCF2GLFiJl6fvxdlq4b"
+              personaNeedsIndex={1}
+            >
+              <div
+                className="create-card"
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  Create new task
+                </button>
+              </div>
+            </CreateCard>
+          </Connect(CreateCard)>
+          <Connect(CardsBoard)
+            type="HYPOTHESIS"
+          >
+            <CardsBoard
+              getCards={[Function]}
+              type="HYPOTHESIS"
+            >
+              <div>
+                <Connect(CardsList)
+                  key=".0"
+                  status={Symbol(TODO)}
+                  type="HYPOTHESIS"
+                >
+                  <CardsList
+                    list={Array []}
+                    status={Symbol(TODO)}
+                    type="HYPOTHESIS"
+                  >
+                    <div />
+                  </CardsList>
+                </Connect(CardsList)>
+              </div>
+            </CardsBoard>
+          </Connect(CardsBoard)>
+        </li>
+        <li
+          key="2"
+        >
+          To share at the right time and with the rigth level of information the User Stories with his team
+          <Connect(CreateCard)
+            personaId="uOCF2GLFiJl6fvxdlq4b"
+            personaNeedsIndex={2}
+          >
+            <CreateCard
+              onValidate={[Function]}
+              personaId="uOCF2GLFiJl6fvxdlq4b"
+              personaNeedsIndex={2}
+            >
+              <div
+                className="create-card"
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  Create new task
+                </button>
+              </div>
+            </CreateCard>
+          </Connect(CreateCard)>
+          <Connect(CardsBoard)
+            type="HYPOTHESIS"
+          >
+            <CardsBoard
+              getCards={[Function]}
+              type="HYPOTHESIS"
+            >
+              <div>
+                <Connect(CardsList)
+                  key=".0"
+                  status={Symbol(TODO)}
+                  type="HYPOTHESIS"
+                >
+                  <CardsList
+                    list={Array []}
+                    status={Symbol(TODO)}
+                    type="HYPOTHESIS"
+                  >
+                    <div />
+                  </CardsList>
+                </Connect(CardsList)>
+              </div>
+            </CardsBoard>
+          </Connect(CardsBoard)>
+        </li>
+        <li
+          key="3"
+        >
+          To have a clear vision on the job he'll have to do AND the job already or currently done
+          <Connect(CreateCard)
+            personaId="uOCF2GLFiJl6fvxdlq4b"
+            personaNeedsIndex={3}
+          >
+            <CreateCard
+              onValidate={[Function]}
+              personaId="uOCF2GLFiJl6fvxdlq4b"
+              personaNeedsIndex={3}
+            >
+              <div
+                className="create-card"
+              >
+                <button
+                  onClick={[Function]}
+                >
+                  Create new task
+                </button>
+              </div>
+            </CreateCard>
+          </Connect(CreateCard)>
+          <Connect(CardsBoard)
+            type="HYPOTHESIS"
+          >
+            <CardsBoard
+              getCards={[Function]}
+              type="HYPOTHESIS"
+            >
+              <div>
+                <Connect(CardsList)
+                  key=".0"
+                  status={Symbol(TODO)}
+                  type="HYPOTHESIS"
+                >
+                  <CardsList
+                    list={Array []}
+                    status={Symbol(TODO)}
+                    type="HYPOTHESIS"
+                  >
+                    <div />
+                  </CardsList>
+                </Connect(CardsList)>
+              </div>
+            </CardsBoard>
+          </Connect(CardsBoard)>
+        </li>
+      </ul>
+    </div>
+  </Persona>
+</Provider>
+`;
+
+exports[`Componant tests Display a persona without children 1`] = `
+<div>
+  Paul Deligny
+  <ul>
+    <li
+      key="0"
+    >
+      To have a clear understanding about the product vision & objectives
+    </li>
+    <li
+      key="1"
+    >
+      To write real User Stories, ie have a Customer Driven thinking
+    </li>
+    <li
+      key="2"
+    >
+      To share at the right time and with the rigth level of information the User Stories with his team
+    </li>
+    <li
+      key="3"
+    >
+      To have a clear vision on the job he'll have to do AND the job already or currently done
+    </li>
+  </ul>
+</div>
+`;
