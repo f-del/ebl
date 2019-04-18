@@ -71,7 +71,11 @@ describe("Componant tests", () => {
     });
     const wrapper = mount(
       <Provider store={store}>
-        <Persona persona={entity_persona_created} selectedNeeds={1} />
+        <Persona
+          persona={entity_persona_created}
+          addStory={false}
+          selectedNeeds={1}
+        />
       </Provider>
     );
 

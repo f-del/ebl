@@ -41,7 +41,6 @@ test("Cards board with param Hypothesis", () => {
     cardsSelector.cardType.Hypothesis
   );
   expect(wrapper.find(CardListByStatus).length).toBe(1);
-  expect(wrapper.find(CardListByStatus).at(0).props.type).toBeDefined();
   expect(wrapper).toMatchSnapshot();
   wrapper.unmount();
 });

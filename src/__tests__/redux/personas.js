@@ -83,9 +83,8 @@ describe("Selectors", () => {
   });
 
   test("Get persona by Id, expect [{productOwner, Id},{FT, ID}]", () => {
-    expect(getPersona(personas_store()), "uOCF2GLFiJl6fvxdlq4b").toStrictEqual({
-      ...entity_persona_featureTeam_Id(),
-      ...entity_persona_featureTeam()
+    expect(getPersona(personas_store(), "uOCF2GLFiJl6fvxdlq4b")).toStrictEqual({
+      ...entity_persona_created
     });
   });
 });

@@ -13,7 +13,15 @@ export const entity_test_created = {
   ...entity_test,
   CreatedAt: new Date(2000, 1, 1, 12, 0, 0, 0)
 };
-
+export const entity_hypothesis_attached = (idpersona = 1) => ({
+  ...entity_test,
+  CreatedAt: expect.any(Date),
+  Type: cardType.Hypothesis,
+  Persona: {
+    Id: idpersona,
+    NeedsIndex: 3
+  }
+});
 export const entity_test_2criteria_false = {
   Criterias: [{ Id: "1", Value: false }, { Id: "2", Value: false }]
 };

@@ -47,7 +47,7 @@ export default function(state = initialState, action) {
  *
  */
 export function getPersona(state, id) {
-  return getAllPersonas(state).filter(p => p.Id === id);
+  return getAllPersonas(state).find(p => p.Id === id);
 }
 
 export function getAllPersonas(state) {

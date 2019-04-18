@@ -1,13 +1,13 @@
 import thunk from "redux-thunk";
 
 import configureMockStore from "redux-mock-store";
-import uiReducer from "../../redux/modules/personas";
-import { entity_test_created } from "../datas";
+import uiReducer from "../../redux/modules/ui";
+import { entity_hypothesis_attached } from "../datas";
 import { selectHypothesis } from "../../redux/modules/ui";
 
 describe("Reducer", () => {
   test("Action select Hypothesis", () => {
-    const hypothesis = { ...entity_test_created };
+    const hypothesis = entity_hypothesis_attached("1");
 
     expect(selectHypothesis(hypothesis)).toEqual({
       type: "UI/SELECT/HYPOTHESIS",

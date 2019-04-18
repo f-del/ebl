@@ -19,7 +19,21 @@ exports[`Cards board with param Hypothesis 1`] = `
       getCards={[Function]}
       type="HYPOTHESIS"
     >
-      <div />
+      <div>
+        <Connect(CardsList)
+          key=".0"
+          status={Symbol(DONE)}
+          type="HYPOTHESIS"
+        >
+          <CardsList
+            list={Array []}
+            status={Symbol(DONE)}
+            type="HYPOTHESIS"
+          >
+            <div />
+          </CardsList>
+        </Connect(CardsList)>
+      </div>
     </CardsBoard>
   </Connect(CardsBoard)>
 </Provider>

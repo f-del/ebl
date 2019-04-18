@@ -12,7 +12,8 @@ import {
   storeStateDyn,
   stateWithDynCard,
   entity_test_created_with_criterias,
-  expect_loadingstate
+  expect_loadingstate,
+  entity_hypothesis_attached
 } from "../datas";
 import {
   createCard,
@@ -473,15 +474,9 @@ describe("API tests", () => {
       );
 
       expect(fnMockPostCards.mock.calls.length).toBe(1);
-      expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual({
-        ...entity_test,
-        CreatedAt: expect.any(Date),
-        Type: cardType.Hypothesis,
-        Persona: {
-          Id: persona.Id,
-          NeedsIndex: 3
-        }
-      });
+      expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual(
+        entity_hypothesis_attached(persona.Id)
+      );
       const actions = store.getActions();
       expect(actions.length).toBe(1);
       expect(actions[0]).toStrictEqual({
