@@ -442,28 +442,51 @@ export function getCard(state, id) {
   Get all cards from state
   option : {
     type = cardType of cards
+    persona : id of the attached persona
   }
 */
 export function getAllCards(state, { ...option } = {}) {
-  return (getCards(validateState(state)).list || []).filter(e =>
-    isTypeCard(e, option.type)
+  return (getCards(validateState(state)).list || []).filter(c =>
+    and(
+      and(isTypeCard(c, option.type), isPersona(c, option.persona)),
+      isPersonaNeeds(c, option.needsIndex)
+    )
   );
 }
+
 export function getAllCardsInProgess(state, { ...option } = {}) {
   return getAllCards(state).filter(c =>
-    and(isCardStatusInProgess(c), isTypeCard(c, option.type))
+    and(
+      and(
+        and(isCardStatusInProgess(c), isTypeCard(c, option.type)),
+        isPersona(c, option.persona)
+      ),
+      isPersonaNeeds(c, option.needsIndex)
+    )
   );
 }
 
 export function getAllCardsTodo(state, { ...option } = {}) {
   return getAllCards(state).filter(c =>
-    and(isCardStatusToDo(c), isTypeCard(c, option.type))
+    and(
+      and(
+        and(isCardStatusToDo(c), isTypeCard(c, option.type)),
+        isPersona(c, option.persona)
+      ),
+      isPersonaNeeds(c, option.needsIndex)
+    )
   );
 }
 
 export function getAllCardsDone(state, { ...option } = {}) {
   return getAllCards(state).filter(c =>
-    and(isCardStatusDone(c), isTypeCard(c, option.type))
+    and(
+      and(
+        and(isCardStatusDone(c), isTypeCard(c, option.type)),
+        isPersona(c, option.persona)
+      ),
+      isPersonaNeeds(c, option.needsIndex)
+    )
   );
 }
 
@@ -486,6 +509,22 @@ function and(fn1, fn2) {
 
 function isTypeCard(card, type) {
   return card.Type === (type || card.Type);
+}
+
+function isPersona(card, id) {
+  return id !== undefined
+    ? card.Persona !== undefined
+      ? card.Persona.Id === id
+      : false
+    : true;
+}
+
+function isPersonaNeeds(card, needsIdx) {
+  return needsIdx !== undefined && card.Persona !== undefined
+    ? card.Persona.NeedsIndex !== undefined
+      ? card.Persona.NeedsIndex === needsIdx
+      : false
+    : true;
 }
 
 function isCardStatusInProgess(card) {

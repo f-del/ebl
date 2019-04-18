@@ -19,7 +19,7 @@ import { cardType } from "../redux/modules/cards";
 
 const styles = {
   card: {
-    maxWidth: 200
+    maxWidth: 400
   },
   status_todo: {
     backgroundColor: grey[500]

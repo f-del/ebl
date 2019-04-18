@@ -1201,6 +1201,17 @@ describe("Selectors", () => {
       )
     ).toStrictEqual([{ ...entity_test_created, Type: cardType.Hypothesis }]);
   });
+  test("GetAllCards Hypothesis for a specific persona from state with 2 cards", () => {
+    expect(
+      getAllCards(
+        storeStateDyn([
+          { ...entity_test_created },
+          { ...entity_hypothesis_attached("fdsfdsf") }
+        ]),
+        { type: cardType.Hypothesis, persona: "fdsfdsf" }
+      )
+    ).toStrictEqual([entity_hypothesis_attached("fdsfdsf")]);
+  });
 
   test("GetAllCards InProgress", () => {
     const cardIp = {
@@ -1226,6 +1237,34 @@ describe("Selectors", () => {
         type: cardType.Hypothesis
       })
     ).toStrictEqual([cardIp]);
+  });
+
+  test("GetAllCards Todo Hypothesis with persona", () => {
+    const cardIp = {
+      Title: "test - inprogress",
+      Status: cardStatus.TODO,
+      Type: cardType.Hypothesis
+    };
+    const hypothesis = entity_hypothesis_attached("fdsfdsf");
+    const hypothesisRightNeeds = {
+      ...hypothesis,
+      Persona: { ...hypothesis.Persona, NeedsIndex: 5 }
+    };
+    expect(
+      getAllCardsTodo(
+        storeStateDyn([
+          entity_test_created,
+          cardIp,
+          hypothesis,
+          hypothesisRightNeeds
+        ]),
+        {
+          type: cardType.Hypothesis,
+          persona: "fdsfdsf",
+          needsIndex: 5
+        }
+      )
+    ).toStrictEqual([hypothesisRightNeeds]);
   });
 
   test("GetAllCards DONE", () => {

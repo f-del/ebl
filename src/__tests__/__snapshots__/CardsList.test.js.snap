@@ -14,10 +14,22 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with DONE 1`] = `
   }
 >
   <Connect(CardsList)
+    filterBy={
+      Object {
+        "needsIndex": 2,
+        "persona": "1",
+      }
+    }
     status={Symbol(DONE)}
     type="TASK"
   >
     <CardsList
+      filterBy={
+        Object {
+          "needsIndex": 2,
+          "persona": "1",
+        }
+      }
       list={Array []}
       status={Symbol(DONE)}
       type="TASK"

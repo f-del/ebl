@@ -10,11 +10,20 @@ import CardsList from "../components/CardsList";
 
 function helperGetCards(state, ownProps) {
   if (ownProps.status === cardStatus.TODO)
-    return getAllCardsTodo(state, { type: ownProps.type });
+    return getAllCardsTodo(state, {
+      type: ownProps.type,
+      ...ownProps.filterBy
+    });
   if (ownProps.status === cardStatus.INPROGRESS)
-    return getAllCardsInProgess(state, { type: ownProps.type });
+    return getAllCardsInProgess(state, {
+      type: ownProps.type,
+      ...ownProps.filterBy
+    });
   if (ownProps.status === cardStatus.DONE)
-    return getAllCardsDone(state, { type: ownProps.type });
+    return getAllCardsDone(state, {
+      type: ownProps.type,
+      ...ownProps.filterBy
+    });
 
   throw new Error("Status not recognized, should come from cardStatus");
 }

@@ -109,11 +109,23 @@ exports[`Componant tests Display a persona with children 1`] = `
             >
               <div>
                 <Connect(CardsList)
+                  filterBy={
+                    Object {
+                      "needsIndex": 0,
+                      "persona": "uOCF2GLFiJl6fvxdlq4b",
+                    }
+                  }
                   key=".0"
                   status={Symbol(TODO)}
                   type="HYPOTHESIS"
                 >
                   <CardsList
+                    filterBy={
+                      Object {
+                        "needsIndex": 0,
+                        "persona": "uOCF2GLFiJl6fvxdlq4b",
+                      }
+                    }
                     list={Array []}
                     status={Symbol(TODO)}
                     type="HYPOTHESIS"
@@ -158,11 +170,23 @@ exports[`Componant tests Display a persona with children 1`] = `
             >
               <div>
                 <Connect(CardsList)
+                  filterBy={
+                    Object {
+                      "needsIndex": 1,
+                      "persona": "uOCF2GLFiJl6fvxdlq4b",
+                    }
+                  }
                   key=".0"
                   status={Symbol(TODO)}
                   type="HYPOTHESIS"
                 >
                   <CardsList
+                    filterBy={
+                      Object {
+                        "needsIndex": 1,
+                        "persona": "uOCF2GLFiJl6fvxdlq4b",
+                      }
+                    }
                     list={Array []}
                     status={Symbol(TODO)}
                     type="HYPOTHESIS"
@@ -207,11 +231,23 @@ exports[`Componant tests Display a persona with children 1`] = `
             >
               <div>
                 <Connect(CardsList)
+                  filterBy={
+                    Object {
+                      "needsIndex": 2,
+                      "persona": "uOCF2GLFiJl6fvxdlq4b",
+                    }
+                  }
                   key=".0"
                   status={Symbol(TODO)}
                   type="HYPOTHESIS"
                 >
                   <CardsList
+                    filterBy={
+                      Object {
+                        "needsIndex": 2,
+                        "persona": "uOCF2GLFiJl6fvxdlq4b",
+                      }
+                    }
                     list={Array []}
                     status={Symbol(TODO)}
                     type="HYPOTHESIS"
@@ -256,11 +292,23 @@ exports[`Componant tests Display a persona with children 1`] = `
             >
               <div>
                 <Connect(CardsList)
+                  filterBy={
+                    Object {
+                      "needsIndex": 3,
+                      "persona": "uOCF2GLFiJl6fvxdlq4b",
+                    }
+                  }
                   key=".0"
                   status={Symbol(TODO)}
                   type="HYPOTHESIS"
                 >
                   <CardsList
+                    filterBy={
+                      Object {
+                        "needsIndex": 3,
+                        "persona": "uOCF2GLFiJl6fvxdlq4b",
+                      }
+                    }
                     list={Array []}
                     status={Symbol(TODO)}
                     type="HYPOTHESIS"

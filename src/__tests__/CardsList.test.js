@@ -95,13 +95,16 @@ describe("Containers tests", () => {
           <CardListByStatus
             status={cardStatus.DONE}
             type={cardsSelector.cardType.Task}
+            filterBy={{ persona: "1", needsIndex: 2 }}
           />
         </Provider>
       );
 
       expect(cardsSelector.getAllCardsDone.mock.calls.length).toBe(1);
       expect(cardsSelector.getAllCardsDone.mock.calls[0][1]).toStrictEqual({
-        type: cardsSelector.cardType.Task
+        type: cardsSelector.cardType.Task,
+        persona: "1",
+        needsIndex: 2
       });
       expect(wrapper).toMatchSnapshot();
       wrapper.unmount();

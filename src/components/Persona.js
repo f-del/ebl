@@ -28,6 +28,7 @@ function Persona({ persona, addStory, selectedNeeds }) {
                   <CardListByStatus
                     type={cardType.Hypothesis}
                     status={cardStatus.TODO}
+                    filterBy={{ persona: persona.Id, needsIndex: i }}
                   />
                 </CardsBoard>
               </React.Fragment>
