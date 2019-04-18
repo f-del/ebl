@@ -18,9 +18,10 @@ import CardsBoard from "./containers/CardsBoard";
 import CreateTaskCard from "./containers/createTaskCard";
 
 import "./styles.css";
-import { cardType, cardStatus } from "./redux/modules/cards";
+import { cardType, cardStatus, getCard } from "./redux/modules/cards";
 import Persona from "./components/Persona";
 import { getAllPersonas } from "./redux/modules/personas";
+import Hypothesis from "./components/Hypothesis";
 
 let config = {
   apiKey: "AIzaSyBwM4YVUVijCR35f9D_vg1qHbF3OTotVb0",
@@ -44,11 +45,15 @@ function App() {
   return (
     <Provider store={store}>
       <CssBaseline />
+      <h1>Personas List : </h1>
       <div className="App">
         {getAllPersonas(store.getState()).map(p => (
           <Persona key={p.Id} persona={p} addStory={true} />
         ))}
         <CreateTaskCard />
+        <h1>Hypothesis Card : </h1>
+        <Hypothesis hypothesis={{}} />
+        <h1>Tasks Board : </h1>
         <CardsBoard type={cardType.Task}>
           <CardListByStatus type={cardType.Task} status={cardStatus.TODO} />
           <CardListByStatus

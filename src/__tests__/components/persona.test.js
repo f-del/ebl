@@ -62,4 +62,27 @@ describe("Componant tests", () => {
 
     wrapper.unmount();
   });
+
+  test("Display a persona and a specific needs", () => {
+    cardsSelector.retrieveAllCards = jest.fn(type => {
+      return dispatch => {
+        return [];
+      };
+    });
+    const wrapper = mount(
+      <Provider store={store}>
+        <Persona persona={entity_persona_created} selectedNeeds={1} />
+      </Provider>
+    );
+
+    expect(wrapper.text()).toContain(entity_persona_created.Name);
+
+    const needsList = wrapper.find("li");
+    expect(needsList.length).toBe(1);
+    expect(needsList.at(0).text()).toContain(entity_persona_created.Needs[1]);
+
+    expect(wrapper.find("button").length).toBe(0);
+
+    wrapper.unmount();
+  });
 });

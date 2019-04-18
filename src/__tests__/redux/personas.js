@@ -1,4 +1,7 @@
-import personnasReducer, { getAllPersonas } from "../../redux/modules/personas";
+import personnasReducer, {
+  getAllPersonas,
+  getPersona
+} from "../../redux/modules/personas";
 
 const entity_persona_productOwner = () => ({
   Details: "Product Owner for a new product, work in a startup",
@@ -77,5 +80,12 @@ describe("Selectors", () => {
       entity_persona_created,
       { ...entity_persona_featureTeam_Id(), ...entity_persona_featureTeam() }
     ]);
+  });
+
+  test("Get persona by Id, expect [{productOwner, Id},{FT, ID}]", () => {
+    expect(getPersona(personas_store()), "uOCF2GLFiJl6fvxdlq4b").toStrictEqual({
+      ...entity_persona_featureTeam_Id(),
+      ...entity_persona_featureTeam()
+    });
   });
 });
