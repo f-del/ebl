@@ -14,7 +14,7 @@ import UiFormHelperText from "@material-ui/core/FormHelperText";
 import UiButton from "@material-ui/core/Button";
 import UiCheckbox from "@material-ui/core/Checkbox";
 
-import { cardStatus } from "../redux/modules/cards";
+import { cardStatus, cardType } from "../redux/modules/cards";
 
 const styles = theme => ({
   root: {
@@ -87,14 +87,19 @@ function CardActions({ card, onAction, criterias_typology_list, classes }) {
     </UiFormControl>
   );
 
-  if (card.Status === cardStatus.TODO)
-    if (card.Criterias !== undefined && card.Criterias.length > 0)
-      return displayTODO();
-    else return displayTODO_AffectCriterias();
+  switch (card.Type) {
+    case cardType.Task: {
+      if (card.Status === cardStatus.TODO)
+        if (card.Criterias !== undefined && card.Criterias.length > 0)
+          return displayTODO();
+        else return displayTODO_AffectCriterias();
 
-  if (card.Status === cardStatus.INPROGRESS) return displayINPROGRESS();
-
-  return null;
+      if (card.Status === cardStatus.INPROGRESS) return displayINPROGRESS();
+      break;
+    }
+    default:
+      return null;
+  }
   function handleSelect(e) {
     onAction({ value: e.target.value });
   }

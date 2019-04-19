@@ -17,7 +17,8 @@ import CardActions from "../components/CardActions";
 import CardActionnable from "../containers/CardActionnable";
 import {
   entity_test_created,
-  entity_test_created_with_criterias
+  entity_test_created_with_criterias,
+  entity_hypothesis_attached
 } from "./datas";
 import {
   entity_criteria,
@@ -38,6 +39,19 @@ describe("Componant tests", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
+  test("Initial state in status TODO on card type not Task", () => {
+    const mockAction = jest.fn(() => {});
+    const wrapper = shallow(
+      <CardActions card={entity_hypothesis_attached()} onAction={mockAction} />
+    ).dive();
+
+    expect(wrapper.isEmptyRender()).toBe(true);
+
+    expect(wrapper).toMatchSnapshot();
+
+    wrapper.unmount();
+  });
+
   test("Initial state in status TODO, without Criterias", () => {
     const mockAction = jest.fn(() => {});
     const wrapper = shallow(

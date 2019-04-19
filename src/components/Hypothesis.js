@@ -5,6 +5,10 @@ import UiCard from "@material-ui/core/Card";
 import UiCardContent from "@material-ui/core/CardContent";
 import UiTypography from "@material-ui/core/Typography";
 import Persona from "./Persona";
+import CreateUserStoryCard from "../containers/CreateUserStoryCard";
+import CardsBoard from "../containers/CardsBoard";
+import { cardType, cardStatus } from "../redux/modules/cards";
+import CardListByStatus from "../containers/CardsListByStatus";
 
 function Hypothesis({ hypothesis, persona }) {
   function getNeedsIdx() {
@@ -31,6 +35,20 @@ function Hypothesis({ hypothesis, persona }) {
         <UiCard>
           <UiCardContent>
             <UiTypography variant="h2">{hypothesis.Title}</UiTypography>
+          </UiCardContent>
+        </UiCard>
+        <UiCard>
+          <UiCardContent>
+            <UiTypography variant="h3">
+              Describe the {persona.Name} Journey
+            </UiTypography>
+            <CreateUserStoryCard hypothesisId={hypothesis.Id} />
+            <CardsBoard type={cardType.UserStory}>
+              <CardListByStatus
+                type={cardType.UserStory}
+                status={cardStatus.TODO}
+              />
+            </CardsBoard>
           </UiCardContent>
         </UiCard>
       </React.Fragment>

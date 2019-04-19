@@ -56,7 +56,7 @@ exports[`Componant tests Initial state 1`] = `
 </div>
 `;
 
-exports[`Containers create User Story should Exist 1`] = `
+exports[`Containers create Hypothesis Card should Exist 1`] = `
 <Provider
   store={
     Object {
@@ -76,6 +76,39 @@ exports[`Containers create User Story should Exist 1`] = `
       onValidate={[Function]}
       personaId="uOCF2GLFiJl6fvxdlq4b"
       personaNeedsIndex={1}
+    >
+      <div
+        className="create-card"
+      >
+        <button
+          onClick={[Function]}
+        >
+          Create new task
+        </button>
+      </div>
+    </CreateCard>
+  </Connect(CreateCard)>
+</Provider>
+`;
+
+exports[`Containers create User Story attached to an hypothesis Card should Exist 1`] = `
+<Provider
+  store={
+    Object {
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(observable): [Function],
+    }
+  }
+>
+  <Connect(CreateCard)
+    hypothesisId="mockedID"
+  >
+    <CreateCard
+      hypothesisId="mockedID"
+      onValidate={[Function]}
     >
       <div
         className="create-card"

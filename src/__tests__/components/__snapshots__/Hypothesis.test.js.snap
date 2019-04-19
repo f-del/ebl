@@ -2,7 +2,28 @@
 
 exports[`Componant tests Display an hypothesis, props hypothesis setted externaly 1`] = `
 <Fragment>
-  <WithStyles(Card) />
+  <WithStyles(Card)>
+    <WithStyles(CardContent)>
+      <Persona
+        addStory={false}
+        persona={
+          Object {
+            "Details": "Product Owner for a new product, work in a startup",
+            "Id": "uOCF2GLFiJl6fvxdlq4b",
+            "Name": "Paul Deligny",
+            "Needs": Array [
+              "To have a clear understanding about the product vision & objectives",
+              "To write real User Stories, ie have a Customer Driven thinking",
+              "To share at the right time and with the rigth level of information the User Stories with his team",
+              "To have a clear vision on the job he'll have to do AND the job already or currently done",
+            ],
+            "Picture": "",
+          }
+        }
+        selectedNeeds={3}
+      />
+    </WithStyles(CardContent)>
+  </WithStyles(Card)>
   <WithStyles(Card)>
     <WithStyles(CardContent)>
       <WithStyles(Typography)
@@ -10,6 +31,28 @@ exports[`Componant tests Display an hypothesis, props hypothesis setted external
       >
         test
       </WithStyles(Typography)>
+    </WithStyles(CardContent)>
+  </WithStyles(Card)>
+  <WithStyles(Card)>
+    <WithStyles(CardContent)>
+      <WithStyles(Typography)
+        variant="h3"
+      >
+        Describe the 
+        Paul Deligny
+         Journey
+      </WithStyles(Typography)>
+      <Connect(CreateCard)
+        hypothesisId="mockedId"
+      />
+      <Connect(CardsBoard)
+        type="USER-STORY"
+      >
+        <Connect(CardsList)
+          status={Symbol(TODO)}
+          type="USER-STORY"
+        />
+      </Connect(CardsBoard)>
     </WithStyles(CardContent)>
   </WithStyles(Card)>
 </Fragment>

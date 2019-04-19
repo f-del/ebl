@@ -12,6 +12,8 @@ import CreateCard from "../components/CreateCard";
 import CreateTaskCard from "../containers/createTaskCard";
 import CreateHypothesisCard from "../containers/CreateHypothesisCard";
 import { entity_persona_created } from "./redux/personas";
+import { entity_hypothesis_attached } from "./datas";
+import CreateUserStoryCard from "../containers/CreateUserStoryCard";
 
 configure({ adapter: new Adapter() });
 
@@ -129,7 +131,7 @@ describe("Containers", () => {
     });
   });
 
-  describe("create User Story", () => {
+  describe("create Hypothesis Card", () => {
     test("should Exist", () => {
       const text = "Unit test User Story";
       const preventDefault = jest.fn();
@@ -146,7 +148,6 @@ describe("Containers", () => {
           />
         </Provider>
       );
-      expect(wrapper).toMatchSnapshot();
       expect(wrapper.props("onValidate")).toBeDefined();
       expect(wrapper.find("button").simulate("click"));
       const input = wrapper.find("textarea");
@@ -162,6 +163,41 @@ describe("Containers", () => {
       expect(cardsSelector.createCard.mock.calls[0][2]).toStrictEqual({
         persona: { id: entity_persona_created.Id, needsIndex: 1 }
       });
+      expect(wrapper).toMatchSnapshot();
+      wrapper.unmount();
+    });
+  });
+  describe("create User Story attached to an hypothesis Card", () => {
+    test("should Exist", () => {
+      const text = "Unit test User Story";
+      const preventDefault = jest.fn();
+      cardsSelector.addUserStoryToHypothesis = jest
+        .fn()
+        .mockImplementationOnce(id => {
+          return dispatch => {
+            return id;
+          };
+        });
+      const wrapper = mount(
+        <Provider store={store}>
+          <CreateUserStoryCard hypothesisId={"mockedID"} />
+        </Provider>
+      );
+      expect(wrapper.props("onValidate")).toBeDefined();
+      expect(wrapper.find("button").simulate("click"));
+      const input = wrapper.find("textarea");
+      expect(input.length).toBe(1);
+      input.simulate("change", { target: { value: text } });
+      input.simulate("keyDown", { which: 13, preventDefault });
+
+      expect(cardsSelector.addUserStoryToHypothesis.mock.calls.length).toBe(1);
+      expect(cardsSelector.addUserStoryToHypothesis.mock.calls[0][0]).toBe(
+        "mockedID"
+      );
+      expect(cardsSelector.addUserStoryToHypothesis.mock.calls[0][1]).toBe(
+        text
+      );
+      expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });
   });

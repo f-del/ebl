@@ -205,10 +205,15 @@ export const toggleCardCriteria = (id, idCriteria, valueCriteria) => {
 export const retrieveAllCards = type => {
   if (type === undefined) throw new Error("Argument type is mandatory");
   return async (dispatch, getState, { api }) => {
-    if (getAllCards(getState(), { type }).length !== 0)
+    const currentState = getLoadingStatus(getState(), type);
+
+    if (
+      currentState === LOADING_STATE.NULL &&
+      getAllCards(getState(), { type }).length !== 0
+    )
       throw new Error("Could not retrieve cards in the current state");
 
-    if (getLoadingStatus(getState(), type) === LOADING_STATE.NULL) {
+    if (currentState === LOADING_STATE.NULL) {
       dispatch(retrieveAllCards_Starting(type));
 
       const cards = await api.Cards.Get(type);

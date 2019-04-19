@@ -312,6 +312,24 @@ describe("API tests", () => {
     done();
   });
 
+  test("retrieve all cards in after already loaded calls, expect just exit", async done => {
+    const fn1 = async () => {
+      await store.dispatch(retrieveAllCards(cardType.Task));
+    };
+
+    const fn2 = async () => {
+      await store.dispatch(retrieveAllCards(cardType.Task));
+    };
+    await fn1();
+
+    expect(fnMockGetCards.mock.calls.length).toBe(1);
+
+    jest.resetAllMocks();
+    await fn2();
+    expect(fnMockGetCards.mock.calls.length).toBe(0);
+    done();
+  });
+
   test("Toogle 1 Card Criteria to true on card with 1 criterias set to true", async () => {
     const card = {
       ...entity_test_created,
@@ -474,9 +492,10 @@ describe("API tests", () => {
       );
 
       expect(fnMockPostCards.mock.calls.length).toBe(1);
-      expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual(
-        entity_hypothesis_attached(persona.Id)
-      );
+      expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual({
+        ...entity_hypothesis_attached(persona.Id),
+        CreatedAt: expect.any(Date)
+      });
       const actions = store.getActions();
       expect(actions.length).toBe(1);
       expect(actions[0]).toStrictEqual({

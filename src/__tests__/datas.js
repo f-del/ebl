@@ -15,7 +15,6 @@ export const entity_test_created = {
 };
 export const entity_hypothesis_attached = (idpersona = 1) => ({
   ...entity_test,
-  CreatedAt: expect.any(Date),
   Type: cardType.Hypothesis,
   Persona: {
     Id: idpersona,

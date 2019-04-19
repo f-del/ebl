@@ -27,6 +27,15 @@ export const mapping = card => {
       NeedsIndex: card.Persona.Needs
     };
   }
+  if (card.UserStories !== undefined) {
+    card.UserStories = {
+      Id:
+        typeof card.UserStories.Id === "object"
+          ? card.UserStories.Id.id
+          : card.UserStories.Id
+    };
+  }
+
   return {
     ...card,
     ...status

@@ -40,7 +40,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test --env=jsdom --updateSnapshot",
     "testwc": "npm test -- --coverage",
     "eject": "react-scripts eject"
   },

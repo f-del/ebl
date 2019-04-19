@@ -171,7 +171,7 @@ describe("Card mapping from Firestore", () => {
     });
   });
 
-  test("card with Persona", () => {
+  test("card with Persona and UserStories", () => {
     const date = new Date();
     const firebase = new MockFirebase(fixtureData);
     const db = firebase.firestore();
@@ -182,6 +182,9 @@ describe("Card mapping from Firestore", () => {
         Type: "TASK",
         Status: "TODO",
         CreatedAt: date.toJSON(),
+        UserStories: {
+          Id: db.collection("Cards").doc("lkdsjfl34dfg")
+        },
         Persona: {
           Id: db.collection("Persona").doc("e6wTJIBsAw5puwwrNEsR"),
           Needs: 3
@@ -191,7 +194,10 @@ describe("Card mapping from Firestore", () => {
         get: jest.fn(() => "e6wTJIBsAw5puwwrNEsR"),
         set: jest.fn()
       });
-
+      Object.defineProperty(ret.UserStories.Id, "id", {
+        get: jest.fn(() => "lkdsjfl34dfg"),
+        set: jest.fn()
+      });
       return ret;
     });
 
@@ -211,6 +217,9 @@ describe("Card mapping from Firestore", () => {
       Persona: {
         Id: "e6wTJIBsAw5puwwrNEsR",
         NeedsIndex: 3
+      },
+      UserStories: {
+        Id: "lkdsjfl34dfg"
       }
     });
   });

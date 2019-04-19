@@ -40,10 +40,11 @@ describe("Componant tests", () => {
   });
 
   test("Display an hypothesis, props hypothesis setted externaly", () => {
-    const hypothesis = entity_hypothesis_attached();
-    const wrapper = shallow(<Hypothesis hypothesis={hypothesis} />);
+    const hypothesis = { ...entity_hypothesis_attached(), Id: "mockedId" };
+    const wrapper = shallow(
+      <Hypothesis hypothesis={hypothesis} persona={entity_persona_created} />
+    );
     expect(wrapper).toMatchSnapshot();
-    expect(wrapper.find(UiTypography).length).toBe(1);
   });
 });
 
@@ -73,6 +74,7 @@ describe("Containers tests", () => {
 
     expect(wrapper.props("persona")).toBeDefined();
     expect(wrapper.props("hypothesis")).toBeDefined();
+    expect(wrapper.props("onAddUserStory")).toBeDefined();
     expect(wrapper).toMatchSnapshot();
   });
 });

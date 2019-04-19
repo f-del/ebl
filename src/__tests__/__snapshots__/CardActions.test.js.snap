@@ -6581,6 +6581,8 @@ exports[`Componant tests Initial state in status INPROGRESS 1`] = `
 </WithStyles(CardActions)>
 `;
 
+exports[`Componant tests Initial state in status TODO on card type not Task 1`] = `""`;
+
 exports[`Componant tests Initial state in status TODO with criteria 1`] = `
 <WithStyles(Button)
   className="CardActions-button-3"
