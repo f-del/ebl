@@ -100,42 +100,94 @@ exports[`Componant tests Display a persona with children 1`] = `
               </div>
             </CreateCard>
           </Connect(CreateCard)>
-          <Connect(CardsBoard)
+          <Connect(WithStyles(CardsBoard))
             type="HYPOTHESIS"
           >
-            <CardsBoard
+            <WithStyles(CardsBoard)
               getCards={[Function]}
               type="HYPOTHESIS"
             >
-              <div>
-                <Connect(CardsList)
-                  filterBy={
-                    Object {
-                      "needsIndex": 0,
-                      "persona": "uOCF2GLFiJl6fvxdlq4b",
-                    }
+              <CardsBoard
+                classes={
+                  Object {
+                    "gridList": "CardsBoard-gridList-2",
+                    "root": "CardsBoard-root-1",
                   }
-                  key=".0"
-                  status={Symbol(TODO)}
-                  type="HYPOTHESIS"
+                }
+                getCards={[Function]}
+                type="HYPOTHESIS"
+              >
+                <div
+                  className="CardsBoard-root-1"
                 >
-                  <CardsList
-                    filterBy={
-                      Object {
-                        "needsIndex": 0,
-                        "persona": "uOCF2GLFiJl6fvxdlq4b",
-                      }
-                    }
-                    list={Array []}
-                    status={Symbol(TODO)}
-                    type="HYPOTHESIS"
+                  <WithStyles(GridList)
+                    className="CardsBoard-gridList-2"
+                    cols={2.5}
                   >
-                    <div />
-                  </CardsList>
-                </Connect(CardsList)>
-              </div>
-            </CardsBoard>
-          </Connect(CardsBoard)>
+                    <GridList
+                      cellHeight={180}
+                      className="CardsBoard-gridList-2"
+                      classes={
+                        Object {
+                          "root": "MuiGridList-root-3",
+                        }
+                      }
+                      cols={2.5}
+                      component="ul"
+                      spacing={4}
+                    >
+                      <ul
+                        className="MuiGridList-root-3 CardsBoard-gridList-2"
+                        style={
+                          Object {
+                            "margin": -2,
+                          }
+                        }
+                      >
+                        <Connect(CardsList)
+                          filterBy={
+                            Object {
+                              "needsIndex": 0,
+                              "persona": "uOCF2GLFiJl6fvxdlq4b",
+                            }
+                          }
+                          key=".$.0"
+                          status={Symbol(TODO)}
+                          style={
+                            Object {
+                              "height": 184,
+                              "padding": 2,
+                              "width": "40%",
+                            }
+                          }
+                          type="HYPOTHESIS"
+                        >
+                          <CardsList
+                            filterBy={
+                              Object {
+                                "needsIndex": 0,
+                                "persona": "uOCF2GLFiJl6fvxdlq4b",
+                              }
+                            }
+                            list={Array []}
+                            status={Symbol(TODO)}
+                            style={
+                              Object {
+                                "height": 184,
+                                "padding": 2,
+                                "width": "40%",
+                              }
+                            }
+                            type="HYPOTHESIS"
+                          />
+                        </Connect(CardsList)>
+                      </ul>
+                    </GridList>
+                  </WithStyles(GridList)>
+                </div>
+              </CardsBoard>
+            </WithStyles(CardsBoard)>
+          </Connect(WithStyles(CardsBoard))>
         </li>
         <li
           key="1"
@@ -161,42 +213,94 @@ exports[`Componant tests Display a persona with children 1`] = `
               </div>
             </CreateCard>
           </Connect(CreateCard)>
-          <Connect(CardsBoard)
+          <Connect(WithStyles(CardsBoard))
             type="HYPOTHESIS"
           >
-            <CardsBoard
+            <WithStyles(CardsBoard)
               getCards={[Function]}
               type="HYPOTHESIS"
             >
-              <div>
-                <Connect(CardsList)
-                  filterBy={
-                    Object {
-                      "needsIndex": 1,
-                      "persona": "uOCF2GLFiJl6fvxdlq4b",
-                    }
+              <CardsBoard
+                classes={
+                  Object {
+                    "gridList": "CardsBoard-gridList-2",
+                    "root": "CardsBoard-root-1",
                   }
-                  key=".0"
-                  status={Symbol(TODO)}
-                  type="HYPOTHESIS"
+                }
+                getCards={[Function]}
+                type="HYPOTHESIS"
+              >
+                <div
+                  className="CardsBoard-root-1"
                 >
-                  <CardsList
-                    filterBy={
-                      Object {
-                        "needsIndex": 1,
-                        "persona": "uOCF2GLFiJl6fvxdlq4b",
-                      }
-                    }
-                    list={Array []}
-                    status={Symbol(TODO)}
-                    type="HYPOTHESIS"
+                  <WithStyles(GridList)
+                    className="CardsBoard-gridList-2"
+                    cols={2.5}
                   >
-                    <div />
-                  </CardsList>
-                </Connect(CardsList)>
-              </div>
-            </CardsBoard>
-          </Connect(CardsBoard)>
+                    <GridList
+                      cellHeight={180}
+                      className="CardsBoard-gridList-2"
+                      classes={
+                        Object {
+                          "root": "MuiGridList-root-3",
+                        }
+                      }
+                      cols={2.5}
+                      component="ul"
+                      spacing={4}
+                    >
+                      <ul
+                        className="MuiGridList-root-3 CardsBoard-gridList-2"
+                        style={
+                          Object {
+                            "margin": -2,
+                          }
+                        }
+                      >
+                        <Connect(CardsList)
+                          filterBy={
+                            Object {
+                              "needsIndex": 1,
+                              "persona": "uOCF2GLFiJl6fvxdlq4b",
+                            }
+                          }
+                          key=".$.0"
+                          status={Symbol(TODO)}
+                          style={
+                            Object {
+                              "height": 184,
+                              "padding": 2,
+                              "width": "40%",
+                            }
+                          }
+                          type="HYPOTHESIS"
+                        >
+                          <CardsList
+                            filterBy={
+                              Object {
+                                "needsIndex": 1,
+                                "persona": "uOCF2GLFiJl6fvxdlq4b",
+                              }
+                            }
+                            list={Array []}
+                            status={Symbol(TODO)}
+                            style={
+                              Object {
+                                "height": 184,
+                                "padding": 2,
+                                "width": "40%",
+                              }
+                            }
+                            type="HYPOTHESIS"
+                          />
+                        </Connect(CardsList)>
+                      </ul>
+                    </GridList>
+                  </WithStyles(GridList)>
+                </div>
+              </CardsBoard>
+            </WithStyles(CardsBoard)>
+          </Connect(WithStyles(CardsBoard))>
         </li>
         <li
           key="2"
@@ -222,42 +326,94 @@ exports[`Componant tests Display a persona with children 1`] = `
               </div>
             </CreateCard>
           </Connect(CreateCard)>
-          <Connect(CardsBoard)
+          <Connect(WithStyles(CardsBoard))
             type="HYPOTHESIS"
           >
-            <CardsBoard
+            <WithStyles(CardsBoard)
               getCards={[Function]}
               type="HYPOTHESIS"
             >
-              <div>
-                <Connect(CardsList)
-                  filterBy={
-                    Object {
-                      "needsIndex": 2,
-                      "persona": "uOCF2GLFiJl6fvxdlq4b",
-                    }
+              <CardsBoard
+                classes={
+                  Object {
+                    "gridList": "CardsBoard-gridList-2",
+                    "root": "CardsBoard-root-1",
                   }
-                  key=".0"
-                  status={Symbol(TODO)}
-                  type="HYPOTHESIS"
+                }
+                getCards={[Function]}
+                type="HYPOTHESIS"
+              >
+                <div
+                  className="CardsBoard-root-1"
                 >
-                  <CardsList
-                    filterBy={
-                      Object {
-                        "needsIndex": 2,
-                        "persona": "uOCF2GLFiJl6fvxdlq4b",
-                      }
-                    }
-                    list={Array []}
-                    status={Symbol(TODO)}
-                    type="HYPOTHESIS"
+                  <WithStyles(GridList)
+                    className="CardsBoard-gridList-2"
+                    cols={2.5}
                   >
-                    <div />
-                  </CardsList>
-                </Connect(CardsList)>
-              </div>
-            </CardsBoard>
-          </Connect(CardsBoard)>
+                    <GridList
+                      cellHeight={180}
+                      className="CardsBoard-gridList-2"
+                      classes={
+                        Object {
+                          "root": "MuiGridList-root-3",
+                        }
+                      }
+                      cols={2.5}
+                      component="ul"
+                      spacing={4}
+                    >
+                      <ul
+                        className="MuiGridList-root-3 CardsBoard-gridList-2"
+                        style={
+                          Object {
+                            "margin": -2,
+                          }
+                        }
+                      >
+                        <Connect(CardsList)
+                          filterBy={
+                            Object {
+                              "needsIndex": 2,
+                              "persona": "uOCF2GLFiJl6fvxdlq4b",
+                            }
+                          }
+                          key=".$.0"
+                          status={Symbol(TODO)}
+                          style={
+                            Object {
+                              "height": 184,
+                              "padding": 2,
+                              "width": "40%",
+                            }
+                          }
+                          type="HYPOTHESIS"
+                        >
+                          <CardsList
+                            filterBy={
+                              Object {
+                                "needsIndex": 2,
+                                "persona": "uOCF2GLFiJl6fvxdlq4b",
+                              }
+                            }
+                            list={Array []}
+                            status={Symbol(TODO)}
+                            style={
+                              Object {
+                                "height": 184,
+                                "padding": 2,
+                                "width": "40%",
+                              }
+                            }
+                            type="HYPOTHESIS"
+                          />
+                        </Connect(CardsList)>
+                      </ul>
+                    </GridList>
+                  </WithStyles(GridList)>
+                </div>
+              </CardsBoard>
+            </WithStyles(CardsBoard)>
+          </Connect(WithStyles(CardsBoard))>
         </li>
         <li
           key="3"
@@ -283,42 +439,94 @@ exports[`Componant tests Display a persona with children 1`] = `
               </div>
             </CreateCard>
           </Connect(CreateCard)>
-          <Connect(CardsBoard)
+          <Connect(WithStyles(CardsBoard))
             type="HYPOTHESIS"
           >
-            <CardsBoard
+            <WithStyles(CardsBoard)
               getCards={[Function]}
               type="HYPOTHESIS"
             >
-              <div>
-                <Connect(CardsList)
-                  filterBy={
-                    Object {
-                      "needsIndex": 3,
-                      "persona": "uOCF2GLFiJl6fvxdlq4b",
-                    }
+              <CardsBoard
+                classes={
+                  Object {
+                    "gridList": "CardsBoard-gridList-2",
+                    "root": "CardsBoard-root-1",
                   }
-                  key=".0"
-                  status={Symbol(TODO)}
-                  type="HYPOTHESIS"
+                }
+                getCards={[Function]}
+                type="HYPOTHESIS"
+              >
+                <div
+                  className="CardsBoard-root-1"
                 >
-                  <CardsList
-                    filterBy={
-                      Object {
-                        "needsIndex": 3,
-                        "persona": "uOCF2GLFiJl6fvxdlq4b",
-                      }
-                    }
-                    list={Array []}
-                    status={Symbol(TODO)}
-                    type="HYPOTHESIS"
+                  <WithStyles(GridList)
+                    className="CardsBoard-gridList-2"
+                    cols={2.5}
                   >
-                    <div />
-                  </CardsList>
-                </Connect(CardsList)>
-              </div>
-            </CardsBoard>
-          </Connect(CardsBoard)>
+                    <GridList
+                      cellHeight={180}
+                      className="CardsBoard-gridList-2"
+                      classes={
+                        Object {
+                          "root": "MuiGridList-root-3",
+                        }
+                      }
+                      cols={2.5}
+                      component="ul"
+                      spacing={4}
+                    >
+                      <ul
+                        className="MuiGridList-root-3 CardsBoard-gridList-2"
+                        style={
+                          Object {
+                            "margin": -2,
+                          }
+                        }
+                      >
+                        <Connect(CardsList)
+                          filterBy={
+                            Object {
+                              "needsIndex": 3,
+                              "persona": "uOCF2GLFiJl6fvxdlq4b",
+                            }
+                          }
+                          key=".$.0"
+                          status={Symbol(TODO)}
+                          style={
+                            Object {
+                              "height": 184,
+                              "padding": 2,
+                              "width": "40%",
+                            }
+                          }
+                          type="HYPOTHESIS"
+                        >
+                          <CardsList
+                            filterBy={
+                              Object {
+                                "needsIndex": 3,
+                                "persona": "uOCF2GLFiJl6fvxdlq4b",
+                              }
+                            }
+                            list={Array []}
+                            status={Symbol(TODO)}
+                            style={
+                              Object {
+                                "height": 184,
+                                "padding": 2,
+                                "width": "40%",
+                              }
+                            }
+                            type="HYPOTHESIS"
+                          />
+                        </Connect(CardsList)>
+                      </ul>
+                    </GridList>
+                  </WithStyles(GridList)>
+                </div>
+              </CardsBoard>
+            </WithStyles(CardsBoard)>
+          </Connect(WithStyles(CardsBoard))>
         </li>
       </ul>
     </div>

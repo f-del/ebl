@@ -33,28 +33,28 @@ exports[`Componant tests Display an hypothesis, props hypothesis setted external
       </WithStyles(Typography)>
     </WithStyles(CardContent)>
   </WithStyles(Card)>
-  <WithStyles(Card)>
-    <WithStyles(CardContent)>
-      <WithStyles(Typography)
-        variant="h3"
-      >
-        Describe the 
-        Paul Deligny
-         Journey
-      </WithStyles(Typography)>
+  <WithStyles(Paper)>
+    <WithStyles(Typography)
+      variant="h3"
+    >
+      Describe the 
+      Paul Deligny
+       Journey
+    </WithStyles(Typography)>
+  </WithStyles(Paper)>
+  <Connect(WithStyles(CardsBoard))
+    type="USER-STORY"
+  >
+    <WithStyles(GridListTile)>
       <Connect(CreateCard)
         hypothesisId="mockedId"
       />
-      <Connect(CardsBoard)
-        type="USER-STORY"
-      >
-        <Connect(CardsList)
-          status={Symbol(TODO)}
-          type="USER-STORY"
-        />
-      </Connect(CardsBoard)>
-    </WithStyles(CardContent)>
-  </WithStyles(Card)>
+    </WithStyles(GridListTile)>
+    <Connect(CardsList)
+      status={Symbol(TODO)}
+      type="USER-STORY"
+    />
+  </Connect(WithStyles(CardsBoard))>
 </Fragment>
 `;
 

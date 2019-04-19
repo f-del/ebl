@@ -4,13 +4,15 @@ import PropTypes from "prop-types";
 import UiCard from "@material-ui/core/Card";
 import UiCardContent from "@material-ui/core/CardContent";
 import UiTypography from "@material-ui/core/Typography";
+import UiGridListTile from "@material-ui/core/GridListTile";
+import UiPaper from "@material-ui/core/Paper";
 import Persona from "./Persona";
 import CreateUserStoryCard from "../containers/CreateUserStoryCard";
 import CardsBoard from "../containers/CardsBoard";
 import { cardType, cardStatus } from "../redux/modules/cards";
 import CardListByStatus from "../containers/CardsListByStatus";
 
-function Hypothesis({ hypothesis, persona }) {
+function Hypothesis({ hypothesis, persona, classes }) {
   function getNeedsIdx() {
     return hypothesis !== undefined ? hypothesis.Persona.NeedsIndex : undefined;
   }
@@ -37,20 +39,21 @@ function Hypothesis({ hypothesis, persona }) {
             <UiTypography variant="h2">{hypothesis.Title}</UiTypography>
           </UiCardContent>
         </UiCard>
-        <UiCard>
-          <UiCardContent>
-            <UiTypography variant="h3">
-              Describe the {persona.Name} Journey
-            </UiTypography>
+
+        <UiPaper>
+          <UiTypography variant="h3">
+            Describe the {persona.Name} Journey
+          </UiTypography>
+        </UiPaper>
+        <CardsBoard type={cardType.UserStory}>
+          <UiGridListTile>
             <CreateUserStoryCard hypothesisId={hypothesis.Id} />
-            <CardsBoard type={cardType.UserStory}>
-              <CardListByStatus
-                type={cardType.UserStory}
-                status={cardStatus.TODO}
-              />
-            </CardsBoard>
-          </UiCardContent>
-        </UiCard>
+          </UiGridListTile>
+          <CardListByStatus
+            type={cardType.UserStory}
+            status={cardStatus.TODO}
+          />
+        </CardsBoard>
       </React.Fragment>
     );
   }

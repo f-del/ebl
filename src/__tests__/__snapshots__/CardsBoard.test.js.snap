@@ -12,29 +12,81 @@ exports[`Cards board with param Hypothesis 1`] = `
     }
   }
 >
-  <Connect(CardsBoard)
+  <Connect(WithStyles(CardsBoard))
     type="HYPOTHESIS"
   >
-    <CardsBoard
+    <WithStyles(CardsBoard)
       getCards={[Function]}
       type="HYPOTHESIS"
     >
-      <div>
-        <Connect(CardsList)
-          key=".0"
-          status={Symbol(DONE)}
-          type="HYPOTHESIS"
+      <CardsBoard
+        classes={
+          Object {
+            "gridList": "CardsBoard-gridList-2",
+            "root": "CardsBoard-root-1",
+          }
+        }
+        getCards={[Function]}
+        type="HYPOTHESIS"
+      >
+        <div
+          className="CardsBoard-root-1"
         >
-          <CardsList
-            list={Array []}
-            status={Symbol(DONE)}
-            type="HYPOTHESIS"
+          <WithStyles(GridList)
+            className="CardsBoard-gridList-2"
+            cols={2.5}
           >
-            <div />
-          </CardsList>
-        </Connect(CardsList)>
-      </div>
-    </CardsBoard>
-  </Connect(CardsBoard)>
+            <GridList
+              cellHeight={180}
+              className="CardsBoard-gridList-2"
+              classes={
+                Object {
+                  "root": "MuiGridList-root-3",
+                }
+              }
+              cols={2.5}
+              component="ul"
+              spacing={4}
+            >
+              <ul
+                className="MuiGridList-root-3 CardsBoard-gridList-2"
+                style={
+                  Object {
+                    "margin": -2,
+                  }
+                }
+              >
+                <Connect(CardsList)
+                  key=".$.0"
+                  status={Symbol(DONE)}
+                  style={
+                    Object {
+                      "height": 184,
+                      "padding": 2,
+                      "width": "40%",
+                    }
+                  }
+                  type="HYPOTHESIS"
+                >
+                  <CardsList
+                    list={Array []}
+                    status={Symbol(DONE)}
+                    style={
+                      Object {
+                        "height": 184,
+                        "padding": 2,
+                        "width": "40%",
+                      }
+                    }
+                    type="HYPOTHESIS"
+                  />
+                </Connect(CardsList)>
+              </ul>
+            </GridList>
+          </WithStyles(GridList)>
+        </div>
+      </CardsBoard>
+    </WithStyles(CardsBoard)>
+  </Connect(WithStyles(CardsBoard))>
 </Provider>
 `;

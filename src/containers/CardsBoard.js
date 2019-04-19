@@ -1,15 +1,32 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import UiGridList from "@material-ui/core/GridList";
+import { withStyles } from "@material-ui/core";
 import { retrieveAllCards } from "../redux/modules/cards";
-
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = (dispatch, ownsProp) => ({
   getCards: type => dispatch(retrieveAllCards(type))
 });
 
-function CardsBoard({ type, getCards, children }) {
+const styles = theme => ({
+  root: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    overflow: "hidden",
+    backgroundColor: theme.palette.background.paper
+  },
+  gridList: {
+    flexWrap: "nowrap",
+    width: "100vw",
+    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+    transform: "translateZ(0)"
+  }
+});
+
+function CardsBoard({ type, getCards, children, classes }) {
   getCards(type);
 
   const displayChildren = () => {
@@ -18,7 +35,13 @@ function CardsBoard({ type, getCards, children }) {
     });
   };
 
-  return <div>{displayChildren()}</div>;
+  return (
+    <div className={classes.root}>
+      <UiGridList className={classes.gridList} cols={2.5}>
+        {displayChildren()}
+      </UiGridList>
+    </div>
+  );
 }
 
 CardsBoard.propTypes = {
@@ -28,4 +51,4 @@ CardsBoard.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CardsBoard);
+)(withStyles(styles)(CardsBoard));

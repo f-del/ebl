@@ -33,9 +33,7 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with DONE 1`] = `
       list={Array []}
       status={Symbol(DONE)}
       type="TASK"
-    >
-      <div />
-    </CardsList>
+    />
   </Connect(CardsList)>
 </Provider>
 `;
@@ -61,9 +59,7 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with Inprogress 1`
       list={Array []}
       status={Symbol(INPROGRESS)}
       type="USER-STORY"
-    >
-      <div />
-    </CardsList>
+    />
   </Connect(CardsList)>
 </Provider>
 `;
@@ -89,9 +85,7 @@ exports[`Containers tests CardsListByStatus CardsListByStatus with todo 1`] = `
       list={Array []}
       status={Symbol(TODO)}
       type="HYPOTHESIS"
-    >
-      <div />
-    </CardsList>
+    />
   </Connect(CardsList)>
 </Provider>
 `;
