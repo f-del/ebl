@@ -95,7 +95,7 @@ function CardActions({ card, onAction, criterias_typology_list, classes }) {
         else return displayTODO_AffectCriterias();
 
       if (card.Status === cardStatus.INPROGRESS) return displayINPROGRESS();
-      break;
+      return null;
     }
     default:
       return null;
