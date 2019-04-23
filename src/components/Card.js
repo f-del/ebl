@@ -32,17 +32,17 @@ const styles = {
   }
 };
 
-function Card({ card, classes }) {
+function Card({ card, classes, onSelect }) {
   const avatarColor = () => {
     if (card.Type === cardType.Task) return classes.status_todo;
     if (card.Type === cardType.Hypothesis) return classes.status_inprogress;
     if (card.Type === cardType.UserStory) return classes.status_done;
   };
   return (
-    <UiCard className={classes.card}>
+    <UiCard className={classes.card} onClick={onSelect}>
       <UiCardHeader
         avatar={
-          <UiAvatar aria-label="Recipe" className={avatarColor()}>
+          <UiAvatar aria-label="Card Type" className={avatarColor()}>
             {card.Type.substring(0, 1).toUpperCase()}
           </UiAvatar>
         }
