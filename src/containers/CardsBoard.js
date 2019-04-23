@@ -4,11 +4,6 @@ import { connect } from "react-redux";
 import UiGridList from "@material-ui/core/GridList";
 import { withStyles } from "@material-ui/core";
 import { retrieveAllCards } from "../redux/modules/cards";
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = (dispatch, ownsProp) => ({
-  getCards: type => dispatch(retrieveAllCards(type))
-});
 
 const styles = theme => ({
   root: {
@@ -24,6 +19,12 @@ const styles = theme => ({
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
     transform: "translateZ(0)"
   }
+});
+
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = (dispatch, ownsProp) => ({
+  getCards: type => dispatch(retrieveAllCards(type))
 });
 
 function CardsBoard({ type, getCards, children, classes }) {

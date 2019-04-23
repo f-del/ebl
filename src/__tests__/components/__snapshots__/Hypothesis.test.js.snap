@@ -126,6 +126,7 @@ exports[`Containers tests Expect props onAction is defined 1`] = `
         },
         "ui": Object {
           "currentHypothesis": undefined,
+          "currentUserStory": undefined,
         },
       },
     }

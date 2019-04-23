@@ -1,4 +1,5 @@
 const SELECT_HYPOTHESIS = "UI/SELECT/HYPOTHESIS";
+const SELECT_USERSTORY = "UI/SELECT/USER-STORY";
 
 export const selectHypothesis = hypothesis => ({
   type: SELECT_HYPOTHESIS,
@@ -6,8 +7,17 @@ export const selectHypothesis = hypothesis => ({
     Id: hypothesis.Id
   }
 });
+
+export const selectUserStory = userstory => ({
+  type: SELECT_USERSTORY,
+  payload: {
+    Id: userstory.Id
+  }
+});
+
 const initialState = {
-  currentHypothesis: undefined
+  currentHypothesis: undefined,
+  currentUserStory: undefined
 };
 
 export default function uiReducer(state = initialState, action) {
@@ -15,6 +25,10 @@ export default function uiReducer(state = initialState, action) {
     case SELECT_HYPOTHESIS: {
       return { ...state, currentHypothesis: action.payload.Id };
     }
+    case SELECT_USERSTORY: {
+      return { ...state, currentUserStory: action.payload.Id };
+    }
+
     default:
       return state;
   }
@@ -22,4 +36,7 @@ export default function uiReducer(state = initialState, action) {
 
 export function getHypothesisSelected(state) {
   return state.ui.currentHypothesis;
+}
+export function getUserStorySelected(state) {
+  return state.ui.currentUserStory;
 }
