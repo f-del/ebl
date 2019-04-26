@@ -1,5 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Containers tests CardsList by list Id 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <Connect(CardsList)
+    list={
+      Array [
+        "1",
+        "2",
+      ]
+    }
+  >
+    <CardsList
+      list={Array []}
+    />
+  </Connect(CardsList)>
+</Provider>
+`;
+
 exports[`Containers tests CardsListByStatus CardsListByStatus with DONE 1`] = `
 <Provider
   store={

@@ -443,6 +443,16 @@ export function getCard(state, id) {
   return getAllCards(state).find(c => c.Id === id);
 }
 
+export function getCardsById(state, idlist = []) {
+  return getAllCards(state).filter(c => {
+    return (
+      idlist.findIndex(id => {
+        return c.Id === id;
+      }) !== -1
+    );
+  });
+}
+
 /*
   Get all cards from state
   option : {

@@ -8,6 +8,7 @@ import CardListByStatus from "../containers/CardsListByStatus";
 
 import { cardStatus } from "../redux/modules/cards";
 import * as cardsSelector from "../redux/modules/cards";
+import CardListByIdList from "../containers/CardListByIdList";
 
 configure({ adapter: new Adapter() });
 let mockStore;
@@ -109,6 +110,27 @@ describe("Containers tests", () => {
       expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });
+  });
+
+  test("CardsList by list Id", () => {
+    cardsSelector.getCardsById = jest.fn(state => {
+      return [];
+    });
+
+    const store = mockStore({});
+    const wrapper = mount(
+      <Provider store={store}>
+        <CardListByIdList list={["1", "2"]} />
+      </Provider>
+    );
+
+    expect(cardsSelector.getCardsById.mock.calls.length).toBe(1);
+    expect(cardsSelector.getCardsById.mock.calls[0][1]).toStrictEqual([
+      "1",
+      "2"
+    ]);
+    expect(wrapper).toMatchSnapshot();
+    wrapper.unmount();
   });
 });
 

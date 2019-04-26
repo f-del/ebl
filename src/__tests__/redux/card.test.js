@@ -38,7 +38,8 @@ import {
   addCriteria,
   setCriteriasTypology,
   attachCards,
-  addUserStoryToHypothesis
+  addUserStoryToHypothesis,
+  getCardsById
 } from "../../redux/modules/cards";
 import { criteriaType } from "../../redux/modules/criterias";
 import * as criteriaRedux from "../../redux/modules/criterias";
@@ -1313,6 +1314,16 @@ describe("Selectors", () => {
   test("Get card by id", () => {
     expect(getCard(storeStateWith1Card, "1")).toStrictEqual(
       entity_test_created
+    );
+  });
+
+  test("Get cards by id", () => {
+    const listCards = [
+      { ...entity_test_created },
+      { ...entity_hypothesis_attached("fdsfdsf"), Id: "Id2" }
+    ];
+    expect(getCardsById(storeStateDyn(listCards), ["1", "Id2"])).toStrictEqual(
+      listCards
     );
   });
 

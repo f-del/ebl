@@ -50,10 +50,7 @@ exports[`Componant tests Display an hypothesis, props hypothesis setted external
         hypothesisId="mockedId"
       />
     </WithStyles(GridListTile)>
-    <Connect(CardsList)
-      status={Symbol(TODO)}
-      type="USER-STORY"
-    />
+    <Connect(CardsList) />
   </Connect(WithStyles(CardsBoard))>
 </Fragment>
 `;
