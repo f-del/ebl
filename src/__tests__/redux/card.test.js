@@ -566,7 +566,8 @@ describe("API tests", () => {
 
     test("Add a user story to an Hypothesis card", async () => {
       const text = "test title user story card";
-      const store = mockStore(storeStateWith1Card);
+      const entity = { ...entity_test_created };
+      const store = mockStore(storeStateDyn([entity]));
       fnMockPostCards
         .mockImplementationOnce(
           () =>
@@ -591,12 +592,11 @@ describe("API tests", () => {
         Title: text,
         CreatedAt: expect.any(Date),
         Type: cardType.UserStory,
-        Status: cardStatus.TODO
+        Status: cardStatus.TODO,
+        Hypothesis: { Id: "1" }
       });
 
-      expect(fnMockPostCards.mock.calls[1][0]).toStrictEqual(
-        entity_test_created
-      );
+      expect(fnMockPostCards.mock.calls[1][0]).toStrictEqual(entity);
       expect(fnMockPostCards.mock.calls[1][1]).toStrictEqual({
         UserStories: [{ Id: "IdChild" }]
       });
@@ -609,7 +609,64 @@ describe("API tests", () => {
           Id: "IdChild",
           Title: text,
           Type: cardType.UserStory,
-          CreatedAt: expect.any(Date)
+          CreatedAt: expect.any(Date),
+          Hypothesis: { Id: "1" }
+        }
+      });
+
+      expect(actions[1]).toStrictEqual({
+        ...attach_action,
+        payload: { ...attach_action.payload, IdParent: "1" }
+      });
+    });
+
+    test("Add a user story to an Hypothesis card wich have already an Us attached", async () => {
+      const text = "test title user story card";
+      const entity = { ...entity_test_created, UserStories: [{ Id: "4" }] };
+      const store = mockStore(storeStateDyn([entity]));
+      fnMockPostCards
+        .mockImplementationOnce(
+          () =>
+            new Promise((resolve, reject) => {
+              setTimeout(t => {
+                resolve(expect_post_create("IdChild"));
+              }, 20);
+            })
+        )
+        .mockImplementationOnce(
+          () =>
+            new Promise((resolve, reject) => {
+              setTimeout(t => {
+                resolve(expect_post_update());
+              }, 20);
+            })
+        );
+      await store.dispatch(addUserStoryToHypothesis("1", text));
+
+      expect(fnMockPostCards.mock.calls.length).toBe(2);
+      expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual({
+        Title: text,
+        CreatedAt: expect.any(Date),
+        Type: cardType.UserStory,
+        Status: cardStatus.TODO,
+        Hypothesis: { Id: "1" }
+      });
+
+      expect(fnMockPostCards.mock.calls[1][0]).toStrictEqual(entity);
+      expect(fnMockPostCards.mock.calls[1][1]).toStrictEqual({
+        UserStories: [{ Id: "4" }, { Id: "IdChild" }]
+      });
+      const actions = store.getActions();
+      expect(actions.length).toBe(2);
+      expect(actions[0]).toStrictEqual({
+        ...create_action,
+        payload: {
+          ...create_action.payload,
+          Id: "IdChild",
+          Title: text,
+          Type: cardType.UserStory,
+          CreatedAt: expect.any(Date),
+          Hypothesis: { Id: "1" }
         }
       });
 
@@ -1032,11 +1089,15 @@ describe("reducers", () => {
       )
     ).toStrictEqual({
       list: [
-        { ...entity_test_created, Id: "IdParent", Stories: ["IdChild"] },
+        {
+          ...entity_test_created,
+          Id: "IdParent",
+          UserStories: [{ Id: "IdChild" }]
+        },
         {
           ...entity_test_created,
           Id: "IdChild",
-          Hypothesis: ["IdParent"]
+          Hypothesis: { Id: "IdParent" }
         }
       ],
       status: expect_loadingstate()
@@ -1322,9 +1383,9 @@ describe("Selectors", () => {
       { ...entity_test_created },
       { ...entity_hypothesis_attached("fdsfdsf"), Id: "Id2" }
     ];
-    expect(getCardsById(storeStateDyn(listCards), ["1", "Id2"])).toStrictEqual(
-      listCards
-    );
+    expect(
+      getCardsById(storeStateDyn(listCards), [{ Id: "1" }, { Id: "Id2" }])
+    ).toStrictEqual(listCards);
   });
 
   test("Get card by id, not exist, expect undefined", () => {

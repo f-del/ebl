@@ -63,7 +63,11 @@ export const cardType = {
   type = cardType.Task
   persona : { id, needsIndex }
  */
-export const createCard = (title, type = cardType.Task, { persona } = {}) => {
+export const createCard = (
+  title,
+  type = cardType.Task,
+  { persona, hypothesis } = {}
+) => {
   if (title === undefined || title.length === 0)
     throw new Error("Argument title is mandatory");
   if (
@@ -85,6 +89,14 @@ export const createCard = (title, type = cardType.Task, { persona } = {}) => {
         );
 
       newCard.Persona = { Id: persona.id, NeedsIndex: persona.needsIndex };
+    }
+
+    if (hypothesis !== undefined) {
+      if (hypothesis.id === undefined)
+        throw new Error(
+          "Optionnal argument hypothesis is not correct, should be {hypothesis : {id}}"
+        );
+      newCard.Hypothesis = { Id: hypothesis.id };
     }
     const res = await api.Cards.Post(newCard);
     dispatch(createCardSuccess(res.Id, newCard));
@@ -118,12 +130,22 @@ export const addUserStoryToHypothesis = (idHypothesis, titleUserStory) => {
     const cardHypotyhesis = _getCard(getState, idHypothesis);
 
     const userStory = await dispatch(
-      createCard(titleUserStory, cardType.UserStory)
+      createCard(titleUserStory, cardType.UserStory, {
+        hypothesis: { id: idHypothesis }
+      })
     );
 
-    await api.Cards.Post(cardHypotyhesis, {
-      UserStories: [{ Id: userStory.Id }]
-    });
+    await api.Cards.Post(
+      cardHypotyhesis,
+      cardHypotyhesis.UserStories !== undefined
+        ? {
+            UserStories: [
+              ...cardHypotyhesis.UserStories,
+              { Id: userStory.Id }
+            ]
+          }
+        : { UserStories: [{ Id: userStory.Id }] }
+    );
 
     dispatch(attachCards(cardHypotyhesis.Id, userStory.Id));
   };
@@ -370,12 +392,14 @@ export default function(state = initialState, action) {
         ...state,
         list: update(state.list, {
           [cardParentIdx]: {
-            Stories: stories =>
-              update(stories || [], { $push: [action.payload.IdChild] })
+            UserStories: stories =>
+              update(stories || [], { $push: [{ Id: action.payload.IdChild }] })
           },
           [cardChildIdx]: {
             Hypothesis: hypothesis =>
-              update(hypothesis || [], { $push: [action.payload.IdParent] })
+              update(hypothesis || {}, {
+                $set: { Id: action.payload.IdParent }
+              })
           }
         })
       };
@@ -446,8 +470,8 @@ export function getCard(state, id) {
 export function getCardsById(state, idlist = []) {
   return getAllCards(state).filter(c => {
     return (
-      idlist.findIndex(id => {
-        return c.Id === id;
+      idlist.findIndex(entity => {
+        return c.Id === entity.Id;
       }) !== -1
     );
   });

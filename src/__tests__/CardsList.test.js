@@ -1,5 +1,5 @@
 import React from "react";
-import { configure, mount } from "enzyme";
+import { configure, mount, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
@@ -8,7 +8,10 @@ import CardListByStatus from "../containers/CardsListByStatus";
 
 import { cardStatus } from "../redux/modules/cards";
 import * as cardsSelector from "../redux/modules/cards";
+import * as criteriasSelector from "../redux/modules/criterias";
 import CardListByIdList from "../containers/CardListByIdList";
+import UiGridListTile from "@material-ui/core/GridListTile";
+import { entity_test_created, entity_hypothesis_attached } from "./datas";
 
 configure({ adapter: new Adapter() });
 let mockStore;
@@ -113,8 +116,15 @@ describe("Containers tests", () => {
   });
 
   test("CardsList by list Id", () => {
-    cardsSelector.getCardsById = jest.fn(state => {
+    const card = [
+      { ...entity_test_created },
+      { ...entity_hypothesis_attached("fdsfdsf"), Id: "Id2" }
+    ];
+    criteriasSelector.getAllCriterias = jest.fn(state => {
       return [];
+    });
+    cardsSelector.getCardsById = jest.fn(state => {
+      return card;
     });
 
     const store = mockStore({});
@@ -129,6 +139,7 @@ describe("Containers tests", () => {
       "1",
       "2"
     ]);
+    expect(wrapper.find(UiGridListTile).length).toBe(2);
     expect(wrapper).toMatchSnapshot();
     wrapper.unmount();
   });

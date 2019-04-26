@@ -63,7 +63,7 @@ describe("Card mapping to Firestore", () => {
     });
   });
 
-  test("card with date & array of UserStories", () => {
+  test("card with date & array of UserStories & Hypothesis Ref", () => {
     const firebase = new MockFirebase(fixtureData);
 
     const db = firebase.firestore();
@@ -74,7 +74,8 @@ describe("Card mapping to Firestore", () => {
         Status: cardStatus.TODO,
         CreatedAt: date,
         Type: cardType.Hypothesis,
-        UserStories: [{ Id: "IdLinked" }]
+        UserStories: [{ Id: "IdLinked" }],
+        Hypothesis: { Id: "fdlijsflkdjsklj" }
       },
       db
     );
@@ -84,7 +85,8 @@ describe("Card mapping to Firestore", () => {
       Type: cardType.Hypothesis,
       Status: "TODO",
       CreatedAt: date.toJSON(),
-      UserStories: [{ Id: db.collection("Cards").doc("IdLinked") }]
+      UserStories: [{ Id: db.collection("Cards").doc("IdLinked") }],
+      Hypothesis: { Id: db.collection("Cards").doc("fdlijsflkdjsklj") }
     });
   });
 });
@@ -182,22 +184,33 @@ describe("Card mapping from Firestore", () => {
         Type: "TASK",
         Status: "TODO",
         CreatedAt: date.toJSON(),
-        UserStories: {
-          Id: db.collection("Cards").doc("lkdsjfl34dfg")
-        },
+        UserStories: [
+          {
+            Id: db.collection("Cards").doc("lkdsjfl34dfg")
+          }
+        ],
         Persona: {
           Id: db.collection("Persona").doc("e6wTJIBsAw5puwwrNEsR"),
           Needs: 3
+        },
+        Hypothesis: {
+          Id: db.collection("Cards").doc("fdlijsflkdjsklj")
         }
       };
       Object.defineProperty(ret.Persona.Id, "id", {
         get: jest.fn(() => "e6wTJIBsAw5puwwrNEsR"),
         set: jest.fn()
       });
-      Object.defineProperty(ret.UserStories.Id, "id", {
-        get: jest.fn(() => "lkdsjfl34dfg"),
+      Object.defineProperty(ret.Hypothesis.Id, "id", {
+        get: jest.fn(() => "fdlijsflkdjsklj"),
         set: jest.fn()
       });
+      ret.UserStories.forEach(e =>
+        Object.defineProperty(e.Id, "id", {
+          get: jest.fn(() => "lkdsjfl34dfg"),
+          set: jest.fn()
+        })
+      );
       return ret;
     });
 
@@ -218,9 +231,12 @@ describe("Card mapping from Firestore", () => {
         Id: "e6wTJIBsAw5puwwrNEsR",
         NeedsIndex: 3
       },
-      UserStories: {
-        Id: "lkdsjfl34dfg"
-      }
+      UserStories: [
+        {
+          Id: "lkdsjfl34dfg"
+        }
+      ],
+      Hypothesis: { Id: "fdlijsflkdjsklj" }
     });
   });
 });

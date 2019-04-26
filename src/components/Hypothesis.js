@@ -50,7 +50,7 @@ function Hypothesis({ hypothesis, persona, classes }) {
           <UiGridListTile>
             <CreateUserStoryCard hypothesisId={hypothesis.Id} />
           </UiGridListTile>
-          <CardListByIdList list={hypothesis.UserStory} />
+          <CardListByIdList list={hypothesis.UserStories} />
         </CardsBoard>
       </React.Fragment>
     );
