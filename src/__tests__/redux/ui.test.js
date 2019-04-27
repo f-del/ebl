@@ -1,6 +1,3 @@
-import thunk from "redux-thunk";
-
-import configureMockStore from "redux-mock-store";
 import uiReducer, {
   getHypothesisSelected,
   selectUserStory,

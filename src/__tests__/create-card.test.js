@@ -12,7 +12,6 @@ import CreateCard from "../components/CreateCard";
 import CreateTaskCard from "../containers/createTaskCard";
 import CreateHypothesisCard from "../containers/CreateHypothesisCard";
 import { entity_persona_created } from "./redux/personas";
-import { entity_hypothesis_attached } from "./datas";
 import CreateUserStoryCard from "../containers/CreateUserStoryCard";
 
 configure({ adapter: new Adapter() });

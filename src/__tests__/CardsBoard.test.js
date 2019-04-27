@@ -9,7 +9,6 @@ import reducer from "../redux/store/index";
 import * as cardsSelector from "../redux/modules/cards";
 import CardsBoard from "../containers/CardsBoard";
 import CardListByStatus from "../containers/CardsListByStatus";
-import CardsList from "../components/CardsList";
 
 configure({ adapter: new Adapter() });
 let store;

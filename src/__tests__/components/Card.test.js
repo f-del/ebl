@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow, configure, mount } from "enzyme";
+import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
@@ -12,7 +12,6 @@ import {
 } from "../datas";
 import UiCard from "@material-ui/core/Card";
 import CardSelectable from "../../components/CardSelectable";
-import Card from "../../components/Card";
 import { cardType } from "../../redux/modules/cards";
 
 configure({ adapter: new Adapter() });

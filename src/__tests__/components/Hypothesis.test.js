@@ -1,12 +1,10 @@
 import React from "react";
-import { shallow, configure, mount } from "enzyme";
+import { shallow, configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import reducer from "../../redux/store/index";
-
-import UiTypography from "@material-ui/core/Typography";
 
 import Hypothesis from "../../components/Hypothesis";
 import { entity_hypothesis_attached } from "../datas";
