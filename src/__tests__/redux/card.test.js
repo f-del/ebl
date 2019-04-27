@@ -38,7 +38,7 @@ import {
   addCriteria,
   setCriteriasTypology,
   attachCards,
-  addUserStoryToHypothesis,
+  addChildCardToParent,
   getCardsById
 } from "../../redux/modules/cards";
 import { criteriaType } from "../../redux/modules/criterias";
@@ -136,13 +136,14 @@ const addCriteria_action_notext = {
   payload: { Id: "1", Criteria: entity_criteria() }
 };
 
-const attach_action = {
+const attach_action = (parentCardType = cardType.Hypothesis) => ({
   type: "CARD/ATTACH",
   payload: {
     IdParent: "IdParent",
-    IdChild: "IdChild"
+    IdChild: "IdChild",
+    parentCardType
   }
-};
+});
 
 describe("API tests", () => {
   beforeEach(() => {
@@ -559,14 +560,14 @@ describe("API tests", () => {
     test("Add a user story to an not existing Hypothesis card", async () => {
       await expect(
         store.dispatch(
-          addUserStoryToHypothesis("999", "test title user story card")
+          addChildCardToParent("999", "test title user story card")
         )
       ).rejects.toThrowError("Card with id 999 can't be found");
     });
 
     test("Add a user story to an Hypothesis card", async () => {
       const text = "test title user story card";
-      const entity = { ...entity_test_created };
+      const entity = { ...entity_test_created, Type: cardType.Hypothesis };
       const store = mockStore(storeStateDyn([entity]));
       fnMockPostCards
         .mockImplementationOnce(
@@ -585,7 +586,7 @@ describe("API tests", () => {
               }, 20);
             })
         );
-      await store.dispatch(addUserStoryToHypothesis("1", text));
+      await store.dispatch(addChildCardToParent("1", text));
 
       expect(fnMockPostCards.mock.calls.length).toBe(2);
       expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual({
@@ -615,14 +616,18 @@ describe("API tests", () => {
       });
 
       expect(actions[1]).toStrictEqual({
-        ...attach_action,
-        payload: { ...attach_action.payload, IdParent: "1" }
+        ...attach_action(),
+        payload: { ...attach_action().payload, IdParent: "1" }
       });
     });
 
     test("Add a user story to an Hypothesis card wich have already an Us attached", async () => {
       const text = "test title user story card";
-      const entity = { ...entity_test_created, UserStories: [{ Id: "4" }] };
+      const entity = {
+        ...entity_test_created,
+        Type: cardType.Hypothesis,
+        UserStories: [{ Id: "4" }]
+      };
       const store = mockStore(storeStateDyn([entity]));
       fnMockPostCards
         .mockImplementationOnce(
@@ -641,7 +646,7 @@ describe("API tests", () => {
               }, 20);
             })
         );
-      await store.dispatch(addUserStoryToHypothesis("1", text));
+      await store.dispatch(addChildCardToParent("1", text));
 
       expect(fnMockPostCards.mock.calls.length).toBe(2);
       expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual({
@@ -671,8 +676,67 @@ describe("API tests", () => {
       });
 
       expect(actions[1]).toStrictEqual({
-        ...attach_action,
-        payload: { ...attach_action.payload, IdParent: "1" }
+        ...attach_action(),
+        payload: {
+          ...attach_action().payload,
+          IdParent: "1"
+        }
+      });
+    });
+
+    test("Add a task to a User Story card", async () => {
+      const text = "test title user story card";
+      const entity = { ...entity_test_created, Type: cardType.UserStory };
+      const store = mockStore(storeStateDyn([entity]));
+      fnMockPostCards
+        .mockImplementationOnce(
+          () =>
+            new Promise((resolve, reject) => {
+              setTimeout(t => {
+                resolve(expect_post_create("IdChild"));
+              }, 20);
+            })
+        )
+        .mockImplementationOnce(
+          () =>
+            new Promise((resolve, reject) => {
+              setTimeout(t => {
+                resolve(expect_post_update());
+              }, 20);
+            })
+        );
+      await store.dispatch(addChildCardToParent("1", text));
+
+      expect(fnMockPostCards.mock.calls.length).toBe(2);
+      expect(fnMockPostCards.mock.calls[0][0]).toStrictEqual({
+        Title: text,
+        CreatedAt: expect.any(Date),
+        Type: cardType.Task,
+        Status: cardStatus.TODO,
+        UserStory: { Id: "1" }
+      });
+
+      expect(fnMockPostCards.mock.calls[1][0]).toStrictEqual(entity);
+      expect(fnMockPostCards.mock.calls[1][1]).toStrictEqual({
+        Tasks: [{ Id: "IdChild" }]
+      });
+      const actions = store.getActions();
+      expect(actions.length).toBe(2);
+      expect(actions[0]).toStrictEqual({
+        ...create_action,
+        payload: {
+          ...create_action.payload,
+          Id: "IdChild",
+          Title: text,
+          Type: cardType.Task,
+          CreatedAt: expect.any(Date),
+          UserStory: { Id: "1" }
+        }
+      });
+
+      expect(actions[1]).toStrictEqual({
+        ...attach_action(cardType.UserStory),
+        payload: { ...attach_action(cardType.UserStory).payload, IdParent: "1" }
       });
     });
 
@@ -965,7 +1029,12 @@ describe("Actions creators", () => {
 
   test("Attach card to another card, hierarchy mode", () => {
     const attachAction = attachCards("IdParent", "IdChild");
-    expect(attachAction).toStrictEqual(attach_action);
+    expect(attachAction).toStrictEqual(attach_action());
+  });
+
+  test("Attach card to another card, hierarchy mode", () => {
+    const attachAction = attachCards("IdParent", "IdChild");
+    expect(attachAction).toStrictEqual(attach_action());
   });
 
   test("Add criteria with text to a card", () => {
@@ -1075,7 +1144,7 @@ describe("reducers", () => {
     });
   });
 
-  test("ATTACH action", () => {
+  test("ATTACH action - Hypothesis to UserStory", () => {
     expect(
       cardReducer(
         stateWithDynCard([
@@ -1085,7 +1154,7 @@ describe("reducers", () => {
             Id: "IdChild"
           }
         ]),
-        attach_action
+        attach_action()
       )
     ).toStrictEqual({
       list: [
@@ -1098,6 +1167,38 @@ describe("reducers", () => {
           ...entity_test_created,
           Id: "IdChild",
           Hypothesis: { Id: "IdParent" }
+        }
+      ],
+      status: expect_loadingstate()
+    });
+  });
+
+  test("ATTACH action - UserStory to Tasks", () => {
+    expect(
+      cardReducer(
+        stateWithDynCard([
+          { ...entity_test_created, Id: "IdParent", Type: cardType.UserStory },
+          {
+            ...entity_test_created,
+            Id: "IdChild",
+            Type: cardType.Task
+          }
+        ]),
+        attach_action(cardType.UserStory)
+      )
+    ).toStrictEqual({
+      list: [
+        {
+          ...entity_test_created,
+          Id: "IdParent",
+          Type: cardType.UserStory,
+          Tasks: [{ Id: "IdChild" }]
+        },
+        {
+          ...entity_test_created,
+          Id: "IdChild",
+          Type: cardType.Task,
+          UserStory: { Id: "IdParent" }
         }
       ],
       status: expect_loadingstate()

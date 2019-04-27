@@ -66,7 +66,7 @@ export const cardType = {
 export const createCard = (
   title,
   type = cardType.Task,
-  { persona, hypothesis } = {}
+  { persona, parentCard } = {}
 ) => {
   if (title === undefined || title.length === 0)
     throw new Error("Argument title is mandatory");
@@ -91,12 +91,14 @@ export const createCard = (
       newCard.Persona = { Id: persona.id, NeedsIndex: persona.needsIndex };
     }
 
-    if (hypothesis !== undefined) {
-      if (hypothesis.id === undefined)
+    if (parentCard !== undefined) {
+      if (parentCard.id === undefined)
         throw new Error(
-          "Optionnal argument hypothesis is not correct, should be {hypothesis : {id}}"
+          "Optionnal argument parentCard is not correct, should be {parentCard : {id}}"
         );
-      newCard.Hypothesis = { Id: hypothesis.id };
+      newCard[type === cardType.UserStory ? "Hypothesis" : "UserStory"] = {
+        Id: parentCard.id
+      };
     }
     const res = await api.Cards.Post(newCard);
     dispatch(createCardSuccess(res.Id, newCard));
@@ -108,7 +110,6 @@ export const setCriteriasTypology = (id, type = criteriaType.BASIC) => {
   if (id === undefined) throw new Error("Argument id is mandatory");
   return async (dispatch, getState, { api }) => {
     const card = _getCard(getState, id);
-
     if (
       card.Criterias !== undefined ||
       (card.Criterias !== undefined && card.Criterias.length > 0)
@@ -125,29 +126,34 @@ export const setCriteriasTypology = (id, type = criteriaType.BASIC) => {
   };
 };
 
-export const addUserStoryToHypothesis = (idHypothesis, titleUserStory) => {
+export const addChildCardToParent = (idParent, titleChildCard) => {
   return async (dispatch, getState, { api }) => {
-    const cardHypotyhesis = _getCard(getState, idHypothesis);
-
-    const userStory = await dispatch(
-      createCard(titleUserStory, cardType.UserStory, {
-        hypothesis: { id: idHypothesis }
-      })
+    const parentCard = _getCard(getState, idParent);
+    const childCard = await dispatch(
+      createCard(
+        titleChildCard,
+        parentCard.Type === cardType.Hypothesis
+          ? cardType.UserStory
+          : cardType.Task,
+        {
+          parentCard: { id: idParent }
+        }
+      )
     );
 
+    const [parentToChildLinkName] = _getLinksName(parentCard.Type);
+
+    const parentCardChilds = parentCard.UserStories;
     await api.Cards.Post(
-      cardHypotyhesis,
-      cardHypotyhesis.UserStories !== undefined
+      parentCard,
+      parentCardChilds !== undefined
         ? {
-            UserStories: [
-              ...cardHypotyhesis.UserStories,
-              { Id: userStory.Id }
-            ]
+            [parentToChildLinkName]: [...parentCardChilds, { Id: childCard.Id }]
           }
-        : { UserStories: [{ Id: userStory.Id }] }
+        : { [parentToChildLinkName]: [{ Id: childCard.Id }] }
     );
 
-    dispatch(attachCards(cardHypotyhesis.Id, userStory.Id));
+    dispatch(attachCards(parentCard.Id, childCard.Id, parentCard.Type));
   };
 };
 
@@ -251,6 +257,11 @@ function _getCard(getState, id) {
     throw new Error("Card with id " + id + " can't be found");
   return card;
 }
+function _getLinksName(parentCardType) {
+  return parentCardType === cardType.Hypothesis
+    ? ["UserStories", "Hypothesis"]
+    : ["Tasks", "UserStory"];
+}
 
 /***
  *     █████╗  ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
@@ -269,11 +280,16 @@ export const createCardSuccess = (id, card) => {
   };
 };
 
-export const attachCards = (idParent, idChild) => ({
+export const attachCards = (
+  idParent,
+  idChild,
+  parentCardType = cardType.Hypothesis
+) => ({
   type: ATTACH,
   payload: {
     IdParent: idParent,
-    IdChild: idChild
+    IdChild: idChild,
+    parentCardType
   }
 });
 
@@ -387,16 +403,22 @@ export default function(state = initialState, action) {
       const cardChildIdx = state.list.findIndex(
         c => c.Id === action.payload.IdChild
       );
+      console.log(
+        "action.payload.parentCardType " + action.payload.parentCardType
+      );
+      const [parentToChildLinkName, childToParentLinkName] = _getLinksName(
+        action.payload.parentCardType
+      );
 
       return {
         ...state,
         list: update(state.list, {
           [cardParentIdx]: {
-            UserStories: stories =>
+            [parentToChildLinkName]: stories =>
               update(stories || [], { $push: [{ Id: action.payload.IdChild }] })
           },
           [cardChildIdx]: {
-            Hypothesis: hypothesis =>
+            [childToParentLinkName]: hypothesis =>
               update(hypothesis || {}, {
                 $set: { Id: action.payload.IdParent }
               })
