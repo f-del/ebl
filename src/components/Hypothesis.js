@@ -12,6 +12,8 @@ import CardsBoard from "../containers/CardsBoard";
 import { cardType, cardStatus } from "../redux/modules/cards";
 import CardListByStatus from "../containers/CardsListByStatus";
 import CardListByIdList from "../containers/CardListByIdList";
+import UserStory from "./UserStory";
+import UserStorySelected from "../containers/UserStorySelected";
 
 function Hypothesis({ hypothesis, persona, classes }) {
   function getNeedsIdx() {
@@ -52,6 +54,7 @@ function Hypothesis({ hypothesis, persona, classes }) {
           </UiGridListTile>
           <CardListByIdList list={hypothesis.UserStories} />
         </CardsBoard>
+        <UserStorySelected />
       </React.Fragment>
     );
   }

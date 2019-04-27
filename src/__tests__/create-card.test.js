@@ -171,7 +171,7 @@ describe("Containers", () => {
     test("should Exist", () => {
       const text = "Unit test User Story";
       const preventDefault = jest.fn();
-      cardsSelector.addUserStoryToHypothesis = jest
+      cardsSelector.addChildCardToParent = jest
         .fn()
         .mockImplementationOnce(id => {
           return dispatch => {
@@ -190,13 +190,11 @@ describe("Containers", () => {
       input.simulate("change", { target: { value: text } });
       input.simulate("keyDown", { which: 13, preventDefault });
 
-      expect(cardsSelector.addUserStoryToHypothesis.mock.calls.length).toBe(1);
-      expect(cardsSelector.addUserStoryToHypothesis.mock.calls[0][0]).toBe(
+      expect(cardsSelector.addChildCardToParent.mock.calls.length).toBe(1);
+      expect(cardsSelector.addChildCardToParent.mock.calls[0][0]).toBe(
         "mockedID"
       );
-      expect(cardsSelector.addUserStoryToHypothesis.mock.calls[0][1]).toBe(
-        text
-      );
+      expect(cardsSelector.addChildCardToParent.mock.calls[0][1]).toBe(text);
       expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });
