@@ -23,7 +23,12 @@ const initialState = {
 export default function uiReducer(state = initialState, action) {
   switch (action.type) {
     case SELECT_HYPOTHESIS: {
-      return { ...state, currentHypothesis: action.payload.Id };
+      // currently Reducer handle Ui logic -> deselect current US on Hypothesis change
+      return {
+        ...state,
+        currentHypothesis: action.payload.Id,
+        currentUserStory: undefined
+      };
     }
     case SELECT_USERSTORY: {
       return { ...state, currentUserStory: action.payload.Id };

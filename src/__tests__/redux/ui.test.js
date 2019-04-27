@@ -49,16 +49,20 @@ describe("Reducer", () => {
   });
 
   test("Should get State after action selectHypothesis", () => {
-    expect(uiReducer(undefined, select_hypothesis_action)).toStrictEqual({
+    expect(
+      uiReducer(ui_state_userstory_selected, select_hypothesis_action)
+    ).toStrictEqual({
       ...ui_state_hypothesis_selected,
       currentUserStory: undefined
     });
   });
 
   test("Should get State after action selectUserStory", () => {
-    expect(uiReducer(undefined, select_userstory_action)).toStrictEqual({
+    expect(
+      uiReducer(ui_state_hypothesis_selected, select_userstory_action)
+    ).toStrictEqual({
       ...ui_state_userstory_selected,
-      currentHypothesis: undefined
+      currentHypothesis: "1"
     });
   });
 
