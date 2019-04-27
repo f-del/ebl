@@ -5,6 +5,7 @@ import UiGridListTile from "@material-ui/core/GridListTile";
 import CardsBoard from "../containers/CardsBoard";
 import { cardType } from "../redux/modules/cards";
 import CardListByIdList from "../containers/CardListByIdList";
+import CreateTaskCard from "../containers/CreateTaskCard";
 
 function UserStory({ userStory }) {
   if (userStory === undefined) return null;
@@ -12,7 +13,7 @@ function UserStory({ userStory }) {
   return (
     <CardsBoard type={cardType.Task}>
       <UiGridListTile>
-        {/* <CreateTaskCard userStoryId={userStory.Id} /> */}
+        <CreateTaskCard userStoryId={userStory.Id} />
       </UiGridListTile>
       <CardListByIdList list={userStory.Tasks} />
     </CardsBoard>

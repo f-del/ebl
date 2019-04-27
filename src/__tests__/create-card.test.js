@@ -9,7 +9,7 @@ import reducer from "../redux/store/index";
 
 import * as cardsSelector from "../redux/modules/cards";
 import CreateCard from "../components/CreateCard";
-import CreateTaskCard from "../containers/createTaskCard";
+import CreateTaskCard from "../containers/CreateTaskCard";
 import CreateHypothesisCard from "../containers/CreateHypothesisCard";
 import { entity_persona_created } from "./redux/personas";
 import CreateUserStoryCard from "../containers/CreateUserStoryCard";
@@ -194,6 +194,50 @@ describe("Containers", () => {
         "mockedID"
       );
       expect(cardsSelector.addChildCardToParent.mock.calls[0][1]).toBe(text);
+      expect(wrapper).toMatchSnapshot();
+      wrapper.unmount();
+    });
+  });
+
+  describe("create Tasks attached to a User Story Card", () => {
+    test("should Exist", () => {
+      const text = "Unit test Task";
+      const preventDefault = jest.fn();
+      cardsSelector.addChildCardToParent = jest
+        .fn()
+        .mockImplementationOnce(id => {
+          return dispatch => {
+            return id;
+          };
+        });
+
+      cardsSelector.createCard = jest.fn().mockImplementationOnce(id => {
+        return dispatch => {
+          return id;
+        };
+      });
+
+      const wrapper = mount(
+        <Provider store={store}>
+          <CreateTaskCard userStoryId={"mockedID"} />
+        </Provider>
+      );
+      expect(wrapper.props("onValidate")).toBeDefined();
+      expect(wrapper.find("button").simulate("click"));
+      const input = wrapper.find("textarea");
+      expect(input.length).toBe(1);
+      input.simulate("change", { target: { value: text } });
+      input.simulate("keyDown", { which: 13, preventDefault });
+
+      expect(cardsSelector.createCard.mock.calls.length).toBe(0);
+      expect(cardsSelector.addChildCardToParent.mock.calls.length).toBe(1);
+      expect(cardsSelector.addChildCardToParent.mock.calls[0][0]).toBe(
+        "mockedID"
+      );
+      expect(cardsSelector.addChildCardToParent.mock.calls[0][1]).toBe(text);
+      expect(cardsSelector.addChildCardToParent.mock.calls[0][2]).toBe(
+        cardsSelector.cardType.UserStory
+      );
       expect(wrapper).toMatchSnapshot();
       wrapper.unmount();
     });

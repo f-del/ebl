@@ -89,6 +89,31 @@ describe("Card mapping to Firestore", () => {
       Hypothesis: { Id: db.collection("Cards").doc("fdlijsflkdjsklj") }
     });
   });
+
+  test("card User Story with array of Task", () => {
+    const firebase = new MockFirebase(fixtureData);
+
+    const db = firebase.firestore();
+    const date = new Date();
+    const card = mappingTo(
+      {
+        Title: "test",
+        Status: cardStatus.TODO,
+        CreatedAt: date,
+        Type: cardType.UserStory,
+        Tasks: [{ Id: "IdLinked" }]
+      },
+      db
+    );
+
+    expect(card).toStrictEqual({
+      Title: "test",
+      Type: cardType.UserStory,
+      Status: "TODO",
+      CreatedAt: date.toJSON(),
+      Tasks: [{ Id: db.collection("Cards").doc("IdLinked") }]
+    });
+  });
 });
 
 describe("Card mapping from Firestore", () => {
@@ -173,7 +198,7 @@ describe("Card mapping from Firestore", () => {
     });
   });
 
-  test("card with Persona and UserStories", () => {
+  test("card with Persona and UserStories and Tasks", () => {
     const date = new Date();
     const firebase = new MockFirebase(fixtureData);
     const db = firebase.firestore();
@@ -187,6 +212,11 @@ describe("Card mapping from Firestore", () => {
         UserStories: [
           {
             Id: db.collection("Cards").doc("lkdsjfl34dfg")
+          }
+        ],
+        Tasks: [
+          {
+            Id: db.collection("Cards").doc("dslmk454")
           }
         ],
         Persona: {
@@ -208,6 +238,12 @@ describe("Card mapping from Firestore", () => {
       ret.UserStories.forEach(e =>
         Object.defineProperty(e.Id, "id", {
           get: jest.fn(() => "lkdsjfl34dfg"),
+          set: jest.fn()
+        })
+      );
+      ret.Tasks.forEach(e =>
+        Object.defineProperty(e.Id, "id", {
+          get: jest.fn(() => "dslmk454"),
           set: jest.fn()
         })
       );
@@ -234,6 +270,11 @@ describe("Card mapping from Firestore", () => {
       UserStories: [
         {
           Id: "lkdsjfl34dfg"
+        }
+      ],
+      Tasks: [
+        {
+          Id: "dslmk454"
         }
       ],
       Hypothesis: { Id: "fdlijsflkdjsklj" }

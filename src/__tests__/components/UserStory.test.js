@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow, configure } from "enzyme";
+import { shallow, configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
@@ -52,6 +52,7 @@ describe("Componant tests", () => {
         .at(0)
         .props().type
     ).toStrictEqual(cardType.Task);
+    expect(wrapper.find(CardsBoard).length).toBe(1);
   });
 });
 
@@ -63,7 +64,7 @@ describe("Containers tests", () => {
       applyMiddleware(thunk.withExtraArgument({ api }))
     );
   });
-  test("Expect props onAction is defined", () => {
+  test("Expect getUserStorySelected called", () => {
     uiReducer.getUserStorySelected = jest.fn().mockImplementationOnce(id => {
       return dispatch => {
         return entity_test_created;
@@ -72,13 +73,14 @@ describe("Containers tests", () => {
 
     store = createStore(reducer, applyMiddleware(thunk));
 
-    const wrapper = shallow(
+    const wrapper = mount(
       <Provider store={store}>
         <UserStorySelected />,
       </Provider>
     );
 
     expect(wrapper.props("userStory")).toBeDefined();
+
     expect(wrapper).toMatchSnapshot();
   });
 });

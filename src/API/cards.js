@@ -27,7 +27,6 @@ export const mapping = card => {
       NeedsIndex: card.Persona.Needs
     };
   }
-
   if (card.Hypothesis !== undefined) {
     card.Hypothesis = {
       Id:
@@ -38,6 +37,11 @@ export const mapping = card => {
   }
   if (card.UserStories !== undefined) {
     card.UserStories = card.UserStories.map(us => ({
+      Id: typeof us.Id === "object" ? us.Id.id : us.Id
+    }));
+  }
+  if (card.Tasks !== undefined) {
+    card.Tasks = card.Tasks.map(us => ({
       Id: typeof us.Id === "object" ? us.Id.id : us.Id
     }));
   }
@@ -78,6 +82,12 @@ export const mappingTo = (card, db) => {
 
   if (card.UserStories !== undefined) {
     mappedCard["UserStories"] = card.UserStories.reduce((acc, us) => {
+      acc.push({ Id: db.collection("Cards").doc(us.Id) });
+      return acc;
+    }, []);
+  }
+  if (card.Tasks !== undefined) {
+    mappedCard["Tasks"] = card.Tasks.reduce((acc, us) => {
       acc.push({ Id: db.collection("Cards").doc(us.Id) });
       return acc;
     }, []);

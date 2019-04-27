@@ -143,7 +143,7 @@ export const addChildCardToParent = (idParent, titleChildCard) => {
 
     const [parentToChildLinkName] = _getLinksName(parentCard.Type);
 
-    const parentCardChilds = parentCard.UserStories;
+    const parentCardChilds = parentCard[parentToChildLinkName];
     await api.Cards.Post(
       parentCard,
       parentCardChilds !== undefined

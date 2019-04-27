@@ -1,12 +1,17 @@
 import { connect } from "react-redux";
 import CreateCard from "../components/CreateCard";
-import { createCard } from "../redux/modules/cards";
+import { createCard, cardType } from "../redux/modules/cards";
+import { addChildCardToParent } from "../redux/modules/cards";
 
 const mapStateToProps = (state, ownProps) => ({});
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   onValidate: title => {
-    dispatch(createCard(title));
+    if (ownProps.userStoryId === undefined) dispatch(createCard(title));
+    else
+      dispatch(
+        addChildCardToParent(ownProps.userStoryId, title, cardType.UserStory)
+      );
   }
 });
 

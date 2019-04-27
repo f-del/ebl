@@ -1,80 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Containers tests Expect props onAction is defined 1`] = `
-<ContextProvider
-  value={
+exports[`Containers tests Expect getUserStorySelected called 1`] = `
+<Provider
+  store={
     Object {
-      "store": Object {
-        "dispatch": [Function],
-        "getState": [Function],
-        "replaceReducer": [Function],
-        "subscribe": [Function],
-        Symbol(observable): [Function],
-      },
-      "storeState": Object {
-        "cards": Object {
-          "list": Array [],
-          "status": Object {
-            "HYPOTHESIS": Symbol(NULL),
-            "TASK": Symbol(NULL),
-            "USER-STORY": Symbol(NULL),
-          },
-        },
-        "criterias": Object {
-          "list": Object {
-            "BASIC": Array [
-              Object {
-                "Id": "IdCritBas1",
-                "Value": false,
-              },
-            ],
-            "DEV": Array [
-              Object {
-                "Id": "IdCritDev1",
-                "Text": "Development",
-                "Value": false,
-              },
-              Object {
-                "Id": "IdCritDev2",
-                "Text": "Unit testing",
-                "Value": false,
-              },
-            ],
-          },
-        },
-        "personas": Object {
-          "list": Object {
-            "e6wTJIBsAw5puwwrNEsR": Object {
-              "Details": "Meta persona, representing all collaborators working with Paul",
-              "Name": "Feature Team",
-              "Needs": Array [
-                "To understand WHAT the Product Owner wants to be able to design collaborativly the HOW",
-                "To manage easly the list of things to do to finish the most quickly the User Story",
-              ],
-              "Picture": "",
-            },
-            "uOCF2GLFiJl6fvxdlq4b": Object {
-              "Details": "Product Owner for a new product, work in a startup",
-              "Name": "Paul Deligny",
-              "Needs": Array [
-                "To have a clear understanding about the product vision & objectives",
-                "To write real User Stories, ie have a Customer Driven thinking",
-                "To share at the right time and with the rigth level of information the User Stories with his team",
-                "To have a clear vision on the job he'll have to do AND the job already or currently done",
-              ],
-              "Picture": "",
-            },
-          },
-        },
-        "ui": Object {
-          "currentHypothesis": undefined,
-          "currentUserStory": undefined,
-        },
-      },
+      "dispatch": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+      Symbol(observable): [Function],
     }
   }
 >
-  <Connect(UserStory) />
+  <Connect(UserStory)>
+    <UserStory />
+  </Connect(UserStory)>
   ,
-</ContextProvider>
+</Provider>
 `;

@@ -15,7 +15,7 @@ import { api } from "./API/api";
 import reducer from "./redux/store/index";
 import CardListByStatus from "./containers/CardsListByStatus";
 import CardsBoard from "./containers/CardsBoard";
-import CreateTaskCard from "./containers/createTaskCard";
+import CreateTaskCard from "./containers/CreateTaskCard";
 
 import "./styles.css";
 import { cardType, cardStatus } from "./redux/modules/cards";
