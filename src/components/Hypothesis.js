@@ -9,10 +9,8 @@ import UiPaper from "@material-ui/core/Paper";
 import Persona from "./Persona";
 import CreateUserStoryCard from "../containers/CreateUserStoryCard";
 import CardsBoard from "../containers/CardsBoard";
-import { cardType, cardStatus } from "../redux/modules/cards";
-import CardListByStatus from "../containers/CardsListByStatus";
+import { cardType } from "../redux/modules/cards";
 import CardListByIdList from "../containers/CardListByIdList";
-import UserStory from "./UserStory";
 import UserStorySelected from "../containers/UserStorySelected";
 
 function Hypothesis({ hypothesis, persona, classes }) {
